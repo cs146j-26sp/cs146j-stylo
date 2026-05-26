@@ -39,7 +39,8 @@
       </div>
 
       <div class="profile-actions">
-        <button class="filter-button">Edit profile</button>
+        <button class="filter-button" id="btn-edit-profile">Edit profile</button>
+        <button class="filter-button" id="btn-follow">Follow</button>
         <button class="filter-button">Share</button>
       </div>
     </div>
@@ -60,5 +61,28 @@
       document.getElementById("header-mount").innerHTML = window.STYLO_UI.renderHeader("");
     });
   </script>
+  <!-- Edit profile modal -->
+  <div class="modal-overlay" id="edit-modal" hidden>
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">edit profile</h2>
+        <button class="modal-close" id="modal-close" aria-label="close">&times;</button>
+      </div>
+      <form id="edit-form" class="modal-form">
+        <div class="field">
+          <label class="field-label" for="edit-name">display name</label>
+          <input class="field-input" id="edit-name" type="text" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="edit-bio">bio</label>
+          <input class="field-input" id="edit-bio" type="text" />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="filter-button" id="modal-cancel">cancel</button>
+          <button type="submit" class="btn-filled">save</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
