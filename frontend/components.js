@@ -28,8 +28,8 @@ function renderHeader(activePage = "") {
       <img class="menu-img" src="media/paper1.png" alt="">
       <a href="index.html" class="logo">STYLO</a>
       <menu>
-        <a href="studio.html"  class="menu-item ${activePage === 'studio' ? 'menu-item--active' : ''}"><h2>Studio</h2></a>
-        <a href="index.html"   class="menu-item ${activePage === 'feed'   ? 'menu-item--active' : ''}"><h2>Feed</h2></a>
+        <a href="index.html"   class="menu-item ${activePage === 'studio' ? 'menu-item--active' : ''}"><h2>Studio</h2></a>
+        <a href="feed.html"    class="menu-item ${activePage === 'feed'   ? 'menu-item--active' : ''}"><h2>Feed</h2></a>
         <a href="closet.html"  class="menu-item ${activePage === 'closet' ? 'menu-item--active' : ''}"><h2>Closet</h2></a>
       </menu>
       <a href="profile.html" class="account" aria-label="Profile">

@@ -8,7 +8,7 @@
   // On the feed page, the menu items are <h2> with no anchor.
   // Wire them to navigate without touching their visual styling.
   function attach() {
-    const map = { studio: "studio.html", feed: "index.html", closet: "closet.html" };
+    const map = { studio: "index.html", feed: "feed.html", closet: "closet.html" };
     document.querySelectorAll("menu .menu-item").forEach((el) => {
       // If already an anchor (other pages), skip — links work natively.
       if (el.tagName === "A") return;
