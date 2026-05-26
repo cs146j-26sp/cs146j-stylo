@@ -1,9 +1,3 @@
-/* ============================================
-   stylo — append-only additions
-   The original feed styles in styles.css are untouched.
-   Everything below is for Studio / Closet / Profile.
-   ============================================ */
-
 /* ---------- shared link reset on header menu ---------- */
 menu .menu-item {
   text-decoration: none;
@@ -21,13 +15,19 @@ menu .menu-item h2 {
   transition: color 0.15s;
 }
 
-menu .menu-item:hover h2 { color: var(--accent); }
+menu .menu-item:hover h2 {
+  color: var(--accent);
+}
 
-.menu-item--active h2 { font-style: italic; }
+.menu-item--active h2 {
+  font-style: italic;
+}
 .menu-item--active::after {
   content: "";
   position: absolute;
-  left: 4px; right: 4px; bottom: -6px;
+  left: 4px;
+  right: 4px;
+  bottom: -6px;
   height: 2px;
   background: var(--accent);
 }
@@ -67,7 +67,9 @@ a.account {
    STUDIO PAGE — filter block (status tabs + category chips)
    ============================================================ */
 
-.filter-block { margin-bottom: 10px; }
+.filter-block {
+  margin-bottom: 10px;
+}
 .filter-block-label {
   display: block;
   font-family: var(--font-body);
@@ -103,7 +105,9 @@ a.account {
   transition: all 0.18s;
   opacity: 0.55;
 }
-.status-tab:hover { opacity: 1; }
+.status-tab:hover {
+  opacity: 1;
+}
 .status-tab.is-active {
   background: var(--text);
   color: var(--bg);
@@ -155,7 +159,10 @@ a.account {
   border-left: 1px dashed var(--border);
   text-wrap: pretty;
 }
-.studio-hero-note em { color: var(--accent); font-style: italic; }
+.studio-hero-note em {
+  color: var(--accent);
+  font-style: italic;
+}
 
 .studio-action-bar {
   display: flex;
@@ -194,14 +201,15 @@ a.account {
   max-width: 460px;
   letter-spacing: -0.01em;
 }
-.studio-name-input:focus { border-bottom: 1px solid var(--text); border-bottom-style: solid; }
+.studio-name-input:focus {
+  border-bottom: 1px solid var(--text);
+  border-bottom-style: solid;
+}
 .studio-action-bar .actions {
   display: flex;
   gap: 10px;
   align-items: center;
 }
-
-/* autosave pill removed */
 
 .btn-filled {
   padding: 11px 20px;
@@ -227,7 +235,11 @@ a.account {
   gap: 22px;
   align-items: stretch;
 }
-.canvas-col { display: flex; flex-direction: column; min-width: 0; }
+.canvas-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 
 /* sidebar shells — softly bordered paper panels */
 .studio-panel {
@@ -253,13 +265,18 @@ a.account {
 }
 .panel-title {
   font-family: var(--font-display);
-  font-size: 1.4rem;
+  font-size: 2rem;
   margin-bottom: 14px;
   color: var(--text);
 }
 
 /* closet panel chips */
-.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
 .chip {
   padding: 4px 10px;
   font-family: var(--font-body);
@@ -271,14 +288,15 @@ a.account {
   cursor: pointer;
   transition: all 0.15s;
 }
-.chip:hover { background: var(--accent-soft); }
+.chip:hover {
+  background: var(--accent-soft);
+}
 .chip.is-active {
   background: var(--text);
   color: var(--bg);
   border-color: var(--text);
 }
 
-/* item cards — items float on transparent background, no polaroid frame */
 .item-card {
   position: relative;
   cursor: grab;
@@ -289,8 +307,12 @@ a.account {
   align-items: stretch;
   padding: 4px 4px 24px;
 }
-.item-card:hover { transform: rotate(0deg) translateY(-3px); }
-.item-card:active { cursor: grabbing; }
+.item-card:hover {
+  transform: rotate(0deg) translateY(-3px);
+}
+.item-card:active {
+  cursor: grabbing;
+}
 
 .item-photo {
   width: 100%;
@@ -307,11 +329,13 @@ a.account {
   display: block;
   -webkit-user-drag: none;
   user-select: none;
-  filter: drop-shadow(0 6px 8px rgba(46, 19, 18, 0.10));
+  filter: drop-shadow(0 6px 8px rgba(46, 19, 18, 0.1));
 }
 .item-caption {
   position: absolute;
-  left: 6px; right: 6px; bottom: 4px;
+  left: 6px;
+  right: 6px;
+  bottom: 4px;
   font-family: var(--font-display);
   font-style: italic;
   font-size: 0.92rem;
@@ -324,11 +348,12 @@ a.account {
 }
 .wishlist-badge {
   position: absolute;
-  top: 4px; right: 4px;
+  top: 4px;
+  right: 4px;
   font-family: var(--font-body);
   font-size: 0.58rem;
   font-weight: 700;
-  letter-spacing: 0.10em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 2px 7px;
   border-radius: 999px;
@@ -348,7 +373,9 @@ a.account {
   flex: 1 1 auto;
   min-height: 0;
 }
-.closet-list .item-card { padding: 2px 2px 20px; }
+.closet-list .item-card {
+  padding: 2px 2px 20px;
+}
 .closet-list .item-caption {
   font-size: 0.78rem;
   bottom: 2px;
@@ -359,33 +386,64 @@ a.account {
   position: relative;
   background:
     /* faint paper grain */
-    radial-gradient(circle at 30% 20%, rgba(214, 169, 146, 0.08), transparent 60%),
-    radial-gradient(circle at 80% 80%, rgba(214, 169, 146, 0.06), transparent 55%),
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(214, 169, 146, 0.08),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(214, 169, 146, 0.06),
+      transparent 55%
+    ),
     #fffefb;
   border: 1px solid var(--border);
   border-radius: 10px;
   min-height: 560px;
   height: calc(100vh - 230px);
   background-image:
-    radial-gradient(circle at 12px 12px, rgba(46, 19, 18, 0.05) 1px, transparent 1.4px),
+    radial-gradient(
+      circle at 12px 12px,
+      rgba(46, 19, 18, 0.05) 1px,
+      transparent 1.4px
+    ),
     linear-gradient(180deg, #fffefb 0%, #fbf6ec 100%);
-  background-size: 28px 28px, 100% 100%;
+  background-size:
+    28px 28px,
+    100% 100%;
   overflow: hidden;
   box-shadow:
-    0 2px 0 rgba(46,19,18,0.02),
-    0 24px 38px -28px rgba(46,19,18,0.22);
+    0 2px 0 rgba(46, 19, 18, 0.02),
+    0 24px 38px -28px rgba(46, 19, 18, 0.22);
 }
 .canvas-corner {
   position: absolute;
-  width: 18px; height: 18px;
+  width: 18px;
+  height: 18px;
   border-color: var(--accent);
   border-style: solid;
   opacity: 0.65;
 }
-.canvas-corner.tl { top: 10px; left: 10px;   border-width: 1.5px 0 0 1.5px; }
-.canvas-corner.tr { top: 10px; right: 10px;  border-width: 1.5px 1.5px 0 0; }
-.canvas-corner.bl { bottom: 10px; left: 10px; border-width: 0 0 1.5px 1.5px; }
-.canvas-corner.br { bottom: 10px; right: 10px; border-width: 0 1.5px 1.5px 0; }
+.canvas-corner.tl {
+  top: 10px;
+  left: 10px;
+  border-width: 1.5px 0 0 1.5px;
+}
+.canvas-corner.tr {
+  top: 10px;
+  right: 10px;
+  border-width: 1.5px 1.5px 0 0;
+}
+.canvas-corner.bl {
+  bottom: 10px;
+  left: 10px;
+  border-width: 0 0 1.5px 1.5px;
+}
+.canvas-corner.br {
+  bottom: 10px;
+  right: 10px;
+  border-width: 0 1.5px 1.5px 0;
+}
 
 .canvas-empty-hint {
   position: absolute;
@@ -420,7 +478,7 @@ a.account {
 .canvas-piece {
   position: absolute;
   cursor: grab;
-  filter: drop-shadow(0 8px 12px rgba(46,19,18,0.20));
+  filter: drop-shadow(0 8px 12px rgba(46, 19, 18, 0.2));
   transition: filter 0.2s;
   user-select: none;
   touch-action: none;
@@ -434,7 +492,7 @@ a.account {
   -webkit-user-drag: none;
 }
 .canvas-piece.is-selected {
-  filter: drop-shadow(0 12px 22px rgba(46,19,18,0.32));
+  filter: drop-shadow(0 12px 22px rgba(46, 19, 18, 0.32));
 }
 .canvas-piece.is-selected::before {
   content: "";
@@ -445,13 +503,15 @@ a.account {
   pointer-events: none;
 }
 .canvas-piece .silhouette {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 /* selection toolbar */
 .piece-toolbar {
   position: absolute;
-  bottom: 14px; left: 50%;
+  bottom: 14px;
+  left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 2px;
@@ -461,7 +521,7 @@ a.account {
   padding: 4px;
   font-family: var(--font-body);
   font-size: 0.75rem;
-  box-shadow: 0 14px 28px -14px rgba(0,0,0,0.45);
+  box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.45);
   z-index: 50;
 }
 .piece-toolbar button {
@@ -475,11 +535,21 @@ a.account {
   cursor: pointer;
   transition: background 0.15s;
 }
-.piece-toolbar button:hover { background: rgba(255,255,255,0.12); }
-.piece-toolbar .remove { color: #f0b8ad; padding: 7px 10px; }
+.piece-toolbar button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.piece-toolbar .remove {
+  color: #f0b8ad;
+  padding: 7px 10px;
+}
 
 /* settings panel ('this fit') */
-.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
 .field-label {
   font-family: var(--font-body);
   font-size: 0.7rem;
@@ -500,7 +570,9 @@ a.account {
   outline: none;
   width: 100%;
 }
-.field-input:focus { border-bottom-color: var(--accent); }
+.field-input:focus {
+  border-bottom-color: var(--accent);
+}
 
 .settings-divider {
   border: none;
@@ -534,7 +606,12 @@ a.account {
   font-family: var(--font-body);
 }
 
-.used-block { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.used-block {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
 .used-list {
   display: flex;
   flex-direction: column;
@@ -553,7 +630,8 @@ a.account {
   color: var(--text);
 }
 .used-thumb {
-  width: 32px; height: 32px;
+  width: 32px;
+  height: 32px;
   border-radius: 4px;
   background: #faf6ec;
   border: 1px solid var(--border);
@@ -564,7 +642,8 @@ a.account {
   overflow: hidden;
 }
 .used-thumb img {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 .used-name {
@@ -602,9 +681,11 @@ a.account {
   font-family: var(--font-body);
   font-size: 0.9rem;
   z-index: 9999;
-  box-shadow: 0 18px 32px -16px rgba(0,0,0,0.45);
+  box-shadow: 0 18px 32px -16px rgba(0, 0, 0, 0.45);
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
   pointer-events: none;
 }
 .studio-toast.in {
@@ -674,16 +755,19 @@ a.account {
   background: #fff;
   padding: 14px 14px 44px;
   box-shadow:
-    0 1px 1px rgba(46,19,18,0.05),
-    0 12px 18px -8px rgba(46,19,18,0.22),
-    0 24px 36px -24px rgba(46,19,18,0.20);
+    0 1px 1px rgba(46, 19, 18, 0.05),
+    0 12px 18px -8px rgba(46, 19, 18, 0.22),
+    0 24px 36px -24px rgba(46, 19, 18, 0.2);
   transform: rotate(-3deg);
   position: relative;
 }
 .profile-polaroid .photo {
-  width: 100%; aspect-ratio: 1/1;
+  width: 100%;
+  aspect-ratio: 1/1;
   background: var(--accent-soft);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-display);
   font-size: 4.5rem;
   color: var(--accent);
@@ -691,7 +775,8 @@ a.account {
 }
 .profile-polaroid .caption {
   position: absolute;
-  left: 18px; bottom: 12px;
+  left: 18px;
+  bottom: 12px;
   font-family: var(--font-body);
   font-size: 0.92rem;
   color: var(--text);
@@ -702,7 +787,7 @@ a.account {
   font-size: 4.2rem;
   letter-spacing: -0.02em;
   color: var(--text);
-  line-height: 1.0;
+  line-height: 1;
 }
 .profile-handle {
   font-family: var(--font-body);
@@ -729,7 +814,7 @@ a.account {
   font-family: var(--font-display);
   font-size: 1.7rem;
   color: var(--text);
-  line-height: 1.0;
+  line-height: 1;
 }
 .profile-stat-label {
   font-family: var(--font-body);
@@ -741,7 +826,12 @@ a.account {
   opacity: 0.55;
   margin-top: 4px;
 }
-.profile-actions { display: flex; flex-direction: column; gap: 8px; min-width: 140px; }
+.profile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 140px;
+}
 
 .profile-tabs {
   display: flex;
@@ -774,7 +864,9 @@ a.account {
 .profile-tab.is-active::after {
   content: "";
   position: absolute;
-  left: 0; right: 0; bottom: -1px;
+  left: 0;
+  right: 0;
+  bottom: -1px;
   height: 2px;
   background: var(--accent);
 }
@@ -789,7 +881,9 @@ a.account {
   cursor: pointer;
   transition: transform 0.25s ease;
 }
-.outfit-card:hover { transform: translateY(-3px); }
+.outfit-card:hover {
+  transform: translateY(-3px);
+}
 .outfit-card img {
   width: 100%;
   height: auto;
@@ -821,11 +915,22 @@ a.account {
 
 /* Responsive ----------------------------------------------- */
 @media (max-width: 1080px) {
-  .studio-grid { grid-template-columns: 1fr; }
-  .profile-header { grid-template-columns: 1fr; text-align: left; }
-  .profile-actions { flex-direction: row; }
-  .canvas-wrap { height: 60vh; }
-  .closet-list { max-height: 320px; }
+  .studio-grid {
+    grid-template-columns: 1fr;
+  }
+  .profile-header {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+  .profile-actions {
+    flex-direction: row;
+  }
+  .canvas-wrap {
+    height: 60vh;
+  }
+  .closet-list {
+    max-height: 320px;
+  }
 }
 
 /* action-bar outline button — same size as btn-filled, accent colour */
