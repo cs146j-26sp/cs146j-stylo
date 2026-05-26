@@ -1,0 +1,334 @@
+:root {
+  --bg:          #fcfaf5;
+  --text:        #2e1312;
+  --text-muted:  #fbe6dc;
+  --accent:      #d6a992;
+  --accent-soft: rgba(255, 227, 197, 0.229);
+  --border:      rgba(42, 51, 68, 0.12);
+  --font-display: "Instrument Serif", serif;
+  --font-body:    "Albert Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px 30px;
+}
+
+menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+body {
+  font-family: var(--font-body);
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
+  min-height: 100vh;
+}
+
+.nav-bar {
+   display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.main-content {
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+
+/************* nav bar styles *************/
+.menu-img {
+  position: absolute;
+  z-index: -1;
+  margin-top: -85vh;
+  margin-left: -5vh;
+  width: 100%;
+}
+
+button {
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1.4px solid var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+.filter-button {
+  padding: 8px 16px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1.4px solid var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.filter-button:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/************* post stats styles *************/
+
+.heart-icon {
+  font-size: 36px; 
+  color: var(--text);
+}
+
+.poster-account {
+  display: flex;
+  width: 95%;
+}
+
+.avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.avatar-small {
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: auto 1rem;
+}
+
+.comment {
+  display: flex;
+  align-items: center;
+}
+
+.post-stat {
+  display: flex;
+  color: rgb(116, 116, 116);
+  gap: 5px;
+  font-size: 15px;
+}
+
+#comment-count {
+    display: flex;
+align-items: center;
+}
+
+/************* feed styles *************/
+.entire-feed {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 25px auto;
+}
+
+.feed-col {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  justify-content: center;
+  gap: 15px;
+}
+
+.post-tall {
+width: 98%;
+  margin: 0 auto;
+}
+
+.post-wide {
+  margin-top: 10px;
+}
+
+.endpoint {
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.endpoint:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.route {
+  display: block;
+  margin-bottom: 6px;
+  font-family: "SF Mono", "Menlo", monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+}
+
+.route b {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.route-note {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.endpoint .row:last-child {
+  margin-bottom: 0;
+}
+
+
+
+#jokeIdInput {
+  max-width: 80px;
+}
+
+select, input[type="number"], input[type="text"] {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text);
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+}
+
+select:focus, input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+#output {
+  display: block;
+  width: 100%;
+  margin-top: 52px;
+  padding: 12px 14px;
+  font-family: "SF Mono", "Menlo", monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  resize: vertical;
+}
+
+  .add-btn {
+    padding: 8px 16px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1.4px solid var(--accent);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .closet-grid {
+    display: grid;
+    /* grid-template-columns: 200px; */
+    grid-template-columns:  repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+  
+
+  
+  .card {
+    background: #fff;
+    border: 0.5px solid #e0ddd6;
+    border-radius: 12px;
+    padding: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.1s;
+  }
+  
+  .card:hover {
+    border-color: #bbb;
+    transform: translateY(-1px);
+  }
+  
+  .card.wishlist {
+    border-style: dashed;
+  }
+  
+  .card-icon {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #f5f4f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  
+  .card-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .card-name {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #1a1a1a;
+  }
+  
+  .card-cat {
+    font-size: 10px;
+    color: #aaa;
+    margin-top: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  
+  .wishlist-tag {
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    background: #fff8e1;
+    color: #b45309;
+    border-radius: 3px;
+  }
