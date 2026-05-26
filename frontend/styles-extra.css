@@ -951,3 +951,79 @@ a.account {
   background: var(--accent);
   color: var(--bg);
 }
+
+/* ============================================================
+   PROFILE — follow button filled state
+   ============================================================ */
+.btn-following {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+.btn-following:hover {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ============================================================
+   PROFILE — closet filter row
+   ============================================================ */
+.profile-closet-filters {
+  padding-bottom: 18px;
+  margin-bottom: 8px;
+}
+
+/* ============================================================
+   PROFILE — edit modal
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(46, 19, 18, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-overlay[hidden] { display: none; }
+
+.modal-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px 36px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 24px 48px -24px rgba(46, 19, 18, 0.35);
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--text);
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: var(--text);
+  opacity: 0.45;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+.modal-close:hover { opacity: 1; background: none; color: var(--text); }
+.modal-form .field { margin-bottom: 18px; }
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 26px;
+}
