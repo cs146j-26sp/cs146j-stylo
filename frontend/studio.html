@@ -1,135 +1,158 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stylo · Studio</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stylo · Studio</title>
 
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="styles-extra.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles-extra.css" />
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
 
-  <script src="data.js" defer></script>
-  <script src="components.js" defer></script>
-  <script src="studio.js" defer></script>
-</head>
-<body>
-  <div id="header-mount"></div>
+    <script src="data.js" defer></script>
+    <script src="components.js" defer></script>
+    <script src="studio.js" defer></script>
+  </head>
+  <body>
+    <div id="header-mount"></div>
 
-  <div class="main-content">
-
-    <!-- HERO -->
-    <div class="studio-hero">
-      <h1 class="title">My Stylo Studio ✦ ݁ ˖</h1>
-    </div>
-
-    <!-- TITLE + ACTIONS BAR -->
-    <div class="studio-action-bar">
-      <div class="studio-name-block">
-        <span class="studio-name-prefix">titled</span>
-        <input class="studio-name-input" id="studio-name" value="saturday in soft light" />
+    <div class="main-content">
+      <!-- HERO -->
+      <div class="studio-hero">
+        <h1 class="title">My Stylo Studio ✦ ݁ ˖</h1>
       </div>
-      <div class="actions">
-        <button class="filter-button" id="save-draft">Save Draft</button>
-        <button class="btn-filled" id="publish-btn">Publish →</button>
+
+      <!-- TITLE + ACTIONS BAR -->
+      <div class="studio-action-bar">
+        <div class="studio-name-block">
+          <span class="studio-name-prefix">titled</span>
+          <input
+            class="studio-name-input"
+            id="studio-name"
+            value="saturday in soft light"
+          />
+        </div>
+        <div class="actions">
+          <button class="filter-button" id="save-draft">Save Draft</button>
+          <button class="btn-filled" id="publish-btn">Publish →</button>
+        </div>
+      </div>
+
+      <div class="studio-grid">
+        <!-- LEFT: closet -->
+        <aside class="studio-panel">
+          <div class="panel-eyebrow">your closet</div>
+          <div class="panel-title">drag onto the page →</div>
+
+          <div class="filter-block">
+            <span class="filter-block-label">status</span>
+            <div class="status-tabs" id="status-chips">
+              <button class="status-tab is-active" data-status="all">
+                all
+              </button>
+              <button class="status-tab" data-status="owned">owned</button>
+              <button class="status-tab" data-status="wishlist">
+                wishlist
+              </button>
+            </div>
+          </div>
+
+          <div class="filter-block">
+            <span class="filter-block-label">category</span>
+            <div class="chip-row" id="cat-chips">
+              <button class="chip is-active" data-cat="all">all</button>
+              <button class="chip" data-cat="tops">tops</button>
+              <button class="chip" data-cat="bottoms">bottoms</button>
+              <button class="chip" data-cat="shoes">shoes</button>
+              <button class="chip" data-cat="accessories">acc.</button>
+            </div>
+          </div>
+
+          <div class="closet-list" id="closet-list"></div>
+        </aside>
+
+        <!-- CENTER: canvas -->
+        <section class="canvas-col">
+          <div class="canvas-wrap" id="canvas">
+            <span class="canvas-corner tl"></span>
+            <span class="canvas-corner tr"></span>
+            <span class="canvas-corner bl"></span>
+            <span class="canvas-corner br"></span>
+
+            <!-- corner label -->
+            <span class="canvas-stamp">page 01 / your studio</span>
+
+            <p class="canvas-empty-hint" id="canvas-empty-hint">
+              drag clothes from your closet onto this page
+            </p>
+          </div>
+        </section>
+
+        <!-- RIGHT: settings -->
+        <aside class="studio-panel">
+          <div class="field">
+            <span class="field-label">title</span>
+            <input
+              class="field-input"
+              id="fit-title"
+              value="saturday in soft light"
+            />
+          </div>
+
+          <div class="field">
+            <span class="field-label">occasion</span>
+            <div class="chip-row" id="occasion-chips">
+              <button class="chip is-active" data-occ="weekend">weekend</button>
+              <button class="chip" data-occ="everyday">everyday</button>
+              <button class="chip" data-occ="work">work</button>
+              <button class="chip" data-occ="date">date</button>
+              <button class="chip" data-occ="travel">travel</button>
+              <button class="chip" data-occ="event">event</button>
+            </div>
+          </div>
+
+          <hr class="settings-divider" />
+
+          <div>
+            <span class="field-label" style="display: block; margin-bottom: 8px"
+              >need a starting point?</span
+            >
+            <button class="shuffle-btn" id="shuffle-btn">
+              ↻ shuffle a fit
+            </button>
+          </div>
+
+          <hr class="settings-divider" />
+
+          <div class="used-block">
+            <span
+              class="field-label"
+              style="display: block; margin-bottom: 10px"
+              >pieces on this page</span
+            >
+            <div class="used-list" id="used-list">
+              <div class="used-empty">nothing yet</div>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
 
-    <div class="studio-grid">
-      <!-- LEFT: closet -->
-      <aside class="studio-panel">
-        <div class="panel-eyebrow">your closet</div>
-        <div class="panel-title">drag onto the page →</div>
-
-        <div class="filter-block">
-          <span class="filter-block-label">status</span>
-          <div class="status-tabs" id="status-chips">
-            <button class="status-tab is-active" data-status="all">all</button>
-            <button class="status-tab" data-status="owned">owned</button>
-            <button class="status-tab" data-status="wishlist">wishlist</button>
-          </div>
-        </div>
-
-        <div class="filter-block">
-          <span class="filter-block-label">category</span>
-          <div class="chip-row" id="cat-chips">
-            <button class="chip is-active" data-cat="all">all</button>
-            <button class="chip" data-cat="tops">tops</button>
-            <button class="chip" data-cat="bottoms">bottoms</button>
-            <button class="chip" data-cat="shoes">shoes</button>
-            <button class="chip" data-cat="accessories">acc.</button>
-          </div>
-        </div>
-
-        <div class="closet-list" id="closet-list"></div>
-      </aside>
-
-      <!-- CENTER: canvas -->
-      <section class="canvas-col">
-        <div class="canvas-wrap" id="canvas">
-          <span class="canvas-corner tl"></span>
-          <span class="canvas-corner tr"></span>
-          <span class="canvas-corner bl"></span>
-          <span class="canvas-corner br"></span>
-
-          <!-- corner label -->
-          <span class="canvas-stamp">page 01 / your studio</span>
-
-          <p class="canvas-empty-hint" id="canvas-empty-hint">
-            drag clothes from your closet onto this page
-          </p>
-        </div>
-      </section>
-
-      <!-- RIGHT: settings -->
-      <aside class="studio-panel">
-        <div class="field">
-          <span class="field-label">title</span>
-          <input class="field-input" id="fit-title" value="saturday in soft light" />
-        </div>
-
-        <div class="field">
-          <span class="field-label">occasion</span>
-          <div class="chip-row" id="occasion-chips">
-            <button class="chip is-active" data-occ="weekend">weekend</button>
-            <button class="chip" data-occ="everyday">everyday</button>
-            <button class="chip" data-occ="work">work</button>
-            <button class="chip" data-occ="date">date</button>
-            <button class="chip" data-occ="travel">travel</button>
-            <button class="chip" data-occ="event">event</button>
-          </div>
-        </div>
-
-        <hr class="settings-divider"/>
-
-        <div>
-          <span class="field-label" style="display:block; margin-bottom:8px;">need a starting point?</span>
-          <button class="shuffle-btn" id="shuffle-btn">↻ shuffle a fit</button>
-          <p class="settings-tip">
-            pulls a few owned pieces onto the page, lightly arranged.
-          </p>
-        </div>
-
-        <hr class="settings-divider"/>
-
-        <div class="used-block">
-          <span class="field-label" style="display:block; margin-bottom:10px;">pieces on this page</span>
-          <div class="used-list" id="used-list">
-            <div class="used-empty">nothing yet</div>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      document.getElementById("header-mount").innerHTML = window.STYLO_UI.renderHeader("studio");
-    });
-  </script>
-</body>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("header-mount").innerHTML =
+          window.STYLO_UI.renderHeader("studio");
+      });
+    </script>
+  </body>
 </html>
