@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stylo</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- link to google icon API to access svg icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <script src="script.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap"
+    rel="stylesheet">
+</head>
+
+<header>
+  <img class="menu-img" src="media/paper1.png">
+  <div class="logo"> STYLO </div>
+  <menu>
+    <h2 class="menu-item">Studio</h2>
+    <h2 class="menu-item">Feed</h2>
+    <h2 class="menu-item">Closet</h2>
+    <!-- <span class="material-symbols-outlined" style="font-size: 36px; color: red;">favorite</span> -->
+  </menu>
+
+  <div class="account">
+    <span class="material-symbols-outlined" style="font-size: 36px; color: var(--text);">account_circle</span>
+  </div>
+
+</header>
+
+<body>
+  <div class="main-content">
+    <h1 class="title">My Feed . ✦ ݁ ˖</h1>
+
+    <div class="nav-bar">
+      <div>
+        <button id="discover-btn">Discover</button>
+        <button id="following-btn">Following</button>
+
+      </div>
+      <div class="filters">
+        <select class="filter-button">
+          <option value="" hidden>Date Posted</option>
+          <option value="most-recent">Most Recent</option>
+          <option value="oldest">Oldest</option>
+          <option value="most-popular">Most Popular</option>
+        </select>
+
+        <select class="filter-button">
+          <option value="" hidden>Select Aesthetic</option>
+          <option value="dark-academia">Dark Academia</option>
+          <option value="y2k">Y2K</option>
+          <option value="cottagecore">Cottagecore</option>
+          <option value="grunge">Grunge</option>
+        </select>
+
+        <select class="filter-button">
+          <option value="" hidden>Select Category</option>
+          <option value="dark-academia">Outfit Inspiration</option>
+          <option value="ootd">OOTD</option>
+          <option value="cottagecore">Cottagecore</option>
+          <option value="grunge">Grunge</option>
+        </select>
+      </div>
+
+
+    </div>
+    <div class="entire-feed">
+      <div class="feed-col">
+        <img class="post-tall" src="media/post1tall.png">
+        <div class="post-content">
+
+          <div class="poster-account">
+            <img class="avatar" src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Stanford_Cardinal_logo.svg"
+              alt="Poster logo" />
+            <strong> @username</strong>
+          </div>
+
+          <p>check out my new outfit of the day! #ootd</p>
+
+          <div class="post-stats">
+
+            <div class="post-stat">
+              <span id="comment-count">2</span>
+              <span class="heart-icon material-symbols-outlined">favorite</span>
+            </div>
+
+                  <div class="post-stat">
+              <span id="comment-count">2</span>
+              <span class="heart-icon material-symbols-outlined">favorite</span>
+            </div>
+
+                  <div class="post-stat">
+              <span id="comment-count">2</span>
+              <span class="heart-icon material-symbols-outlined">favorite</span>
+            </div>
+
+
+            <div>3
+              <span class="heart-icon material-symbols-outlined">comment</span>
+            </div>
+            <div>3
+              <span class="heart-icon material-symbols-outlined">360</span>
+
+            </div>
+
+          </div>
+
+        </div>
+        <img class="post-wide" src="media/post2wide.png">
+        <img class="post-tall" src="media/post4tall.png">
+        <img class="post-wide" src="media/post3wide.png">
+      </div>
+
+      <div class="feed-col">
+        <img class="post-wide" src="media/post2wide.png">
+        <img class="post-tall" src="media/post3tall.png">
+        <img class="post-wide" src="media/post1wide.png">
+        <img class="post-tall" src="media/post4tall.png">
+
+      </div>
+
+      <div class="feed-col">
+        <img class="post-tall" src="media/post4tall.png">
+        <img class="post-wide" src="media/post1wide.png">
+        <img class="post-tall" src="media/post2tall.png">
+        <img class="post-wide" src="media/post3wide.png">
+      </div>
+
+      <div class="feed-col">
+        <img class="post-wide" src="media/post3wide.png">
+        <img class="post-tall" src="media/post1tall.png">
+        <img class="post-wide" src="media/post4wide.png">
+        <img class="post-tall" src="media/post2tall.png">
+
+      </div>
+    </div>
+
+</body>
+
+</html>

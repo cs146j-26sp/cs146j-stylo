@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stylo · Profile</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles-extra.css" />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <script src="data.js" defer></script>
+  <script src="components.js" defer></script>
+  <script src="profile.js" defer></script>
+</head>
+<body>
+  <div id="header-mount"></div>
+
+  <div class="main-content">
+    <h1 class="title">Profile . ✦ ݁ ˖</h1>
+
+    <!-- top: polaroid avatar + name + stats + actions -->
+    <div class="profile-header">
+      <div class="profile-polaroid">
+        <div class="photo" id="avatar-initials">IM</div>
+        <div class="caption" id="avatar-caption">@iris.m</div>
+      </div>
+
+      <div>
+        <h2 class="profile-name" id="profile-name">Iris Morgan</h2>
+        <p class="profile-handle" id="profile-handle">@iris.m</p>
+        <p class="profile-bio" id="profile-bio">"Writing my closet onto paper."</p>
+
+        <div class="profile-stats" id="profile-stats"></div>
+      </div>
+
+      <div class="profile-actions">
+        <button class="filter-button">Edit profile</button>
+        <button class="filter-button">Share</button>
+      </div>
+    </div>
+
+    <!-- tabs -->
+    <div class="profile-tabs" id="profile-tabs">
+      <button class="profile-tab is-active" data-tab="outfits">outfits <span class="count" id="count-outfits"></span></button>
+      <button class="profile-tab" data-tab="remixes">remixes <span class="count" id="count-remixes"></span></button>
+      <button class="profile-tab" data-tab="closet">closet <span class="count" id="count-closet"></span></button>
+    </div>
+
+    <!-- grid -->
+    <div id="tab-content"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("header-mount").innerHTML = window.STYLO_UI.renderHeader("");
+    });
+  </script>
+</body>
+</html>

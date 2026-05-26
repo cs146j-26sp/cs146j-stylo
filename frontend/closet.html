@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stylo · Closet</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles-extra.css" />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <script src="data.js" defer></script>
+  <script src="components.js" defer></script>
+  <script src="closet.js" defer></script>
+</head>
+<body>
+  <div id="header-mount"></div>
+
+  <div class="main-content">
+    <h1 class="title">My Closet . ✦ ݁ ˖</h1>
+
+    <div class="subhead">
+      <div class="subhead-note" id="closet-summary">
+        <!-- filled by closet.js -->
+      </div>
+      <button class="btn-filled" id="add-item-btn">+ Add a piece</button>
+    </div>
+
+    <div class="closet-filter-row" id="closet-filters">
+      <span class="closet-filter-label">Status</span>
+      <div class="chip-row" data-group="status">
+        <button class="chip is-active" data-value="all">all</button>
+        <button class="chip" data-value="owned">owned</button>
+        <button class="chip" data-value="wishlist">wishlist</button>
+      </div>
+    </div>
+    <div class="closet-filter-row">
+      <span class="closet-filter-label">Category</span>
+      <div class="chip-row" data-group="category">
+        <button class="chip is-active" data-value="all">all</button>
+        <button class="chip" data-value="tops">tops</button>
+        <button class="chip" data-value="bottoms">bottoms</button>
+        <button class="chip" data-value="shoes">shoes</button>
+        <button class="chip" data-value="accessories">accessories</button>
+      </div>
+    </div>
+    <div class="closet-filter-row">
+      <span class="closet-filter-label">Color</span>
+      <div class="chip-row" data-group="color" id="color-chips">
+        <!-- populated by closet.js -->
+      </div>
+    </div>
+
+    <div class="closet-grid" id="closet-grid"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("header-mount").innerHTML = window.STYLO_UI.renderHeader("closet");
+    });
+  </script>
+</body>
+</html>
