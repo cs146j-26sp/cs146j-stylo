@@ -3,21 +3,10 @@
    Filterable item grid, vanilla JS.
    ============================================ */
 (function () {
-  const { ITEMS, PALETTE } = window.STYLO;
+  const { ITEMS } = window.STYLO;
   const { itemCardHTML } = window.STYLO_UI;
 
   const filters = { status: "all", category: "all", color: "all" };
-
-  // Build the color chip row from distinct colors in items.
-  const colorChips = document.getElementById("color-chips");
-  const distinctColors = [...new Set(ITEMS.map((i) => i.color))];
-  colorChips.innerHTML =
-    `<button class="chip is-active" data-value="all">all</button>` +
-    distinctColors.map((c) => `
-      <button class="chip" data-value="${c}">
-        <span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:${PALETTE[c]}; border:1px solid rgba(0,0,0,0.18); margin-right:6px; vertical-align:-1px;"></span>${c}
-      </button>
-    `).join("");
 
   // Wire filter chip rows.
   document.querySelectorAll(".chip-row[data-group]").forEach((row) => {
