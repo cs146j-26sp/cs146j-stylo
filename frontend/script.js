@@ -1,98 +1,426 @@
-const BASE_URL = "http://localhost:3000/jokes";
+// for frontend, load in placeholder data
+const DISCOVER_POSTS = [
+  {
+    id: "1",
+    username: "angela",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "check out my daily fit! #ootd",
+    likeCount: 67,
+    commentCount: 6,
+    shareCount: 3,
+  },
+  {
+    id: "2",
+    username: "hannah",
+    avatarUrl: "",
+    imageUrl: "media/post2wide.png",
+    caption: "spring sprang sprung 🌸 #pollenallergies",
+    likeCount: 67,
+    commentCount: 4,
+    shareCount: 12,
+  },
+  {
+    id: "3",
+    username: "vivian",
+    avatarUrl: "",
+    imageUrl: "media/post3tall.png",
+    caption: "you can never go wrong with layering #layeringtips",
+    likeCount: 67,
+    commentCount: 18,
+    shareCount: 7,
+  },
+  {
+    id: "4",
+    username: "kaycee",
+    avatarUrl: "",
+    imageUrl: "media/post4tall.png",
+    caption: "farmer's market fit! #supportsmallbusinesses",
+    likeCount: 67,
+    commentCount: 2,
+    shareCount: 3,
+  },
+  {
+    id: "5",
+    username: "angelaaaa",
+    avatarUrl: "",
+    imageUrl: "media/post2wide.png",
+    caption: "today's business casual outfit ✨ #powersuit #ootd",
+    likeCount: 67,
+    commentCount: 9,
+    shareCount: 5,
+  },
+  {
+    id: "6",
+    username: "hannahhh",
+    avatarUrl: "",
+    imageUrl: "media/post3tall.png",
+    caption: "golden hour is my favorite time of the day #sunset",
+    likeCount: 67,
+    commentCount: 11,
+    shareCount: 7,
+  },
+  {
+    id: "7",
+    username: "viviannn",
+    avatarUrl: "",
+    imageUrl: "media/post4wide.png",
+    caption: "pastel pink and green picnic #glinda&elphaba",
+    likeCount: 67,
+    commentCount: 4,
+    shareCount: 2,
+  },
+  {
+    id: "8",
+    username: "kayceeee",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "who said airport outfits can't be cute? #zoommm",
+    likeCount: 67,
+    commentCount: 14,
+    shareCount: 9,
+  },
+];
+ 
+const FOLLOWING_POSTS = [
+  {
+    id: "9",
+    username: "cinnamoroll",
+    avatarUrl: "",
+    imageUrl: "media/post2tall.png",
+    caption: "not spelled cinnamonroll",
+    likeCount: 100,
+    commentCount: 3,
+    shareCount: 1,
+  },
+  {
+    id: "10",
+    username: "kuromi",
+    avatarUrl: "",
+    imageUrl: "media/post1wide.png",
+    caption: "#blackandpink",
+    likeCount: 200,
+    commentCount: 7,
+    shareCount: 4,
+  },
+  {
+    id: "11",
+    username: "keroppi",
+    avatarUrl: "",
+    imageUrl: "media/post3tall.png",
+    caption: "ribbit ribbit 💚",
+    likeCount: 300,
+    commentCount: 22,
+    shareCount: 15,
+  },
+  {
+    id: "12",
+    username: "mymelody",
+    avatarUrl: "",
+    imageUrl: "media/post4wide.png",
+    caption: "#pinkandwhite",
+    likeCount: 400,
+    commentCount: 5,
+    shareCount: 2,
+  },
+];
+ 
+// fake comments on post
+const MOCK_COMMENTS = {
+  "1": [
+    { username: "angela", text: "obsessed with this palette" },
+    { username: "hannah", text: "where is the top from??" },
+  ],
+  "2": [{ username: "vivian", text: "so cute!! 🌸" }],
+  "3": [
+    { username: "kaycee", text: "this is everything" },
+    { username: "angela", text: "need those shoes immediately" },
+  ],
+  "9":  [{ username: "hannah", text: "love love this coat on you" }],
+  "11": [{ username: "vivian", text: "thrift goals" },
+    {username: "kaycee", text: "ur my favorite influencer!!"}
+  ],
+};
+ 
+ 
+// --------------state------------
 
-const output = document.querySelector("#output");
-
-// Populate type filter from /jokes/categories
-async function loadCategories() {
-  const typeFilter = document.querySelector("#typeFilter");
-  // Keep only the "All types" option, remove the rest
-  while (typeFilter.options.length > 1) {
-    typeFilter.remove(1);
-  }
-  try {
-    const res = await fetch(`${BASE_URL}/categories`);
-    const categories = await res.json();
-    categories.forEach((cat) => {
-      const option = document.createElement("option");
-      option.value = cat;
-      option.textContent = cat[0].toUpperCase() + cat.slice(1);
-      typeFilter.appendChild(option);
-    });
-  } catch {
-    // Fallback if the categories endpoint is not available
-    ["programming", "general"].forEach((cat) => {
-      const option = document.createElement("option");
-      option.value = cat;
-      option.textContent = cat[0].toUpperCase() + cat.slice(1);
-      typeFilter.appendChild(option);
-    });
-  }
+const state = {
+  currentPostId: null,
+  currentTab: "discover",
+  likedPosts: new Set(),
+  sharedPosts: new Set(),
+  postMap: new Map(),
+  comments: structuredClone(MOCK_COMMENTS),
+};
+ 
+ 
+// -------------- feed functionality ------------
+ 
+function loadPosts(tab = "discover") {
+  const posts = tab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
+  renderFeed(posts);
 }
-loadCategories();
-
-// ??change filter button
-document.querySelector("#filter-button").addEventListener("click", async () => {
-  const res = await fetch(`${BASE_URL}/random`);
-  const joke = await res.json();
-  output.value = joke.setup + "\n" + joke.punchline;
-});
-
-// Get all jokes or by category
-document.querySelector("#allButton").addEventListener("click", async () => {
-  const type = document.querySelector("#typeFilter").value;
-  const url = type ? `${BASE_URL}?type=${type}` : BASE_URL;
-  const res = await fetch(url);
-  const jokes = await res.json();
-  output.value = jokes
-    .map((j) => `#${j.id} [${j.type}] ${j.setup} / ${j.punchline}`)
-    .join("\n");
-});
-
-// Get joke by ID
-document.querySelector("#idButton").addEventListener("click", async () => {
-  const id = document.querySelector("#jokeIdInput").value;
-  const res = await fetch(`${BASE_URL}/${id}`);
-  const data = await res.json();
-  output.value = data.error
-    ? data.error
-    : data.setup + "\n" + data.punchline;
-});
-
-// Toggle custom type input visibility
-const addForm = document.querySelector("#addForm");
-const newTypeSelect = document.querySelector("#newType");
-const customTypeInput = document.querySelector("#customType");
-
-customTypeInput.hidden = newTypeSelect.value !== "__custom";
-
-newTypeSelect.addEventListener("change", () => {
-  customTypeInput.hidden = newTypeSelect.value !== "__custom";
-});
-
-// Add new joke using FormData
-addForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(addForm);
-
-  // Replace "__custom" sentinel with the actual custom value
-  if (formData.get("type") === "__custom") {
-    formData.set("type", customTypeInput.value);
-  }
-
-  const res = await fetch(BASE_URL, {
-    method: "POST",
-    body: new URLSearchParams(formData),
+ 
+function renderFeed(posts) {
+  const container = document.getElementById("feed-container");
+  container.innerHTML = "";
+  state.postMap.clear();
+ 
+  posts.forEach(post => state.postMap.set(post.id, post));
+ 
+  const columns = [[], [], [], []];
+  posts.forEach((post, i) => columns[i % 4].push(post));
+ 
+  columns.forEach(colPosts => {
+    const col = document.createElement("div");
+    col.className = "feed-col";
+    colPosts.forEach(post => col.appendChild(createPostCard(post)));
+    container.appendChild(col);
   });
+}
+ 
+function getPost(postId) {
+  return state.postMap.get(String(postId));
+}
+ 
+// -------------- indiv post functionality ------------
+ 
+function createPostCard(post) {
+  const card = document.createElement("div");
+  card.className = "post-card";
+  card.dataset.id = post.id;
+ 
+  const avatar = post.avatarUrl
+    ? `<img class="avatar" src="${post.avatarUrl}" alt="${post.username}" />`
+    : `<div class="avatar avatar-placeholder">${post.username[0].toUpperCase()}</div>`;
+ 
+  card.innerHTML = `
+    <div class="card-username">
+      ${avatar}
+      <strong>@${post.username}</strong>
+    </div>
+    <div class="card-img-wrapper">
+      <img class="card-outfit-img" src="${post.imageUrl}" alt="outfit by ${post.username}" />
+    </div>
+    ${post.caption ? `<p class="card-caption">${post.caption}</p>` : ""}
+    <div class="card-footer">
+      <button class="action-btn like-btn ${state.likedPosts.has(post.id) ? "active" : ""}">
+        <span class="material-symbols-outlined">favorite</span>
+        <span class="action-count like-count">${post.likeCount}</span>
+      </button>
+      <button class="action-btn comment-btn">
+        <span class="material-symbols-outlined">chat_bubble</span>
+        <span class="action-count comment-count">${post.commentCount}</span>
+      </button>
+      <button class="action-btn share-btn ${state.sharedPosts.has(post.id) ? "active" : ""}">
+        <span class="material-symbols-outlined">refresh</span>
+        <span class="action-count share-count">${post.shareCount}</span>
+      </button>
+    </div>
+  `;
+ 
+  card.querySelector(".like-btn").addEventListener("click", e => {
+    e.stopPropagation();
+    toggleLike(post, card);
+  });
+ 
+  card.querySelector(".share-btn").addEventListener("click", e => {
+    e.stopPropagation();
+    toggleShare(post, card);
+  });
+ 
+  card.querySelector(".comment-btn").addEventListener("click", e => {
+    e.stopPropagation();
+    openModal(post);
+  });
+ 
+  card.addEventListener("click", () => openModal(post));
+ 
+  return card;
+}
+ 
+ 
+// -------------- liking and sharing functionality ------------
 
-  const data = await res.json();
-  output.value = data.error
-    ? data.error
-    : `Added #${data.id}: ${data.setup} / ${data.punchline}`;
-
-  // Reload categories so the new type appears in the filter
-  if (!data.error) {
-    addForm.reset();
-    loadCategories();
+ 
+function toggleLike(post, card) {
+  const liked = state.likedPosts.has(post.id);
+ 
+  if (liked) {
+    state.likedPosts.delete(post.id);
+    post.likeCount = Math.max(0, post.likeCount - 1);
+  } else {
+    state.likedPosts.add(post.id);
+    post.likeCount += 1;
   }
+ 
+  card.querySelector(".like-btn").classList.toggle("active", !liked);
+  card.querySelector(".like-count").textContent = post.likeCount;
+  syncModalCounts(post);
+}
+ 
+function toggleShare(post, card) {
+  const shared = state.sharedPosts.has(post.id);
+ 
+  if (shared) {
+    state.sharedPosts.delete(post.id);
+    post.shareCount = Math.max(0, post.shareCount - 1);
+  } else {
+    state.sharedPosts.add(post.id);
+    post.shareCount += 1;
+  }
+ 
+  card.querySelector(".share-btn").classList.toggle("active", !shared);
+  card.querySelector(".share-count").textContent = post.shareCount;
+  syncModalCounts(post);
+}
+ 
+// -------------- popup modal functionality ------------
+
+function openModal(post) {
+  state.currentPostId = post.id;
+ 
+  const avatar = post.avatarUrl
+    ? `<img class="avatar" src="${post.avatarUrl}" alt="${post.username}" />`
+    : `<div class="avatar avatar-placeholder">${post.username[0].toUpperCase()}</div>`;
+ 
+  document.getElementById("modal-username").innerHTML =
+    `${avatar}<strong>@${post.username}</strong>`;
+ 
+  document.getElementById("modal-outfit-img").src = post.imageUrl;
+  document.getElementById("modal-caption").textContent = post.caption ?? "";
+ 
+  syncModalCounts(post);
+ 
+  document.getElementById("modal-like-btn")
+    .classList.toggle("active", state.likedPosts.has(post.id));
+  document.getElementById("modal-share-btn")
+    .classList.toggle("active", state.sharedPosts.has(post.id));
+ 
+  renderComments(state.comments[post.id] ?? []);
+ 
+  document.getElementById("modal-overlay").classList.add("open");
+}
+ 
+function closeModal() {
+  document.getElementById("modal-overlay").classList.remove("open");
+  state.currentPostId = null;
+}
+ 
+function syncModalCounts(post) {
+  if (state.currentPostId !== post.id) return;
+  document.getElementById("modal-like-count").textContent = post.likeCount;
+  document.getElementById("modal-comment-count").textContent = post.commentCount;
+  document.getElementById("modal-share-count").textContent = post.shareCount;
+}
+ 
+ 
+// -------------- comments functionality ------------
+
+function renderComments(comments) {
+  const list = document.getElementById("comments-list");
+ 
+  if (!comments.length) {
+    list.innerHTML = `<p class="empty-text">No comments yet. Be the first!</p>`;
+    return;
+  }
+ 
+  list.innerHTML = comments.map(c => `
+    <div class="comment-item">
+      <strong>@${c.username}</strong>
+      <span>${c.text}</span>
+    </div>
+  `).join("");
+ 
+  list.scrollTop = list.scrollHeight;
+}
+ 
+function postComment() {
+  const input = document.getElementById("comment-input");
+  const text = input.value.trim();
+  if (!text || !state.currentPostId) return;
+ 
+  const newComment = { username: "you", text };
+ 
+  // save to local state so changes stay if reopening model
+  if (!state.comments[state.currentPostId]) {
+    state.comments[state.currentPostId] = [];
+  }
+  state.comments[state.currentPostId].push(newComment);
+ 
+  // append to visible list in the feedd
+  const list = document.getElementById("comments-list");
+  const emptyMsg = list.querySelector(".empty-text");
+  if (emptyMsg) emptyMsg.remove();
+ 
+  const item = document.createElement("div");
+  item.className = "comment-item";
+  item.innerHTML = `<strong>@you</strong><span>${text}</span>`;
+  list.appendChild(item);
+  list.scrollTop = list.scrollHeight;
+ 
+  // increment stat counts
+  const post = getPost(state.currentPostId);
+  if (post) {
+    post.commentCount += 1;
+    syncModalCounts(post);
+    const cardCount = document.querySelector(
+      `.post-card[data-id="${post.id}"] .comment-count`
+    );
+    if (cardCount) cardCount.textContent = post.commentCount;
+  }
+ 
+  input.value = "";
+}
+ 
+// -------------- switching feed tabs functionality ------------
+
+function switchTab(tab) {
+  state.currentTab = tab;
+  document.getElementById("discover-btn")
+    .classList.toggle("active-tab", tab === "discover");
+  document.getElementById("following-btn")
+    .classList.toggle("active-tab", tab === "following");
+  loadPosts(tab);
+}
+ 
+ 
+// -------------- initialization functionality ------------
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadPosts("discover");
+ 
+  document.getElementById("discover-btn")
+    .addEventListener("click", () => switchTab("discover"));
+  document.getElementById("following-btn")
+    .addEventListener("click", () => switchTab("following"));
+ 
+  document.getElementById("modal-close")
+    .addEventListener("click", closeModal);
+  document.getElementById("modal-overlay")
+    .addEventListener("click", e => {
+      if (e.target.id === "modal-overlay") closeModal();
+    });
+ 
+  document.getElementById("post-comment-btn")
+    .addEventListener("click", postComment);
+  document.getElementById("comment-input")
+    .addEventListener("keydown", e => {
+      if (e.key === "Enter") postComment();
+    });
+ 
+  document.getElementById("modal-like-btn")
+    .addEventListener("click", () => {
+      const post = getPost(state.currentPostId);
+      const card = document.querySelector(`.post-card[data-id="${state.currentPostId}"]`);
+      if (post && card) toggleLike(post, card);
+    });
+ 
+  document.getElementById("modal-share-btn")
+    .addEventListener("click", () => {
+      const post = getPost(state.currentPostId);
+      const card = document.querySelector(`.post-card[data-id="${state.currentPostId}"]`);
+      if (post && card) toggleShare(post, card);
+    });
 });
