@@ -4,13 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stylo · Studio</title>
-  <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="styles-extra.css" />
+  <title>Stylo · Feed</title>
+<!--   use ../ to go up a folder level -->
+  <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../styles-extra.css" />
 
 
   <!-- link to google icon API to access svg icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -19,9 +20,8 @@
 
   <script src="feed.js" defer></script>
 
-  <script src="data.js" defer></script>
-  <script src="components.js" defer></script>
-  <script src="studio.js" defer></script>
+  <script src="../components.js" defer></script>
+
 </head>
 
 <body>
@@ -72,7 +72,7 @@
   </div>
 
   <div class="post-overlay" id="post-overlay">
-    <div class="post-card" id="post-card">
+    <div class="post-overlay-card" id="post-overlay-card">
       <button class="post-close" id="post-close">
         <span class="material-symbols-outlined">close</span>
       </button>

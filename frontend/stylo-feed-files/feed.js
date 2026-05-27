@@ -1,4 +1,4 @@
-// for frontend, load in placeholder data
+
 const DISCOVER_POSTS = [
   {
     id: "1",
@@ -413,7 +413,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("post-like-btn")
     .addEventListener("click", () => {
-      const post = getPost(stat3e.currentPostId);
+      const post = getPost(state.currentPostId);
       const card = document.querySelector(`.post-card[data-id="${state.currentPostId}"]`);
       if (post && card) toggleLike(post, card);
     });

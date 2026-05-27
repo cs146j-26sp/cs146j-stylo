@@ -131,7 +131,7 @@ button:hover {
  
 /************* post card styling*************/
 .post-card {
-  border-radius: px;
+  border-radius: 2 px;
   overflow: hidden;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -260,6 +260,7 @@ button:hover {
 .action-btn:hover .material-symbols-outlined {
   color: var(--accent);
 }
+
  
 .like-btn.active .material-symbols-outlined,
 .post-like-btn.active .material-symbols-outlined {
