@@ -1,4 +1,6 @@
-/*** color scheme ***/
+/************ SHARED CSS STYLES ACROSS ALL PAGES *************/
+
+/******* overall color scheme *******/
 
 :root {
   --bg:          #fcfaf5;
@@ -43,9 +45,73 @@ menu {
 .menu-img {
   position: absolute;
   z-index: -1;
-  margin-top: -550px;
+  margin-top: -300px;
   margin-left: -30px;
   width: 1440px;
+}
+
+menu .menu-item {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+  position: relative;
+}
+
+menu .menu-item h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  color: var(--text);
+  transition: color 0.15s;
+}
+
+menu .menu-item:hover h2 {
+  color: var(--accent);
+}
+
+.menu-item--active h2 {
+  font-style: italic;
+}
+.menu-item--active::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: -6px;
+  height: 2px;
+  background: var(--accent);
+}
+
+a.logo {
+  text-decoration: none;
+  color: inherit;
+}
+
+a.account {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+/************* page subhead for studio, closet, profile pages *************/
+.subhead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+}
+.subhead-note {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--text);
+  opacity: 0.72;
 }
  
 /************* main contnt styling*************/
@@ -111,334 +177,4 @@ button:hover {
 .tab-btn.active-tab {
   background: var(--accent);
   color: var(--bg);
-}
- 
-/************* feed styling*************/
-.entire-feed {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  gap: 12px;
-  margin: 25px auto;
-}
- 
-.feed-col {
-  display: flex;
-  flex-direction: column;
-  width: 25%;
-  gap: 12px;
-}
- 
-/************* post card styling*************/
-.post-card {
-  border-radius: 2 px;
-  overflow: hidden;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: transform 0.15s ease;
-}
- 
-.post-card:hover {
-  transform: scale(1.01);
-}
- 
-.post-card--tall .card-img-wrapper {
-  aspect-ratio: 2.5/4;
-}
- 
-.post-card--wide .card-img-wrapper {
-  aspect-ratio: 4/3;
-}
- 
-.card-img-wrapper {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-}
- 
-.card-outfit-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
- 
-.card-username {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
-  padding: 10px 12px;
-}
-
-.card-username-overlay {
-    display: flex;
-  flex-direction: row;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  align-items: center;
-  gap: 5px;
-  padding: 10px 12px;
-  font-size: 0.85rem;
-  color: white;
-}
- 
-.card-username-overlay strong {
-  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-}
- 
-/************* profile photo styling*************/
-.avatar {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
- 
-.avatar-placeholder {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background: var(--accent);
-  color: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 700;
-  flex-shrink: 0;
-}
- 
-/************* card caption + footer styling*************/
-.card-caption {
-  padding: 8px 12px 4px;
-  font-size: 0.8rem;
-  color: var(--text);
-  opacity: 0.75;
-  line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
- 
-.card-footer {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 6px 12px 10px;
-}
- 
-/************* action buttons styling*************/
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  padding: 0;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  color: var(--text);
-  cursor: pointer;
-  transition: color 0.15s;
-}
- 
-.action-btn .material-symbols-outlined {
-  font-size: 20px;
-  transition: color 0.15s;
-}
- 
-.action-btn:hover {
-  background: none;
-  color: var(--accent);
-}
- 
-.action-btn:hover .material-symbols-outlined {
-  color: var(--accent);
-}
-
- 
-.like-btn.active .material-symbols-outlined,
-.post-like-btn.active .material-symbols-outlined {
-  color: #e05c6e;
-  font-variation-settings: 'FILL' 1;
-}
- 
-.share-btn.active .material-symbols-outlined,
-.post-share-btn.active .material-symbols-outlined {
-  color: var(--accent);
-  font-variation-settings: 'FILL' 1;
-}
- 
-.post-comment-btn.active .material-symbols-outlined {
-  color: #7b9ccc;
-  font-variation-settings: 'FILL' 1;
-}
- 
-/************* post overlay styling *************/
-.post-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 100;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(2px);
-}
- 
-.post-overlay.open {
-  display: flex;
-}
- 
-.post-overlay-card {
-  position: relative;
-  background: var(--bg);
-  border-radius: 3px;
-  width: min(90vw, 860px);
-  max-height: 88vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
- 
-.post-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text);
-  padding: 4px;
-  z-index: 10;
-  font-size: 0;
-}
- 
-.post-close .material-symbols-outlined {
-  font-size: 24px;
-}
- 
-.post-close:hover {
-  background: none;
-  color: var(--accent);
-}
- 
-.post-body {
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  overflow: hidden;
-}
- 
-.post-left {
-  flex: 0 0 55%;
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid var(--border);
-  overflow: hidden;
-}
- 
-.post-username {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 16px 8px;
-  font-size: 0.9rem;
-}
- 
-.post-img-wrapper {
-  flex: 1;
-  overflow: hidden;
-}
- 
-.post-outfit-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
- 
-.post-actions {
-  display: flex;
-  gap: 18px;
-  padding: 10px 16px 4px;
-}
- 
-.post-caption {
-  padding: 2px 16px 14px;
-  font-size: 0.85rem;
-  opacity: 0.8;
-}
- 
-/************* comment section styling *************/
-.post-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  overflow: hidden;
-}
- 
-.comments-heading {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 500;
-  margin-bottom: 12px;
-}
- 
-.comments-list {
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 12px;
-}
- 
-.comment-item {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 0.82rem;
-}
- 
-.comment-item strong {
-  font-size: 0.78rem;
-  color: var(--accent);
-}
- 
-.empty-text {
-  font-size: 0.82rem;
-  opacity: 0.5;
-}
- 
-.comment-input-row {
-  display: flex;
-  gap: 8px;
-}
- 
-.comment-input-row input {
-  flex: 1;
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1.4px solid var(--border);
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  background: transparent;
-  color: var(--text);
-}
- 
-.comment-input-row input:focus {
-  outline: none;
-  border-color: var(--accent);
-}
- 
-.comment-input-row button {
-  padding: 8px 14px;
-  font-size: 0.82rem;
 }

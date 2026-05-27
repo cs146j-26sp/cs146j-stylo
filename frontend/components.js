@@ -1,9 +1,6 @@
-/* ============================================
-   stylo — shared UI helpers (vanilla JS)
-   ============================================ */
+/****** stylo shared UI helpers ******/
 
-// HTML for a small item card — used in studio sidebar + closet grid.
-// Uses the cut-out PNG (no SVG silhouettes).
+// small item card ()tudio sidebar, closet grid) for cut-out PNG 
 function itemCardHTML(item, opts = {}) {
   const rot = opts.rotation != null
     ? opts.rotation
@@ -20,19 +17,19 @@ function itemCardHTML(item, opts = {}) {
     </article>`;
 }
 
-// Compose a "shared" header. Mirrors feed's header so navigation/typography
-// is consistent.
+// shared header/menu design. 
+// use basePath to fill in filepath, icons from google
 function renderHeader(activePage = "", basePath = "../") {
   return `
     <header>
-      <img class="menu-img" src="${basePath}media/paper1.png" alt="">
-      <a href="${basePath}studio/index.html" class="logo">STYLO</a>
+      <img class="menu-img" src="${basePath}uploads/paper1.png" alt="strip of paper">
+      <a href="${basePath}stylo-studio/studio.html" class="logo">STYLO</a>
       <menu>
-        <a href="${basePath}stylo-studio/index.html"  class="menu-item ${activePage === 'studio' ? 'menu-item--active' : ''}"><h2>Studio</h2></a>
+        <a href="${basePath}stylo-studio/studio.html"  class="menu-item ${activePage === 'studio' ? 'menu-item--active' : ''}"><h2>Studio</h2></a>
         <a href="${basePath}stylo-feed/feed.html"     class="menu-item ${activePage === 'feed'   ? 'menu-item--active' : ''}"><h2>Feed</h2></a>
         <a href="${basePath}stylo-closet/closet.html" class="menu-item ${activePage === 'closet' ? 'menu-item--active' : ''}"><h2>Closet</h2></a>
       </menu>
-      <a href="${basePath}profile/profile.html" class="account" aria-label="Profile">
+      <a href="${basePath}stylo-profile/profile.html" class="account" aria-label="Profile">
         <span class="material-symbols-outlined" style="font-size: 36px; color: var(--text);">account_circle</span>
       </a>
     </header>`;
