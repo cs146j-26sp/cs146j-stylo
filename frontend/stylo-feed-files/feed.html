@@ -4,38 +4,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stylo</title>
+  <title>Stylo · Studio</title>
   <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-extra.css" />
+
 
   <!-- link to google icon API to access svg icons -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
-  <script src="stylo-feed.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap"
     rel="stylesheet">
-</head>
 
+  <script src="feed.js" defer></script>
+
+  <script src="data.js" defer></script>
+  <script src="components.js" defer></script>
+  <script src="studio.js" defer></script>
+</head>
 
 <body>
 
-  <header>
-    <img class="menu-img" src="media/paper1.png">
-    <div class="logo"> STYLO </div>
-    <menu>
-      <h2 class="menu-item">Studio</h2>
-      <h2 class="menu-item">Feed</h2>
-      <h2 class="menu-item">Closet</h2>
-    </menu>
-
->>>>>>> Stashed changes
-    <div class="account">
-      <span class="material-symbols-outlined" style="font-size: 36px; color: var(--text);">account_circle</span>
-    </div>
-
-  </header>
-
+  <div id="header-mount"></div>
 
   <div class="main-content">
     <h1 class="title">My Feed . ✦ ݁ ˖</h1>
@@ -74,42 +65,42 @@
 
     </div>
     <div class="entire-feed" id="feed-container">
-      
+
     </div>
 
 
   </div>
 
-  <div class="modal-overlay" id="modal-overlay">
-    <div class="modal-card" id="modal-card">
-      <button class="modal-close" id="modal-close">
+  <div class="post-overlay" id="post-overlay">
+    <div class="post-card" id="post-card">
+      <button class="post-close" id="post-close">
         <span class="material-symbols-outlined">close</span>
       </button>
 
-      <div class="modal-body">
-        <div class="modal-left">
-          <div class="modal-username" id="modal-username"></div>
-          <div class="modal-img-wrapper">
-            <img class="modal-outfit-img" id="modal-outfit-img" src="" alt="Outfit">
+      <div class="post-body">
+        <div class="post-left">
+          <div class="post-username" id="post-username"></div>
+          <div class="post-img-wrapper">
+            <img class="post-outfit-img" id="post-outfit-img" src="" alt="Outfit">
           </div>
-          <div class="modal-actions">
-            <button class="action-btn modal-like-btn" id="modal-like-btn">
+          <div class="post-actions">
+            <button class="action-btn post-like-btn" id="post-like-btn">
               <span class="material-symbols-outlined">favorite</span>
-              <span class="action-count" id="modal-like-count">0</span>
+              <span class="action-count" id="post-like-count">0</span>
             </button>
-            <button class="action-btn modal-comment-btn" id="modal-comment-btn">
+            <button class="action-btn post-comment-btn" id="post-comment-btn">
               <span class="material-symbols-outlined">chat_bubble</span>
-              <span class="action-count" id="modal-comment-count">0</span>
+              <span class="action-count" id="post-comment-count">0</span>
             </button>
-            <button class="action-btn modal-share-btn" id="modal-share-btn">
+            <button class="action-btn post-share-btn" id="post-share-btn">
               <span class="material-symbols-outlined">refresh</span>
-              <span class="action-count" id="modal-share-count">0</span>
+              <span class="action-count" id="post-share-count">0</span>
             </button>
           </div>
-          <p class="modal-caption" id="modal-caption"></p>
+          <p class="post-caption" id="post-caption"></p>
         </div>
 
-        <div class="modal-right">
+        <div class="post-right">
           <h3 class="comments-heading">Comments</h3>
           <div class="comments-list" id="comments-list"></div>
           <div class="comment-input-row">
@@ -120,6 +111,14 @@
       </div>
     </div>
   </div>
+
+  // to load in the header menu
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("header-mount").innerHTML =
+        window.STYLO_UI.renderHeader("feed");
+    });
+  </script>
 
 </body>
 

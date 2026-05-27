@@ -284,34 +284,34 @@ function openModal(post) {
     ? `<img class="avatar" src="${post.avatarUrl}" alt="${post.username}" />`
     : `<div class="avatar avatar-placeholder">${post.username[0].toUpperCase()}</div>`;
 
-  document.getElementById("modal-username").innerHTML =
+  document.getElementById("post-username").innerHTML =
     `${avatar}<strong>@${post.username}</strong>`;
 
-  document.getElementById("modal-outfit-img").src = post.imageUrl;
-  document.getElementById("modal-caption").textContent = post.caption ?? "";
+  document.getElementById("post-outfit-img").src = post.imageUrl;
+  document.getElementById("post-caption").textContent = post.caption ?? "";
 
   syncModalCounts(post);
 
-  document.getElementById("modal-like-btn")
+  document.getElementById("post-like-btn")
     .classList.toggle("active", state.likedPosts.has(post.id));
-  document.getElementById("modal-share-btn")
+  document.getElementById("post-share-btn")
     .classList.toggle("active", state.sharedPosts.has(post.id));
 
   renderComments(state.comments[post.id] ?? []);
 
-  document.getElementById("modal-overlay").classList.add("open");
+  document.getElementById("post-overlay").classList.add("open");
 }
 
 function closeModal() {
-  document.getElementById("modal-overlay").classList.remove("open");
+  document.getElementById("post-overlay").classList.remove("open");
   state.currentPostId = null;
 }
 
 function syncModalCounts(post) {
   if (state.currentPostId !== post.id) return;
-  document.getElementById("modal-like-count").textContent = post.likeCount;
-  document.getElementById("modal-comment-count").textContent = post.commentCount;
-  document.getElementById("modal-share-count").textContent = post.shareCount;
+  document.getElementById("post-like-count").textContent = post.likeCount;
+  document.getElementById("post-comment-count").textContent = post.commentCount;
+  document.getElementById("post-share-count").textContent = post.shareCount;
 }
 
 
@@ -397,11 +397,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("following-btn")
     .addEventListener("click", () => switchTab("following"));
 
-  document.getElementById("modal-close")
+  document.getElementById("post-close")
     .addEventListener("click", closeModal);
-  document.getElementById("modal-overlay")
+  document.getElementById("post-overlay")
     .addEventListener("click", event => {
-      if (event.target.id === "modal-overlay") closeModal();
+      if (event.target.id === "post-overlay") closeModal();
     });
 
   document.getElementById("post-comment-btn")
@@ -411,17 +411,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (event.key === "Enter") postComment();
     });
 
-  document.getElementById("modal-like-btn")
+  document.getElementById("post-like-btn")
     .addEventListener("click", () => {
       const post = getPost(stat3e.currentPostId);
       const card = document.querySelector(`.post-card[data-id="${state.currentPostId}"]`);
       if (post && card) toggleLike(post, card);
     });
 
-  document.getElementById("modal-share-btn")
+  document.getElementById("post-share-btn")
     .addEventListener("click", () => {
       const post = getPost(state.currentPostId);
       const card = document.querySelector(`.post-card[data-id="${state.currentPostId}"]`);
       if (post && card) toggleShare(post, card);
     });
 });
+

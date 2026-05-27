@@ -131,7 +131,7 @@ button:hover {
  
 /************* post card styling*************/
 .post-card {
-  border-radius: 2px;
+  border-radius: px;
   overflow: hidden;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -144,7 +144,7 @@ button:hover {
 }
  
 .post-card--tall .card-img-wrapper {
-  aspect-ratio: 3/4;
+  aspect-ratio: 2.5/4;
 }
  
 .post-card--wide .card-img-wrapper {
@@ -262,24 +262,24 @@ button:hover {
 }
  
 .like-btn.active .material-symbols-outlined,
-.modal-like-btn.active .material-symbols-outlined {
+.post-like-btn.active .material-symbols-outlined {
   color: #e05c6e;
   font-variation-settings: 'FILL' 1;
 }
  
 .share-btn.active .material-symbols-outlined,
-.modal-share-btn.active .material-symbols-outlined {
+.post-share-btn.active .material-symbols-outlined {
   color: var(--accent);
   font-variation-settings: 'FILL' 1;
 }
  
-.modal-comment-btn.active .material-symbols-outlined {
+.post-comment-btn.active .material-symbols-outlined {
   color: #7b9ccc;
   font-variation-settings: 'FILL' 1;
 }
  
-/************* modal overlay styling*************/
-.modal-overlay {
+/************* post overlay styling *************/
+.post-overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -290,11 +290,11 @@ button:hover {
   backdrop-filter: blur(2px);
 }
  
-.modal-overlay.open {
+.post-overlay.open {
   display: flex;
 }
  
-.modal-card {
+.post-overlay-card {
   position: relative;
   background: var(--bg);
   border-radius: 3px;
@@ -305,7 +305,7 @@ button:hover {
   flex-direction: column;
 }
  
-.modal-close {
+.post-close {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -318,23 +318,23 @@ button:hover {
   font-size: 0;
 }
  
-.modal-close .material-symbols-outlined {
+.post-close .material-symbols-outlined {
   font-size: 24px;
 }
  
-.modal-close:hover {
+.post-close:hover {
   background: none;
   color: var(--accent);
 }
  
-.modal-body {
+.post-body {
   display: flex;
   flex-direction: row;
   height: 100%;
   overflow: hidden;
 }
  
-.modal-left {
+.post-left {
   flex: 0 0 55%;
   display: flex;
   flex-direction: column;
@@ -342,7 +342,7 @@ button:hover {
   overflow: hidden;
 }
  
-.modal-username {
+.post-username {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -350,32 +350,32 @@ button:hover {
   font-size: 0.9rem;
 }
  
-.modal-img-wrapper {
+.post-img-wrapper {
   flex: 1;
   overflow: hidden;
 }
  
-.modal-outfit-img {
+.post-outfit-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
  
-.modal-actions {
+.post-actions {
   display: flex;
   gap: 18px;
   padding: 10px 16px 4px;
 }
  
-.modal-caption {
+.post-caption {
   padding: 2px 16px 14px;
   font-size: 0.85rem;
   opacity: 0.8;
 }
  
 /************* comment section styling *************/
-.modal-right {
+.post-right {
   flex: 1;
   display: flex;
   flex-direction: column;
