@@ -1,7 +1,4 @@
-/* ============================================
-   stylo — Closet page logic
-   Filterable item grid, vanilla JS.
-   ============================================ */
+/******* stylo — Closet page helper funcs ******/
 (function () {
   const { ITEMS } = window.STYLO;
   const { itemCardHTML } = window.STYLO_UI;

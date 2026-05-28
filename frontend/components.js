@@ -1,10 +1,12 @@
 /****** stylo shared UI helpers ******/
 
-// small item card ()tudio sidebar, closet grid) for cut-out PNG 
+// small item card (studio sidebar, closet grid) for cut-out PNG 
 function itemCardHTML(item, opts = {}) {
   const rot = opts.rotation != null
     ? opts.rotation
     : ((item.id.charCodeAt(0) % 5) - 2);
+
+    // add clothing item to wishlist
   const wishBadge = item.status === "wishlist"
     ? `<span class="wishlist-badge">wish</span>` : "";
   return `
@@ -17,7 +19,7 @@ function itemCardHTML(item, opts = {}) {
     </article>`;
 }
 
-// shared header/menu design. 
+// shared header/menu design
 // use basePath to fill in filepath, icons from google
 function renderHeader(activePage = "", basePath = "../") {
   return `
