@@ -57,6 +57,17 @@ db.exec(`
   );
 `);
 
+// Test route
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", message: "Stylo server is running" });
+});
+
+// Example: get all users
+app.get("/api/users", (req, res) => {
+  const users = db.prepare("SELECT * FROM users").all();
+  res.json(users);
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
