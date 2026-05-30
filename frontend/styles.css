@@ -12,13 +12,13 @@
   --font-display: "Instrument Serif", serif;
   --font-body:    "Albert Sans", sans-serif;
 }
- 
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
- 
+
 body {
   font-family: var(--font-body);
   line-height: 1.6;
@@ -26,7 +26,7 @@ body {
   background-color: var(--bg);
   min-height: 100vh;
 }
- 
+
 /************* header/nav styling *************/
 header {
   display: flex;
@@ -35,13 +35,13 @@ header {
   align-items: center;
   padding: 20px 30px;
 }
- 
+
 menu {
   display: flex;
   flex-direction: row;
   gap: 50px;
 }
- 
+
 .menu-img {
   position: absolute;
   z-index: -1;
@@ -113,29 +113,29 @@ a.account {
   color: var(--text);
   opacity: 0.72;
 }
- 
-/************* main contnt styling *************/
+
+/************* main content styling *************/
 .main-content {
   max-width: 90%;
   margin: 0 auto;
   padding: 40px 24px 60px;
 }
- 
+
 .title {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 2.5rem;
   margin-bottom: 20px;
 }
- 
-/************* nav bar styling*************/
+
+/************* nav bar styling *************/
 .nav-bar {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 20px;
 }
- 
+
 button {
   padding: 8px 16px;
   font-family: var(--font-body);
@@ -149,12 +149,12 @@ button {
   cursor: pointer;
   transition: background 0.2s;
 }
- 
+
 button:hover {
   background: var(--accent);
   color: var(--bg);
 }
- 
+
 .filter-button {
   padding: 8px 16px;
   font-family: var(--font-body);
@@ -168,12 +168,12 @@ button:hover {
   cursor: pointer;
   transition: background 0.2s;
 }
- 
+
 .filter-button:hover {
   background: var(--accent);
   color: var(--bg);
 }
- 
+
 .tab-btn.active-tab {
   background: var(--accent);
   color: var(--bg);

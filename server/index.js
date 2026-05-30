@@ -57,6 +57,11 @@ db.exec(`
   );
 `);
 
+// Redirect root to studio
+app.get("/", (req, res) => {
+  res.redirect("/stylo-studio/studio.html");
+});
+
 // Test route
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Stylo server is running" });
