@@ -501,3 +501,66 @@
   // randomly generates an outfit using owned clothing items
   // picks tops, bottoms, shoes, and accessories
   // then auto-places them into styled positions on canvas
+  function shuffleFit() {
+    const owned = ITEMS.filter(i => i.status === "owned");
+    const pick = (cats) => {
+      const pool = owned.filter(i => cats.includes(i.category));
+      return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+    };
+
+    const top    = pick(["top", "outer"]);
+    const bottom = pick(["bottom", "skirt"]);
+    const shoes  = pick(["shoes"]);
+    const acc    = pick(["accessory", "hat"]);
+
+    const picks = [top, bottom, shoes, acc].filter(Boolean);
+    if (!picks.length) return;
+
+    placements = picks.map((item, i) => ({
+      item_id: item.id,
+      x: 20 + i * 17,
+      y: 28 + (i % 2) * 22,
+      scale: 0.95,
+      rot: rand(-5, 5),
+      z: i + 1,
+    }));
+    selectedIdx = null;
+    renderCanvas();
+  }
+
+  document.getElementById("shuffle-btn").addEventListener("click", shuffleFit);
+
+  document.getElementById("save-draft").addEventListener("click", () => {
+    const toast = document.createElement("div");
+    toast.className = "studio-toast";
+    toast.innerHTML = `draft saved — <span class="studio-toast-em">keep going.</span>`;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add("in"));
+    setTimeout(() => {
+      toast.classList.remove("in");
+      setTimeout(() => toast.remove(), 350);
+    }, 2200);
+  });
+
+  document.getElementById("publish-btn").addEventListener("click", () => {
+    const title = document.getElementById("fit-title").value.trim() || "untitled";
+    const toast = document.createElement("div");
+    toast.className = "studio-toast";
+    toast.innerHTML = `posted — <span class="studio-toast-em">${title}</span>`;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add("in"));
+    setTimeout(() => {
+      toast.classList.remove("in");
+      setTimeout(() => toast.remove(), 350);
+    }, 2800);
+  });
+
+  // keep both title inputs in sync
+  const studioName = document.getElementById("studio-name");
+  const fitTitle   = document.getElementById("fit-title");
+  studioName.addEventListener("input", () => { fitTitle.value   = studioName.value; });
+  fitTitle.addEventListener("input",   () => { studioName.value = fitTitle.value; });
+
+  renderClosetList();
+  renderCanvas();
+})();

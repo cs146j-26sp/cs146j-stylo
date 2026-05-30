@@ -173,24 +173,9 @@
   gap: 4px;
 }
 
-/* Responsive ----------------------------------------------- */
 @media (max-width: 1080px) {
-  .studio-grid {
-    grid-template-columns: 1fr;
-  }
-  .profile-header {
-    grid-template-columns: 1fr;
-    text-align: left;
-  }
-  .profile-actions {
-    flex-direction: row;
-  }
-  .canvas-wrap {
-    height: 60vh;
-  }
-  .closet-list {
-    max-height: 320px;
-  }
+  .profile-header { grid-template-columns: 1fr; text-align: left; }
+  .profile-actions { flex-direction: row; }
 }
 
 /* action-bar outline button — same size as btn-filled, accent colour */
