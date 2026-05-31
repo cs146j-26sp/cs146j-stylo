@@ -5,13 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Stylo · Feed</title>
-<!--   use ../ to go up a folder level -->
+  <!--   use ../ to go up a folder level -->
   <link rel="stylesheet" href="../styles.css">
-    <link rel="stylesheet" href="feed.css" />
+  <link rel="stylesheet" href="feed.css" />
 
 
   <!-- link to google icon API to access svg icons -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -23,8 +24,13 @@
 
 </head>
 
-<body>
+<!-- post new btn is above body -->
+<div class="create-new">
+    <button id="post-btn">Create Post</button>
+    <button class="post-btn-bg">Create Post</button>
+</div>
 
+<body>
   <div id="header-mount"></div>
 
   <div class="main-content">
@@ -34,8 +40,8 @@
       <div>
         <button id="discover-btn" class="tab-btn active-tab">Discover</button>
         <button id="following-btn" class="tab-btn">Following</button>
-
       </div>
+
       <div class="filters">
         <select class="filter-button">
           <option value="" hidden>Date Posted</option>
@@ -80,7 +86,7 @@
         <div class="post-left">
           <div class="post-username" id="post-username"></div>
           <div class="post-img-wrapper">
-            <img class="post-outfit-img" id="post-outfit-img" src="" alt="Outfit">
+            <img class="post-outfit-img" id="post-outfit-img" src="" alt="outfit">
           </div>
           <div class="post-actions">
             <button class="action-btn post-like-btn" id="post-like-btn">
@@ -103,7 +109,7 @@
           <h3 class="comments-heading">Comments</h3>
           <div class="comments-list" id="comments-list"></div>
           <div class="comment-input-row">
-            <input type="text" id="comment-input" placeholder="Add a comment…" />
+            <input type="text" id="comment-input" placeholder="Join the conversation..." />
             <button id="post-comment-btn">Post</button>
           </div>
         </div>

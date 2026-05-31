@@ -392,6 +392,12 @@ function switchTab(tab) {
 document.addEventListener("DOMContentLoaded", () => {
   loadPosts("discover");
 
+  document.getElementById("post-btn")
+  .addEventListener("click", () => {
+    window.location.href = "../stylo-studio/studio.html";
+  });
+  // ../ is to go up one level 
+
   document.getElementById("discover-btn")
     .addEventListener("click", () => switchTab("discover"));
   document.getElementById("following-btn")

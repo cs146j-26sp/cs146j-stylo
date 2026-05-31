@@ -15,6 +15,25 @@
   width: 25%;
   gap: 12px;
 }
+
+.create-new {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 500;
+}
+
+#post-btn {
+  position: relative;
+  z-index: 999;
+}
+.post-btn-bg{
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+    color: transparent;
+  background-color: rgb(254, 245, 236);
+}
  
 /************* post card styling*************/
 .post-card {
@@ -77,7 +96,7 @@
   text-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
  
-/************* profile photo styling*************/
+/************* profile photo styling *************/
 .avatar {
   width: 2rem;
   height: 2rem;
@@ -100,7 +119,7 @@
   flex-shrink: 0;
 }
  
-/************* card caption + footer styling*************/
+/************* card caption + footer styling *************/
 .card-caption {
   padding: 8px 12px 4px;
   font-size: 0.8rem;
@@ -119,7 +138,7 @@
   padding: 6px 12px 10px;
 }
  
-/************* action buttons styling*************/
+/************* action buttons styling (like, comment, remix) *************/
 .action-btn {
   display: flex;
   align-items: center;
