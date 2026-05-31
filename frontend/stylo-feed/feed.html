@@ -26,8 +26,8 @@
 
 <!-- post new btn is above body -->
 <div class="create-new">
-    <button id="post-btn">Create Post</button>
-    <button class="post-btn-bg">Create Post</button>
+  <button id="post-btn">Create Post</button>
+  <button class="post-btn-bg">Create Post</button>
 </div>
 
 <body>
@@ -76,6 +76,31 @@
 
   </div>
 
+  <div class="share-popup" id="share-popup" hidden>
+
+    <div class="share-popup-card" id="share-popup-card">
+      <button class="post-close" id="post-close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="post-body">
+        <h2>Remix this outfit?</h2>
+        <p>("Remixing" makes a copy of the outfit for you to edit)</p>
+
+        <button class="share-btn-yes" id="share-btn-yes">
+          Remix it!
+        </button>
+
+        <button class="share-btn-close" id="share-btn-close">
+          No, take me back
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+
+
   <div class="post-overlay" id="post-overlay">
     <div class="post-overlay-card" id="post-overlay-card">
       <button class="post-close" id="post-close">
@@ -89,7 +114,7 @@
             <img class="post-outfit-img" id="post-outfit-img" src="" alt="outfit">
           </div>
           <div class="post-actions">
-            <button class="action-btn post-like-btn" id="post-like-btn">
+            <button class="action-btn like-btn" id="post-like-btn">
               <span class="material-symbols-outlined">favorite</span>
               <span class="action-count" id="post-like-count">0</span>
             </button>

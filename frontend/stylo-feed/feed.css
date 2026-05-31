@@ -1,5 +1,6 @@
 
- 
+
+
 /************* feed styling*************/
 .entire-feed {
   display: flex;
@@ -18,8 +19,8 @@
 
 .create-new {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 40px;
+  right: 50px;
   z-index: 500;
 }
 
@@ -29,8 +30,8 @@
 }
 .post-btn-bg{
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 40px;
+  right: 50px;
     color: transparent;
   background-color: rgb(254, 245, 236);
 }
@@ -78,23 +79,6 @@
   padding: 10px 12px;
 }
 
-.card-username-overlay {
-    display: flex;
-  flex-direction: row;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  align-items: center;
-  gap: 5px;
-  padding: 10px 12px;
-  font-size: 0.85rem;
-  color: white;
-}
- 
-.card-username-overlay strong {
-  text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-}
  
 /************* profile photo styling *************/
 .avatar {
@@ -176,7 +160,7 @@
  
 .share-btn.active .material-symbols-outlined,
 .post-share-btn.active .material-symbols-outlined {
-  color: var(--accent);
+  color: #7b9ccc;
   font-variation-settings: 'FILL' 1;
 }
  
@@ -347,4 +331,15 @@
 .comment-input-row button {
   padding: 8px 14px;
   font-size: 0.82rem;
+}
+
+/************* remix overlay styling *************/
+
+.share-popup-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--accent-bg);
+  width: 300px;
+  border-color: var(--border);
 }

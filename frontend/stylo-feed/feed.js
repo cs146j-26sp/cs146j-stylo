@@ -158,6 +158,7 @@ const state = {
 // -------------- feed functionality ------------
 
 function loadPosts(tab = "discover") {
+  // if tab = following, load following posts placeholder
   const posts = tab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
   renderFeed(posts);
 }
@@ -191,22 +192,28 @@ function createPostCard(post) {
   card.className = "post-card";
   card.dataset.id = post.id;
 
-  const avatar = 
-  `<div class="avatar avatar-placeholder">${post.username[0].toUpperCase()}</div>`;
+  const avatar =
+    `<div class="avatar avatar-placeholder">${post.username[0].toUpperCase()}</div>`;
 
+  // set up html for each post within JS to avoid hard coding
   card.innerHTML = `
-    <div class="card-username">
+        <div class="card-username">
       ${avatar} <strong>@${post.username}</strong>
-
     </div>
-    <div class="card-img-wrapper">
+
+    <div class="card-img-wrapper"> 
       <img class="card-outfit-img" src="${post.imageUrl}" alt="outfit by ${post.username}" />
     </div>
+    
     ${post.caption ? `<p class="card-caption">${post.caption}</p>` : ""}
     <div class="card-footer">
-      <button class="action-btn like-btn ${state.likedPosts.has(post.id) ? "active" : ""}">
+      <button class="action-btn like-btn 
+      ${state.likedPosts.has(post.id) ? "active" : ""}
+      ">
         <span class="material-symbols-outlined">favorite</span>
-        <span class="action-count like-count">${post.likeCount}</span>
+        <span class="action-count like-count">
+         ${post.likeCount}
+        </span>
       </button>
       <button class="action-btn comment-btn">
         <span class="material-symbols-outlined">chat_bubble</span>
@@ -254,8 +261,15 @@ function toggleLike(post, card) {
     post.likeCount += 1;
   }
 
+
   card.querySelector(".like-btn").classList.toggle("active", !liked);
   card.querySelector(".like-count").textContent = post.likeCount;
+
+  // since post overlay is separate from the post in the feed, 
+  // must extract element separately to make "like" change color in overlay
+  const postOverlay = document.getElementById("post-overlay");
+  postOverlay.querySelector("#post-like-btn").classList.toggle("active", !liked);
+
   syncModalCounts(post);
 }
 
@@ -272,6 +286,22 @@ function toggleShare(post, card) {
 
   card.querySelector(".share-btn").classList.toggle("active", !shared);
   card.querySelector(".share-count").textContent = post.shareCount;
+
+  // open up remix popup, add button functionality
+  const sharePopup = document.querySelector(".share-popup");
+  const yesRemixBtn = document.querySelector(".share-btn-yes");
+  const noRemixBtn = document.querySelector(".share-btn-no");
+
+  sharePopup.removeAttribute("hidden");
+  yesRemixBtn.addEventListener("click", () => {
+    window.location.href = "../stylo-studio/studio.html";
+  });
+
+  noRemixBtn.addEventListener("click", () => {
+        window.location.href = "../stylo-feed/feed.html";
+
+    sharePopup.setAttribute("hidden");
+  });
   syncModalCounts(post);
 }
 
@@ -354,7 +384,7 @@ function postComment() {
   if (emptyMsg) {
     emptyMsg.remove();
   }
-  
+
   const item = document.createElement("div");
   item.className = "comment-item";
   item.innerHTML = `<strong>@you</strong><span>${text}</span>`;
@@ -375,7 +405,7 @@ function postComment() {
   input.value = "";
 }
 
-// -------------- switching feed tabs functionality ------------
+// -------------- switching feed tabs helper func ------------
 
 function switchTab(tab) {
   state.currentTab = tab;
@@ -392,17 +422,19 @@ function switchTab(tab) {
 document.addEventListener("DOMContentLoaded", () => {
   loadPosts("discover");
 
+  // clicking "create post" takes user to Studio page
   document.getElementById("post-btn")
-  .addEventListener("click", () => {
-    window.location.href = "../stylo-studio/studio.html";
-  });
-  // ../ is to go up one level 
+    .addEventListener("click", () => {
+      window.location.href = "../stylo-studio/studio.html";
+    }); // ../ is to go up one level 
 
+  // switch between feeds
   document.getElementById("discover-btn")
     .addEventListener("click", () => switchTab("discover"));
   document.getElementById("following-btn")
     .addEventListener("click", () => switchTab("following"));
 
+  // open/close expanded post
   document.getElementById("post-close")
     .addEventListener("click", closeModal);
   document.getElementById("post-overlay")
@@ -410,6 +442,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (event.target.id === "post-overlay") closeModal();
     });
 
+  // allow user to post comment 
+  // can't do "submit" event listener since comments isn't a form element
   document.getElementById("post-comment-btn")
     .addEventListener("click", postComment);
   document.getElementById("comment-input")
@@ -417,6 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (event.key === "Enter") postComment();
     });
 
+  // toggle like button on and off
   document.getElementById("post-like-btn")
     .addEventListener("click", () => {
       const post = getPost(state.currentPostId);
@@ -424,11 +459,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (post && card) toggleLike(post, card);
     });
 
+  // allow user to remix
   document.getElementById("post-share-btn")
     .addEventListener("click", () => {
       const post = getPost(state.currentPostId);
       const card = document.querySelector(`.post-card[data-id="${state.currentPostId}"]`);
       if (post && card) toggleShare(post, card);
+
     });
 });
 

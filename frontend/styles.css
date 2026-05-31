@@ -7,6 +7,7 @@
   --text:        #2e1312;
   --text-muted:  #fbe6dc;
   --accent:      #d6a992;
+  --accent-bg: rgb(254, 245, 236);
   --accent-soft: rgba(255, 227, 197, 0.229);
   --border:      rgba(42, 51, 68, 0.12);
   --font-display: "Instrument Serif", serif;
