@@ -6,7 +6,7 @@
   --bg: #fcfaf5;
   --text: #2e1312;
   --text-muted: #fbe6dc;
-  --accent: #d6a992;
+  --accent: #d0a18a;
   --accent-bg: rgb(255, 248, 241);
   --accent-soft: rgba(255, 227, 197, 0.229);
   --border: rgba(42, 51, 68, 0.12);
@@ -27,27 +27,40 @@ body {
   color: var(--text);
   background-color: var(--bg);
   min-height: 100vh;
+  margin-top: 30px;
 }
 
 /************* header/nav styling *************/
+
+/* header disappears and re-appears depending on scroll */
 header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 20px 30px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  transition: transform 0.3s ease-in-out;
+}
+
+header.header-hidden {
+  transform: translateY(-130%);
 }
 
 menu {
   display: flex;
   flex-direction: row;
-  gap: 50px;
+  gap: 60px;
 }
 
 .menu-img {
   position: absolute;
   z-index: -1;
-  margin-top: -300px;
+  margin-top: -310px;
   margin-left: -30px;
   width: 1440px;
 }
@@ -79,9 +92,9 @@ menu .menu-item:hover h2 {
 .menu-item--active::after {
   content: "";
   position: absolute;
-  left: 4px;
-  right: 4px;
-  bottom: -6px;
+  left: 0px;
+  right: 0px;
+  bottom: 3px;
   height: 2px;
   background: var(--accent);
 }

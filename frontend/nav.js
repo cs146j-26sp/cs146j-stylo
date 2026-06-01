@@ -1,9 +1,5 @@
-/* ============================================
-   stylo — navigation helper
-   Loaded on the feed page (and used by other
-   pages via renderHeader) so menu items work
-   as links without changing the feed's look.
-   ============================================ */
+/* navigation helper function: loads on the feed page (used in renderHeader) 
+so menu items work as links without changing the feed's look. */
 (function () {
   // On the feed page, the menu items are <h2> with no anchor.
   // Wire them to navigate without touching their visual styling.

@@ -1,4 +1,4 @@
-/****** stylo shared UI helpers ******/
+/****** shared helper functions for header + card design ******/
 
 // small item card (studio sidebar, closet grid) for cut-out PNG 
 function itemCardHTML(item, opts = {}) {
@@ -37,4 +37,26 @@ function renderHeader(activePage = "", basePath = "../") {
     </header>`;
 }
 
+
+// scrolling header animation
+let origScrollY = 0; // track height of scroll
+
+window.addEventListener("scroll", () => {
+  const currentScrollY = window.scrollY; // track current scroll height
+// must init header query selector AFTER scroll event, 
+// since header isn't initialized when pg first loads
+  const headerElem = document.querySelector("header")
+
+  if (currentScrollY > 60 && currentScrollY > origScrollY) {
+      headerElem.classList.add("header-hidden");
+  } else {
+    // scrolling up → show
+    headerElem.classList.remove("header-hidden");
+  }
+
+  // reset scroll relative to current scroll height on pg
+  origScrollY = currentScrollY;
+});
+
+// add these to overall app UI
 window.STYLO_UI = { itemCardHTML, renderHeader };
