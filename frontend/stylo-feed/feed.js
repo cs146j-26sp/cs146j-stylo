@@ -65,7 +65,7 @@ const DISCOVER_POSTS = [
     username: "viviannn",
     avatarUrl: "",
     imageUrl: "media/post4wide.png",
-    caption: "pastel pink and green picnic #glinda&elphaba",
+    caption: "pastel pink and green picnic #cottagecore",
     likeCount: 700,
     commentCount: 4,
     shareCount: 2,
@@ -75,16 +75,96 @@ const DISCOVER_POSTS = [
     username: "kayceeee",
     avatarUrl: "",
     imageUrl: "media/post1tall.png",
-    caption: "who said airport outfits can't be cute? #zoommm",
+    caption: "who said airport outfits can't be cute? #grunge",
     likeCount: 800,
     commentCount: 4,
     shareCount: 2,
   },
+  {
+    id: "9",
+    username: "username",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "caption here!",
+    likeCount: 800,
+    commentCount: 4,
+    shareCount: 2,
+  },
+  {
+    id: "10",
+    username: "username",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "caption here!",
+    likeCount: 800,
+    commentCount: 4,
+    shareCount: 2,
+  },
+  {
+    id: "11",
+    username: "username",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "caption here!",
+    likeCount: 800,
+    commentCount: 4,
+    shareCount: 2,
+  },
+  {
+    id: "12",
+    username: "username",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "caption here!",
+    likeCount: 800,
+    commentCount: 4,
+    shareCount: 2,
+  },
+  {
+    id: "13",
+    username: "username",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "caption here!",
+    likeCount: 800,
+    commentCount: 4,
+    shareCount: 2,
+  },
+  {
+    id: "14",
+    username: "username",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "caption here!",
+    likeCount: 800,
+    commentCount: 4,
+    shareCount: 2,
+  },
+  {
+    id: "15",
+    username: "username",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "caption here!",
+    likeCount: 800,
+    commentCount: 4,
+    shareCount: 2,
+  },
+  {
+    id: "16",
+    username: "username",
+    avatarUrl: "",
+    imageUrl: "media/post1tall.png",
+    caption: "caption here!",
+    likeCount: 800,
+    commentCount: 4,
+    shareCount: 2,
+  }
 ];
 
 const FOLLOWING_POSTS = [
   {
-    id: "9",
+    id: "17",
     username: "cinnamoroll",
     avatarUrl: "",
     imageUrl: "media/post2tall.png",
@@ -94,7 +174,7 @@ const FOLLOWING_POSTS = [
     shareCount: 2,
   },
   {
-    id: "10",
+    id: "18",
     username: "kuromi",
     avatarUrl: "",
     imageUrl: "media/post1wide.png",
@@ -104,7 +184,7 @@ const FOLLOWING_POSTS = [
     shareCount: 2,
   },
   {
-    id: "11",
+    id: "19",
     username: "keroppi",
     avatarUrl: "",
     imageUrl: "media/post3tall.png",
@@ -114,7 +194,7 @@ const FOLLOWING_POSTS = [
     shareCount: 2,
   },
   {
-    id: "12",
+    id: "20",
     username: "mymelody",
     avatarUrl: "",
     imageUrl: "media/post4wide.png",
@@ -125,7 +205,7 @@ const FOLLOWING_POSTS = [
   },
 ];
 
-// fake comments on post
+// placeholder comments on post
 const MOCK_COMMENTS = {
   "1": [
     { username: "angela", text: "i love this this palette" },
@@ -184,6 +264,47 @@ function renderFeed(posts) {
 function getPost(postId) {
   return state.postMap.get(String(postId));
 }
+
+// -------------- infinite scroll helper funcs------------
+
+const POSTS_PER_PAGE = 8;
+
+// helper to append posts on load
+function appendPosts(posts, page) {
+  const start = (page - 1) * POSTS_PER_PAGE;
+  const end = page * POSTS_PER_PAGE;
+  const newPosts = posts.slice(start, end);
+
+  const cols = document.querySelectorAll(".feed-col");
+
+  newPosts.forEach((post, i) => {
+    state.postMap.set(post.id, post);
+    const col = cols[i % 4];
+    if (col) col.appendChild(createPostCard(post));
+  });
+}
+
+// when user scrolls near bottom of screen div, this observer activates
+const infiniteScroll = document.querySelector("#infinite-scroll");
+
+const scrollObserver = new IntersectionObserver((entries) => {
+  // if sentinel is visible
+  if (entries[0].isIntersecting) {
+    // track current page status
+    const currentPosts
+      = state.currentTab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
+    const visible = state.currentPage * POSTS_PER_PAGE;
+    // if no more posts
+    if (visible >= currentPosts.length) return; 
+
+    // only if we have 2+ pages?
+    state.currentPage += 1;
+    appendPosts(currentPosts, state.currentPage);
+  }
+}, { threshold: 0.1 }); // call observer when 10% of infiniteScroll is visible
+
+scrollObserver.observe(infiniteScroll);
+
 
 // -------------- indiv post functionality ------------
 

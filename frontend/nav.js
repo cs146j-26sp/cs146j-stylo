@@ -1,12 +1,11 @@
 /* navigation helper function: loads on the feed page (used in renderHeader) 
-so menu items work as links without changing the feed's look. */
+so menu items work as links without changing feed UI */
 (function () {
-  // On the feed page, the menu items are <h2> with no anchor.
-  // Wire them to navigate without touching their visual styling.
+  // navigate menu without modifying css styling
   function attach() {
     const map = { studio: "index.html", feed: "feed.html", closet: "closet.html" };
     document.querySelectorAll("menu .menu-item").forEach((el) => {
-      // If already an anchor (other pages), skip — links work natively.
+      // if already an anchor (other pages), skip
       if (el.tagName === "A") return;
       const key = el.textContent.trim().toLowerCase();
       const target = map[key];
@@ -14,7 +13,7 @@ so menu items work as links without changing the feed's look. */
       el.style.cursor = "pointer";
       el.addEventListener("click", () => { window.location.href = target; });
     });
-    // Account icon → profile
+    // account icon and profile
     const account = document.querySelector(".account");
     if (account && account.tagName !== "A") {
       account.style.cursor = "pointer";
