@@ -3,15 +3,16 @@
 /******* overall color scheme *******/
 
 :root {
-  --bg:          #fcfaf5;
-  --text:        #2e1312;
-  --text-muted:  #fbe6dc;
-  --accent:      #d6a992;
-  --accent-bg: rgb(254, 245, 236);
+  --bg: #fcfaf5;
+  --text: #2e1312;
+  --text-muted: #fbe6dc;
+  --accent: #d6a992;
+  --accent-bg: rgb(255, 248, 241);
   --accent-soft: rgba(255, 227, 197, 0.229);
-  --border:      rgba(42, 51, 68, 0.12);
+  --border: rgba(42, 51, 68, 0.12);
+  --popup-border: rgb(57, 35, 27);
   --font-display: "Instrument Serif", serif;
-  --font-body:    "Albert Sans", sans-serif;
+  --font-body: "Albert Sans", sans-serif;
 }
 
 * {
@@ -74,6 +75,7 @@ menu .menu-item:hover h2 {
 .menu-item--active h2 {
   font-style: italic;
 }
+
 .menu-item--active::after {
   content: "";
   position: absolute;
@@ -107,6 +109,7 @@ a.account {
   border-bottom: 1px solid var(--border);
   margin-bottom: 28px;
 }
+
 .subhead-note {
   font-family: var(--font-display);
   font-style: italic;

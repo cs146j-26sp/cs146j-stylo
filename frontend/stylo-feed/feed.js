@@ -289,19 +289,10 @@ function toggleShare(post, card) {
 
   // open up remix popup, add button functionality
   const sharePopup = document.querySelector(".share-popup");
-  const yesRemixBtn = document.querySelector(".share-btn-yes");
-  const noRemixBtn = document.querySelector(".share-btn-no");
 
   sharePopup.removeAttribute("hidden");
-  yesRemixBtn.addEventListener("click", () => {
-    window.location.href = "../stylo-studio/studio.html";
-  });
 
-  noRemixBtn.addEventListener("click", () => {
-        window.location.href = "../stylo-feed/feed.html";
 
-    sharePopup.setAttribute("hidden");
-  });
   syncModalCounts(post);
 }
 
@@ -467,5 +458,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (post && card) toggleShare(post, card);
 
     });
+
+  // open remix pop-up
+  const yesRemixBtn = document.querySelector(".share-btn-yes");
+  const noRemixBtn = document.querySelector(".share-btn-close");
+
+  yesRemixBtn.addEventListener("click", () => {
+    window.location.href = "../stylo-studio/studio.html";
+  });
+
+  noRemixBtn.addEventListener("click", () => {
+    window.location.href = "../stylo-feed/feed.html";
+    sharePopup.setAttribute("hidden");
+  });
 });
 
