@@ -22,21 +22,23 @@
 }
 
 #post-btn {
-  border-width: 2px;
-  font-size: 15px;
+  font-size: 2.7vh;
   position: relative;
   z-index: 999;
+  padding: 13px 20px;
+  font-family: var(--font-display);
+  font-style: italic;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1.4px solid var(--accent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.post-btn-bg {
-  border-color: transparent;
-  position: fixed;
-  bottom: 40px;
-  right: 50px;
-    font-size: 15px;
-
-  color: transparent;
-  background-color: rgb(254, 245, 236);
+#post-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
 }
 
 /************* post card styling*************/
