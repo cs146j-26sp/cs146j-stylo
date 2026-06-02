@@ -87,7 +87,6 @@
       <div>
         <h2>Remix this outfit?</h2>
         <p>"Remixing" makes a copy of the outfit for you to edit.</p>
-
       </div>
 
       <button class="share-btn-yes" id="share-btn-yes">
@@ -146,8 +145,8 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      document.getElementById("header-mount").innerHTML =
-        window.STYLO_UI.renderHeader("feed");
+      document.getElementById("header-mount")
+      .innerHTML = window.STYLO_UI.renderHeader("feed");
     });
   </script>
 
