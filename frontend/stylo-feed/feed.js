@@ -4,7 +4,7 @@ const DISCOVER_POSTS = [
     id: "1",
     username: "angela",
     avatarUrl: "",
-      //  overlayUrl: "media/items/mint-cami.png", // layer clothing on top
+    //  overlayUrl: "media/items/mint-cami.png", // layer clothing on top
     imageUrl: "media/post1tall.png",
     caption: "check out my daily fit! #ootd",
     likeCount: 100,
@@ -296,7 +296,7 @@ const scrollObserver = new IntersectionObserver((entries) => {
       = state.currentTab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
     const visible = state.currentPage * POSTS_PER_PAGE;
     // if no more posts
-    if (visible >= currentPosts.length) return; 
+    if (visible >= currentPosts.length) return;
 
     // only if we have 2+ pages?
     state.currentPage += 1;
@@ -422,7 +422,17 @@ function toggleShare(post, card) {
 
 function openModal(post) {
   state.currentPostId = post.id;
+  const overlayCard = document.getElementById("post-overlay-card");
 
+  // determine if image is tall
+  const isTall = post.cover
+    ? post.cover.includes("tall")
+    : post.imageUrl?.includes("tall");
+  // remove existing style classes, add the tall property back
+  overlayCard.classList.remove("post-overlay-card--tall", "post-overlay-card--wide");
+  overlayCard.classList.add(isTall ? "post-overlay-card--tall" : "post-overlay-card--wide");
+
+  // set up profile placeholder
   const avatar = post.avatarUrl
     ? `<img class="avatar" src="${post.avatarUrl}" alt="${post.username}" />`
     : `<div class="avatar avatar-placeholder">${post.username[0].toUpperCase()}</div>`;
