@@ -243,6 +243,19 @@ const MOCK_COMMENTS = {
   ],
 };
 
+// -------------- update actual comment counts ------------
+// helper func to count comments
+function getCommentCount(post) {
+  const comments = MOCK_COMMENTS[post];
+  // ternary operator: return comments if there are any, otherwise 0
+  return comments ? comments.length : 0;
+}
+
+// make the counts reflect actual # of comments
+[...DISCOVER_POSTS, ...FOLLOWING_POSTS].forEach(post => { 
+  // combine array using ...
+  post.commentCount = getCommentCount(post.id);
+});
 
 // -------------- state ------------
 
