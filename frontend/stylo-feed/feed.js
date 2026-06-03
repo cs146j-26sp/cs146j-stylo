@@ -6,6 +6,7 @@ const DISCOVER_POSTS = [
     avatarUrl: "",
     //  overlayUrl: "media/items/mint-cami.png", // layer clothing on top
     imageUrl: "media/post1tall.png",
+    overlayUrl: "media/items/mint-cami.png",
     caption: "check out my daily fit! #ootd",
     likeCount: 100,
     commentCount: 4,
@@ -16,6 +17,7 @@ const DISCOVER_POSTS = [
     username: "hannah",
     avatarUrl: "",
     imageUrl: "media/post2wide.png",
+    overlayUrl: "media/items/wash-shorts.png",
     caption: "spring sprang sprung 🌸 #pollenallergies",
     likeCount: 200,
     commentCount: 4,
@@ -26,6 +28,7 @@ const DISCOVER_POSTS = [
     username: "vivian",
     avatarUrl: "",
     imageUrl: "media/post3tall.png",
+    overlayUrl: "media/items/puff-blouse.png",
     caption: "you can never go wrong with layering #layeringtips",
     likeCount: 300,
     commentCount: 4,
@@ -36,6 +39,7 @@ const DISCOVER_POSTS = [
     username: "kaycee",
     avatarUrl: "",
     imageUrl: "media/post4wide.png",
+    overlayUrl: "media/items/red-cap.png",
     caption: "farmer's market fit! #supportsmallbusinesses",
     likeCount: 400,
     commentCount: 4,
@@ -46,6 +50,7 @@ const DISCOVER_POSTS = [
     username: "angelaaaa",
     avatarUrl: "",
     imageUrl: "media/post3wide.png",
+    overlayUrl: "media/items/tan-flats.png",
     caption: "today's business casual outfit ✨ #powersuit #ootd",
     likeCount: 500,
     commentCount: 4,
@@ -56,6 +61,7 @@ const DISCOVER_POSTS = [
     username: "hannahhh",
     avatarUrl: "",
     imageUrl: "media/post4tall.png",
+    overlayUrl: "media/items/rose-cami.png",
     caption: "golden hour is my favorite time of the day #sunset",
     likeCount: 600,
     commentCount: 4,
@@ -66,6 +72,7 @@ const DISCOVER_POSTS = [
     username: "viviannn",
     avatarUrl: "",
     imageUrl: "media/post1wide.png",
+    overlayUrl: "media/items/valentin-tee.png",
     caption: "pastel pink and green picnic #cottagecore",
     likeCount: 700,
     commentCount: 4,
@@ -76,6 +83,7 @@ const DISCOVER_POSTS = [
     username: "kayceeee",
     avatarUrl: "",
     imageUrl: "media/post2tall.png",
+    overlayUrl: "media/items/olive-bag.png",
     caption: "who said airport outfits can't be cute? #grunge",
     likeCount: 800,
     commentCount: 4,
@@ -86,6 +94,7 @@ const DISCOVER_POSTS = [
     username: "username",
     avatarUrl: "",
     imageUrl: "media/post1tall.png",
+    overlayUrl: "media/items/wide-denim.png",
     caption: "caption here!",
     likeCount: 800,
     commentCount: 4,
@@ -96,6 +105,7 @@ const DISCOVER_POSTS = [
     username: "username",
     avatarUrl: "",
     imageUrl: "media/post2wide.png",
+    overlayUrl: "media/items/wide-jeans.png",
     caption: "caption here!",
     likeCount: 800,
     commentCount: 4,
@@ -106,6 +116,7 @@ const DISCOVER_POSTS = [
     username: "username",
     avatarUrl: "",
     imageUrl: "media/post3tall.png",
+    overlayUrl: "media/items/beige-flats.png",
     caption: "caption here!",
     likeCount: 800,
     commentCount: 4,
@@ -116,6 +127,7 @@ const DISCOVER_POSTS = [
     username: "username",
     avatarUrl: "",
     imageUrl: "media/post4wide.png",
+    overlayUrl: "media/items/brown-bag.png",
     caption: "caption here!",
     likeCount: 800,
     commentCount: 4,
@@ -126,6 +138,7 @@ const DISCOVER_POSTS = [
     username: "username",
     avatarUrl: "",
     imageUrl: "media/post3wide.png",
+    overlayUrl: "media/items/mint-cami.png",
     caption: "caption here!",
     likeCount: 800,
     commentCount: 4,
@@ -136,6 +149,7 @@ const DISCOVER_POSTS = [
     username: "username",
     avatarUrl: "",
     imageUrl: "media/post4tall.png",
+    overlayUrl: "media/items/olive-bag.png",
     caption: "caption here!",
     likeCount: 800,
     commentCount: 4,
@@ -146,6 +160,7 @@ const DISCOVER_POSTS = [
     username: "username",
     avatarUrl: "",
     imageUrl: "media/post1wide.png",
+    overlayUrl: "media/items/plaid-scrunchie.png",
     caption: "caption here!",
     likeCount: 800,
     commentCount: 4,
@@ -156,6 +171,7 @@ const DISCOVER_POSTS = [
     username: "username",
     avatarUrl: "",
     imageUrl: "media/post2tall.png",
+    overlayUrl: "media/items/puff-blouse.png",
     caption: "caption here!",
     likeCount: 800,
     commentCount: 4,
@@ -169,6 +185,7 @@ const FOLLOWING_POSTS = [
     username: "cinnamoroll",
     avatarUrl: "",
     imageUrl: "media/post2tall.png",
+    overlayUrl: "media/items/mint-cami.png",
     caption: "not spelled cinnamonroll",
     likeCount: 100,
     commentCount: 4,
@@ -179,6 +196,7 @@ const FOLLOWING_POSTS = [
     username: "kuromi",
     avatarUrl: "",
     imageUrl: "media/post1wide.png",
+    overlayUrl: "media/items/mint-cami.png",
     caption: "#blackandpink",
     likeCount: 200,
     commentCount: 4,
@@ -189,6 +207,7 @@ const FOLLOWING_POSTS = [
     username: "keroppi",
     avatarUrl: "",
     imageUrl: "media/post3tall.png",
+    overlayUrl: "media/items/mint-cami.png",
     caption: "ribbit ribbit 💚",
     likeCount: 300,
     commentCount: 4,
@@ -199,6 +218,7 @@ const FOLLOWING_POSTS = [
     username: "mymelody",
     avatarUrl: "",
     imageUrl: "media/post4wide.png",
+    overlayUrl: "media/items/mint-cami.png",
     caption: "#pinkandwhite",
     likeCount: 400,
     commentCount: 4,
@@ -224,7 +244,7 @@ const MOCK_COMMENTS = {
 };
 
 
-// --------------state------------
+// -------------- state ------------
 
 const state = {
   currentPostId: null,
@@ -325,7 +345,10 @@ function createPostCard(post) {
 
     <div class="card-img-wrapper"> 
       <img class="card-outfit-img" src="${post.imageUrl}" alt="outfit by ${post.username}" />
-    </div>
+   ${post.overlayUrl
+      ? `<img class="card-overlay-img" src="${post.overlayUrl}" alt="clothing item" />`
+      : ""}
+      </div>
     
     ${post.caption ? `<p class="card-caption">${post.caption}</p>` : ""}
     <div class="card-footer">
@@ -440,7 +463,9 @@ function openModal(post) {
   document.getElementById("post-username").innerHTML =
     `${avatar}<strong>@${post.username}</strong>`;
 
+    // load all images for post overlay
   document.getElementById("post-outfit-img").src = post.imageUrl;
+    document.getElementById("post-overlay-img").src = post.overlayUrl ?? "";
   document.getElementById("post-caption").textContent = post.caption ?? "";
 
   syncModalCounts(post);
