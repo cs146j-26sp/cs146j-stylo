@@ -53,8 +53,8 @@
 
 /* HERO */
 .studio-hero {
-  padding: 4px 0 22px;
-  margin-bottom: 22px;
+  padding: 4px 0 8px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
 .studio-eyebrow {
@@ -296,6 +296,104 @@
   z-index: 2;
 }
 
+/* search bar */
+.closet-search {
+  margin-bottom: 10px;
+}
+.closet-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  background: #fffaf2;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.closet-search-input:focus {
+  border-color: var(--accent);
+}
+.closet-search-input::placeholder {
+  opacity: 0.42;
+}
+
+/* multiselect dropdown */
+.multiselect {
+  position: relative;
+  width: 100%;
+}
+.multiselect-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  background: #fffaf2;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s;
+}
+.multiselect-trigger:hover,
+.multiselect.is-open .multiselect-trigger {
+  border-color: var(--accent);
+}
+.multiselect-arrow {
+  font-size: 0.7rem;
+  opacity: 0.5;
+  transition: transform 0.15s;
+  flex-shrink: 0;
+  margin-left: 6px;
+}
+.multiselect.is-open .multiselect-arrow {
+  transform: rotate(180deg);
+}
+.multiselect-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fffaf2;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 0;
+  z-index: 200;
+  box-shadow: 0 8px 18px -8px rgba(46, 19, 18, 0.18);
+}
+.multiselect.is-open .multiselect-menu {
+  display: block;
+}
+.multiselect-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.12s;
+  user-select: none;
+}
+.multiselect-option:hover {
+  background: var(--accent-soft);
+}
+.multiselect-option input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 /* small variant for studio sidebar */
 .closet-list {
   display: grid;
@@ -492,6 +590,15 @@
   color: var(--text);
   opacity: 0.55;
 }
+.field-value {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text);
+  padding: 6px 2px;
+  border-bottom: 1px solid var(--border);
+  margin: 0;
+}
+
 .field-input {
   font-family: var(--font-body);
   font-size: 0.95rem;

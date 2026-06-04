@@ -33,7 +33,7 @@
 
       <div class="studio-action-bar">
         <div class="studio-name-block">
-          <span class="studio-name-prefix">titled</span>
+          <span class="studio-name-prefix">name of outfit</span>
           <input
             class="studio-name-input"
             id="studio-name"
@@ -41,7 +41,7 @@
           />
         </div>
         <div class="actions">
-          <button class="btn-filled" id="publish-btn">Publish →</button>
+          <button class="btn-filled" id="publish-btn">Publish Outfit →</button>
         </div>
       </div>
 
@@ -49,6 +49,15 @@
         <aside class="studio-panel">
           <div class="panel-eyebrow">my closet</div>
           <div class="panel-title">drag onto the page!</div>
+
+          <div class="closet-search">
+            <input
+              class="closet-search-input"
+              id="closet-search"
+              type="text"
+              placeholder="search pieces…"
+            />
+          </div>
 
           <div class="filter-block">
             <span class="filter-block-label">status</span>
@@ -65,11 +74,27 @@
 
           <div class="filter-block">
             <span class="filter-block-label">category</span>
-            <div class="chip-row" id="cat-chips">
-              <button class="chip is-active" data-cat="tops">tops</button>
-              <button class="chip is-active" data-cat="bottoms">bottoms</button>
-              <button class="chip is-active" data-cat="shoes">shoes</button>
-              <button class="chip is-active" data-cat="accessories">acc.</button>
+            <div class="multiselect" id="cat-dropdown">
+              <button class="multiselect-trigger" type="button">
+                <span class="multiselect-label">all categories</span>
+                <span class="multiselect-arrow">▾</span>
+              </button>
+              <div class="multiselect-menu">
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="tops" checked /> tops</label
+                >
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="bottoms" checked />
+                  bottoms</label
+                >
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="shoes" checked /> shoes</label
+                >
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="accessories" checked />
+                  acc.</label
+                >
+              </div>
             </div>
           </div>
 
@@ -90,23 +115,40 @@
 
         <aside class="studio-panel">
           <div class="field">
-            <span class="field-label">title</span>
-            <input
-              class="field-input"
-              id="fit-title"
-              value="last day of school!"
-            />
+            <span class="field-label">outfit title</span>
+            <p class="field-value" id="fit-title">last day of school!</p>
           </div>
 
           <div class="field">
             <span class="field-label">occasion</span>
-            <div class="chip-row" id="occasion-chips">
-              <button class="chip is-active" data-occ="weekend">weekend</button>
-              <button class="chip" data-occ="everyday">everyday</button>
-              <button class="chip" data-occ="work">work</button>
-              <button class="chip" data-occ="date">date</button>
-              <button class="chip" data-occ="travel">travel</button>
-              <button class="chip" data-occ="event">event</button>
+            <div class="multiselect" id="occ-dropdown">
+              <button class="multiselect-trigger" type="button">
+                <span class="multiselect-label">weekend</span>
+                <span class="multiselect-arrow">▾</span>
+              </button>
+              <div class="multiselect-menu">
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="weekend" checked />
+                  weekend</label
+                >
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="everyday" checked />
+                  everyday</label
+                >
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="work" checked /> work</label
+                >
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="date" checked /> date</label
+                >
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="travel" checked />
+                  travel</label
+                >
+                <label class="multiselect-option"
+                  ><input type="checkbox" value="event" checked /> event</label
+                >
+              </div>
             </div>
           </div>
 
