@@ -233,7 +233,7 @@
 /* constrain image so tall images don't overflow */
 .post-overlay-card--tall .post-outfit-img {
   object-fit: contain;  /* contain = show full image */
-  background: var(--bg);
+  background: transparent;
 }
 
 .post-overlay-card--wide .post-outfit-img {
@@ -291,6 +291,8 @@
 }
 
 .post-outfit-img {
+  position: relative;
+    z-index: 999;
   width: 100%;
   height: 100%;
   object-fit: cover;

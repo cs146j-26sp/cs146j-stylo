@@ -18,7 +18,7 @@ const DISCOVER_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post2wide.png",
     overlayUrl: "media/items/wash-shorts.png",
-    caption: "spring sprang sprung 🌸 #pollenallergies",
+    caption: "spring sprang sprung 🌸 #cottagecore",
     likeCount: 200,
     commentCount: 4,
     shareCount: 2,
@@ -29,7 +29,7 @@ const DISCOVER_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post3tall.png",
     overlayUrl: "media/items/puff-blouse.png",
-    caption: "you can never go wrong with layering #layeringtips",
+    caption: "you can never go wrong with layering #darkacademia",
     likeCount: 300,
     commentCount: 4,
     shareCount: 2,
@@ -40,7 +40,7 @@ const DISCOVER_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post4wide.png",
     overlayUrl: "media/items/red-cap.png",
-    caption: "farmer's market fit! #supportsmallbusinesses",
+    caption: "farmer's market fit! #grunge",
     likeCount: 400,
     commentCount: 4,
     shareCount: 2,
@@ -51,7 +51,7 @@ const DISCOVER_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post3wide.png",
     overlayUrl: "media/items/tan-flats.png",
-    caption: "today's business casual outfit ✨ #powersuit #ootd",
+    caption: "today's business casual outfit ✨ #dark academia #ootd",
     likeCount: 500,
     commentCount: 4,
     shareCount: 2,
@@ -62,7 +62,7 @@ const DISCOVER_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post4tall.png",
     overlayUrl: "media/items/rose-cami.png",
-    caption: "golden hour is my favorite time of the day #sunset",
+    caption: "golden hour is my favorite time of the day #Y2K",
     likeCount: 600,
     commentCount: 4,
     shareCount: 2,
@@ -186,7 +186,7 @@ const FOLLOWING_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post2tall.png",
     overlayUrl: "media/items/mint-cami.png",
-    caption: "not spelled cinnamonroll",
+    caption: "I love cinnamon rolls #Y2K",
     likeCount: 100,
     commentCount: 4,
     shareCount: 2,
@@ -197,7 +197,7 @@ const FOLLOWING_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post1wide.png",
     overlayUrl: "media/items/mint-cami.png",
-    caption: "#blackandpink",
+    caption: "black and pink #grunge",
     likeCount: 200,
     commentCount: 4,
     shareCount: 2,
@@ -208,7 +208,7 @@ const FOLLOWING_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post3tall.png",
     overlayUrl: "media/items/mint-cami.png",
-    caption: "ribbit ribbit 💚",
+    caption: "ribbit ribbit #cottagecore 💚",
     likeCount: 300,
     commentCount: 4,
     shareCount: 2,
@@ -219,7 +219,7 @@ const FOLLOWING_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post4wide.png",
     overlayUrl: "media/items/mint-cami.png",
-    caption: "#pinkandwhite",
+    caption: "pink and white #ootd",
     likeCount: 400,
     commentCount: 4,
     shareCount: 2,
@@ -252,7 +252,7 @@ function getCommentCount(post) {
 }
 
 // make the counts reflect actual # of comments
-[...DISCOVER_POSTS, ...FOLLOWING_POSTS].forEach(post => { 
+[...DISCOVER_POSTS, ...FOLLOWING_POSTS].forEach(post => {
   // combine array using ...
   post.commentCount = getCommentCount(post.id);
 });
@@ -266,17 +266,73 @@ const state = {
   sharedPosts: new Set(),
   postMap: new Map(),
   comments: structuredClone(MOCK_COMMENTS),
+  // enable dropdown filters
+  filters: {
+    sortBy: "",
+    aesthetic: "",
+    category: "",
+  }
 };
 
 
-// -------------- feed functionality ------------
+// -------------- feed helper funcs ------------
 
 function loadPosts(tab = "discover") {
   // if tab = following, load following posts placeholder
-  const posts = tab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
-  renderFeed(posts);
+  // const posts = tab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
+
+  const outfits = window.STYLO.OUTFITS;
+  const posts = outfits.map(outfit => ({
+    // map all labels from data.js onto feed posts
+    id: outfit.id,
+    username: window.STYLO.ME.username,
+    avatarUrl: "",
+    imageUrl: outfit.cover,
+    overlayUrl: outfit.overlayUrl,
+    caption: outfit.title,
+    likeCount: outfit.likes,
+    commentCount: outfit.comments,
+    shareCount: outfit.remixes,
+    aspect: outfit.aspect,
+  }));
+
+  // filter posts by filter btns
+  filteredPosts = filterPosts(posts);
+  renderFeed(filteredPosts);
 }
 
+// helper func, returns array of filtered posts by dropdown btns
+function filterPosts(posts) {
+  // copy array to make edits to it
+  let filtered = [...posts];
+
+  // filter by aesthetic
+  if (state.filters.aesthetic) {
+    filtered = filtered.filter( // .filter() keeps items with only that aesthetic
+      post => post.aesthetic === state.filters.aesthetic);
+  }
+
+  // filter by category/tag
+  if (state.filters.category) {
+    filtered = filtered.filter(post =>
+      // check that post has tags at all
+      post.tags && post.tags.includes(state.filters.category)
+    );
+  }
+
+  // compare posts to apply dropdown filters
+  if (state.filters.sortBy === "most-popular") { // sort by like count
+    filtered.sort((firstPost, secondPost) => secondPost.likes - firstPost.likes);
+  } else if (state.filters.sortBy === "oldest") {
+    filtered.sort((firstPost, secondPost) => firstPost.id.localeCompare(secondPost.id));
+  } else if (state.filters.sortBy === "most-recent") {
+    filtered.sort((firstPost, secondPost) => secondPost.id.localeCompare(firstPost.id));
+  }
+
+  return filtered;
+}
+
+// helper func to load all posts in feed
 function renderFeed(posts) {
   const container = document.getElementById("feed-container");
   container.innerHTML = "";
@@ -357,7 +413,7 @@ function createPostCard(post) {
     </div>
 
     <div class="card-img-wrapper"> 
-      <img class="card-outfit-img" src="${post.imageUrl}" alt="outfit by ${post.username}" />
+      <img class="card-outfit-img" src="${post.imageUrl}" alt="post frame bg" />
    ${post.overlayUrl
       ? `<img class="card-overlay-img" src="${post.overlayUrl}" alt="clothing item" />`
       : ""}
@@ -476,9 +532,9 @@ function openModal(post) {
   document.getElementById("post-username").innerHTML =
     `${avatar}<strong>@${post.username}</strong>`;
 
-    // load all images for post overlay
+  // load all images for post overlay
   document.getElementById("post-outfit-img").src = post.imageUrl;
-    document.getElementById("post-overlay-img").src = post.overlayUrl ?? "";
+  document.getElementById("post-overlay-img").src = post.overlayUrl ?? "";
   document.getElementById("post-caption").textContent = post.caption ?? "";
 
   syncModalCounts(post);
@@ -641,5 +697,22 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "../stylo-feed/feed.html";
     sharePopup.setAttribute("hidden");
   });
+
+  // add filter functionality
+  document.getElementById("filter-sort").addEventListener("change", event => {
+    state.filters.sortBy = event.target.value;
+    loadPosts(state.currentTab);
+  });
+
+  document.getElementById("filter-aesthetic").addEventListener("change", event => {
+    state.filters.aesthetic = event.target.value;
+    loadPosts(state.currentTab);
+  });
+
+  document.getElementById("filter-category").addEventListener("change", event => {
+    state.filters.category = event.target.value;
+    loadPosts(state.currentTab);
+  });
+
 });
 

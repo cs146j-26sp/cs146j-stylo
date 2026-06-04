@@ -20,6 +20,8 @@
     rel="stylesheet">
 
   <script src="feed.js" defer></script>
+  <!-- for loading outfit data -->
+    <script src="../data.js" defer></script>
   <script src="../components.js" defer></script>
 
 </head>
@@ -42,14 +44,14 @@
       </div>
 
       <div class="filters">
-        <select class="filter-button">
+        <select id="filter-sort" class="filter-button">
           <option value="" hidden>Date Posted</option>
           <option value="most-recent">Most Recent</option>
           <option value="oldest">Oldest</option>
           <option value="most-popular">Most Popular</option>
         </select>
 
-        <select class="filter-button">
+        <select id="filter-aesthetic" class="filter-button">
           <option value="" hidden>Select Aesthetic</option>
           <option value="dark-academia">Dark Academia</option>
           <option value="y2k">Y2K</option>
@@ -57,12 +59,12 @@
           <option value="grunge">Grunge</option>
         </select>
 
-        <select class="filter-button">
+        <select id="filter-category" class="filter-button">
           <option value="" hidden>Select Category</option>
-          <option value="dark-academia">Outfit Inspiration</option>
+          <option value="inspo">Outfit Inspiration</option>
           <option value="ootd">OOTD</option>
-          <option value="cottagecore">Cottagecore</option>
-          <option value="grunge">Grunge</option>
+          <option value="accessories">Accessories</option>
+          <option value="staples">Closet Staples</option>
         </select>
       </div>
 
@@ -112,7 +114,7 @@
         <div class="post-left">
           <div class="post-username" id="post-username"></div>
           <div class="post-img-wrapper">
-            <img class="post-outfit-img" id="post-outfit-img" src="" alt="outfit">
+            <img class="post-outfit-img" id="post-outfit-img" src="" alt="post frame">
            <img class="post-overlay-img" id="post-overlay-img" src="" alt="clothing item">
           </div>
           <div class="post-actions">
