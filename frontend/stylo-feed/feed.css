@@ -249,7 +249,7 @@
   object-fit: cover;
 }
 
-.post-close {
+.post-close, #share-post-close {
   position: absolute;
   top: 12px;
   right: 12px;

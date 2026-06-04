@@ -284,7 +284,7 @@ function loadPosts(tab = "discover") {
   const outfits = window.STYLO.OUTFITS;
   const posts = outfits.map(outfit => ({
     // map all labels from data.js onto feed posts
-    id: outfit.id,
+    id: outfit.id, // must be id and NOT src to be able to find outfit
     username: outfit.username ?? window.STYLO.ME.username,
     avatarUrl: outfit.avatarUrl ?? "",
     imageUrl: outfit.cover,
@@ -424,7 +424,7 @@ function createPostCard(post) {
     
     ${post.caption ? `<p class="card-caption">${post.caption}</p>` : ""}
     <div class="card-footer">
-      <button class="action-btn like-btn 
+      <button class="action-btn post-like-btn 
       ${state.likedPosts.has(post.id) ? "active" : ""}
       ">
         <span class="material-symbols-outlined">favorite</span>
@@ -443,7 +443,7 @@ function createPostCard(post) {
     </div>
   `;
 
-  card.querySelector(".like-btn").addEventListener("click", event => {
+  card.querySelector(".post-like-btn").addEventListener("click", event => {
     event.stopPropagation();
     toggleLike(post, card);
   });
@@ -472,20 +472,15 @@ function toggleLike(post, card) {
 
   if (liked) {
     state.likedPosts.delete(post.id);
+    // decrease post like count, ensure likes don't < 0
     post.likeCount = Math.max(0, post.likeCount - 1);
   } else {
     state.likedPosts.add(post.id);
     post.likeCount += 1;
   }
 
-
-  card.querySelector(".like-btn").classList.toggle("active", !liked);
+  card.querySelector(".post-like-btn").classList.toggle("active", !liked);
   card.querySelector(".like-count").textContent = post.likeCount;
-
-  // since post overlay is separate from the post in the feed, 
-  // must extract element separately to make "like" change color in overlay
-  const postOverlay = document.getElementById("post-overlay");
-  postOverlay.querySelector("#post-like-btn").classList.toggle("active", !liked);
 
   syncModalCounts(post);
 }
@@ -509,6 +504,37 @@ function toggleShare(post, card) {
 
   sharePopup.removeAttribute("hidden");
 
+
+  syncModalCounts(post);
+}
+
+
+// -------------- overlay like count helper func ------------
+
+function toggleLikeOverlay() {
+const post = getPost(state.currentPostId);
+  if (!post) return;
+
+  const liked = state.likedPosts.has(post.id);
+
+  if (liked) {
+    state.likedPosts.delete(post.id);
+    post.likeCount = Math.max(0, post.likeCount - 1);
+  } else {
+    state.likedPosts.add(post.id);
+    post.likeCount += 1;
+  }
+
+  // update overlay button directly
+  document.getElementById("post-like-btn")
+    .classList.toggle("active", state.likedPosts.has(post.id));
+
+  // sync the card in the feed too
+  const card = document.querySelector(`.post-card[data-id="${post.id}"]`);
+  if (card) {
+    card.querySelector(".post-like-btn").classList.toggle("active", state.likedPosts.has(post.id));
+    card.querySelector(".like-count").textContent = post.likeCount;
+  }
 
   syncModalCounts(post);
 }
@@ -637,6 +663,7 @@ function switchTab(tab) {
 }
 
 
+
 // -------------- initialization functionality ------------
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -664,20 +691,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // allow user to post comment 
   // can't do "submit" event listener since comments isn't a form element
-  document.getElementById("post-comment-btn")
+  document.getElementById("submit-comment-btn")
     .addEventListener("click", postComment);
   document.getElementById("comment-input")
     .addEventListener("keydown", event => {
       if (event.key === "Enter") postComment();
     });
 
-  // toggle like button on and off
+/*   // feed- toggle like button on and off
   document.getElementById("post-like-btn")
     .addEventListener("click", () => {
       const post = getPost(state.currentPostId);
       const card = document.querySelector(`.post-card[data-id="${state.currentPostId}"]`);
       if (post && card) toggleLike(post, card);
-    });
+    }); */
+
+  // overlay- toggle like btn
+  document.getElementById("post-like-btn").addEventListener("click", toggleLikeOverlay);
 
   // allow user to remix
   document.getElementById("post-share-btn")
@@ -696,10 +726,16 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "../stylo-studio/studio.html";
   });
 
-  noRemixBtn.addEventListener("click", () => {
+/*   noRemixBtn.addEventListener("click", () => {
     window.location.href = "../stylo-feed/feed.html";
     sharePopup.setAttribute("hidden");
-  });
+  }); */
+
+  noRemixBtn.addEventListener("click", () => {
+  const sharePopup = document.getElementById("share-popup"); // add this
+  sharePopup.setAttribute("hidden", "");
+  // remove the window.location.href — this navigates away instead of just closing
+});
 
   // add filter functionality
   document.getElementById("filter-sort").addEventListener("change", event => {
