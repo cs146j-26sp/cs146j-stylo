@@ -285,15 +285,18 @@ function loadPosts(tab = "discover") {
   const posts = outfits.map(outfit => ({
     // map all labels from data.js onto feed posts
     id: outfit.id,
-    username: window.STYLO.ME.username,
-    avatarUrl: "",
+    username: outfit.username ?? window.STYLO.ME.username,
+    avatarUrl: outfit.avatarUrl ?? "",
     imageUrl: outfit.cover,
-    overlayUrl: outfit.overlayUrl,
+    overlayUrl: outfit.overlayUrl ?? "",
     caption: outfit.title,
     likeCount: outfit.likes,
     commentCount: outfit.comments,
     shareCount: outfit.remixes,
     aspect: outfit.aspect,
+    tags: outfit.tags ?? [],
+    aesthetic: outfit.aesthetic ?? "",
+    
   }));
 
   // filter posts by filter btns

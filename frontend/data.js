@@ -1,10 +1,8 @@
 /* ============================================
-   stylo shared data
-   Real clothing items with rembg-style cutouts.
+  shared data, real clothing items with rembg-style cutouts.
    ============================================ */
 
 // using cut-out PNGs in media/items/
-// Each: { id, name, category, status, image }
 const ITEMS = [
   // tops
   { id: "mint-cami", name: "mint cami", category: "top", status: "owned", image: "/stylo-feed/media/items/mint-cami.png", brand: "anyonemore" },
@@ -34,18 +32,18 @@ const ITEMS = [
 // demo user (current "you")
 const ME = {
   id: "u1",
-  username: "iris.m",
-  displayName: "Iris Morgan",
-  bio: "Writing my closet onto paper.",
+  username: "janestanford",
+  displayName: "Jane Stanford",
+  bio: "hi! welcome to my digital closet :)",
   followers: 142,
   following: 89,
-  initials: "IM",
+  initials: "JS",
 };
 
 // outfits: use the pre-rendered post images for cover art
 const OUTFITS = [
     {
-id: "o1", title: "saturday market outfit",
+id: "outfit1", title: "saturday market outfit",
     occasion: "weekend",
     cover: "media/post1tall.png",
     overlayUrl: "media/items/mint-cami.png",
@@ -56,7 +54,7 @@ id: "o1", title: "saturday market outfit",
   },
 
   {
-     id: "o2", title: "office fit", occasion: "work", cover: "media/post2wide.png", aspect: "wide", likes: 89, comments: 6, remixes: 14,
+     id: "outfit2", title: "office fit", occasion: "work", cover: "media/post2wide.png", aspect: "wide", likes: 89, comments: 6, remixes: 14,
     overlayUrl: "media/items/wash-shorts.png",
     items: ["puff-blouse", "wide-jeans", "beige-flats"],
     tags: ["inspo"],
@@ -64,7 +62,7 @@ id: "o1", title: "saturday market outfit",
   },
 
   {
-    id: "o3", title: "flowers and rain", occasion: "everyday",
+    id: "outfit3", title: "flowers and rain", occasion: "everyday",
     cover: "media/post3tall.png", aspect: "tall", likes: 312, comments: 28, remixes: 22,
     overlayUrl: "media/items/puff-blouse.png",
     items: ["rose-cami", "wide-denim", "black-bag"],
@@ -73,7 +71,7 @@ id: "o1", title: "saturday market outfit",
   },
 
   {
-    id: "o4", title: "this outfit was inspired by my mom #shoutout mom", occasion: "everyday", 
+    id: "outfit4", title: "this outfit was inspired by my mom #shoutout mom", occasion: "everyday", 
     cover: "media/post4wide.png", aspect: "wide", likes: 540, comments: 41, remixes: 36,
     overlayUrl: "media/items/red-cap.png",
     items: ["valentin-tee", "wide-jeans", "tan-flats"],
@@ -82,7 +80,7 @@ id: "o1", title: "saturday market outfit",
   },
 
   {
-    id: "o5", title: "sunday garden", occasion: "weekend", 
+    id: "outfit5", title: "sunday garden", occasion: "weekend", 
     cover: "media/post2tall.png", aspect: "tall", likes: 201, comments: 9, remixes: 5,
     overlayUrl: "media/items/rose-cami.png",
     items: ["mint-cami", "wide-denim", "beige-flats", "red-cap"],
@@ -91,7 +89,7 @@ id: "o1", title: "saturday market outfit",
   },
 
   {
-id: "o6", title: "cold weather", occasion: "weekend", 
+id: "outfit6", title: "cold weather", occasion: "weekend", 
     cover: "media/post4tall.png", aspect: "tall", likes: 178, comments: 11, remixes: 9,
     overlayUrl: "media/items/valentin-tee.png",
     items: ["valentin-tee", "wide-jeans", "olive-bag"],
@@ -100,7 +98,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o7",
+    id: "outfit7",
     title: "pastel pink and green picnic",
     occasion: "weekend",
     cover: "media/post1wide.png",
@@ -115,7 +113,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o8",
+    id: "outfit8",
     title: "who said airport outfits can't be cute?",
     occasion: "travel",
     cover: "media/post2tall.png",
@@ -130,7 +128,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o9",
+    id: "outfit9",
     title: "caption here!",
     occasion: "everyday",
     cover: "media/post1tall.png",
@@ -145,7 +143,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o10",
+    id: "outfit10",
     title: "caption here!",
     occasion: "everyday",
     cover: "media/post2wide.png",
@@ -160,7 +158,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o11",
+    id: "outfit11",
     title: "caption here!",
     occasion: "everyday",
     cover: "media/post3tall.png",
@@ -175,7 +173,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o12",
+    id: "outfit12",
     title: "caption here!",
     occasion: "everyday",
     cover: "media/post4wide.png",
@@ -190,7 +188,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o13",
+    id: "outfit13",
     title: "caption here!",
     occasion: "everyday",
     cover: "media/post3wide.png",
@@ -205,7 +203,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o14",
+    id: "outfit14",
     title: "caption here!",
     occasion: "everyday",
     cover: "media/post4tall.png",
@@ -220,7 +218,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o15",
+    id: "outfit15",
     title: "caption here!",
     occasion: "everyday",
     cover: "media/post1wide.png",
@@ -235,7 +233,7 @@ id: "o6", title: "cold weather", occasion: "weekend",
   },
 
   {
-    id: "o16",
+    id: "outfit16",
     title: "caption here!",
     occasion: "everyday",
     cover: "media/post2tall.png",
@@ -251,3 +249,4 @@ id: "o6", title: "cold weather", occasion: "weekend",
 ];
 
 window.STYLO = { ITEMS, OUTFITS, ME };
+

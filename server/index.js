@@ -17,6 +17,15 @@ app.use(express.static(path.join(__dirname, "../frontend")));
 // Connect to SQLite
 const db = new Database(process.env.DB_PATH || "./server/stylo.db");
 
+// removed 
+/*   CREATE TABLE IF NOT EXISTS outfits (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    name TEXT,
+    item_ids TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+  ); */
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,14 +46,7 @@ db.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id)
   );
 
-  CREATE TABLE IF NOT EXISTS outfits (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    name TEXT,
-    item_ids TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-  );
+
 
   CREATE TABLE IF NOT EXISTS posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -100,10 +102,6 @@ app.get("/api/health", (req, res) => {
 app.get("/api/users", (req, res) => {
   const users = db.prepare("SELECT * FROM users").all();
   res.json(users);
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
 });
 
 app.get("/api/clothing-items", (req, res) => {
@@ -178,7 +176,7 @@ app.delete("/api/outfits/:id", (req, res) => {
   stmt.run(id);
   res.json({ message: "Outfit deleted" });
 });
-app.get("GET /items?filter=wishlist", (req, res) => {
+/* app.get("GET /items?filter=wishlist", (req, res) => {
   const stmt = db.prepare(`
     SELECT *
     FROM clothing_items
@@ -234,6 +232,26 @@ app.get("GET /items?filter=shoes", (req, res) => {
   `);
   const items = stmt.all();
   res.json(items);
+}); */
+
+// handle filters
+app.get("/api/clothing-items", (req, res) => {
+  const { status, category } = req.query;
+
+  let query = "SELECT * FROM clothing_items WHERE 1=1";
+  const params = [];
+
+  if (status) {
+    query += " AND status = ?";
+    params.push(status);
+  }
+  if (category) {
+    query += " AND category = ?";
+    params.push(category);
+  }
+
+  const items = db.prepare(query).all(...params);
+  res.json(items);
 });
 
 app.get("/api/outfits/:id/items", (req, res) => { 
@@ -246,4 +264,9 @@ app.get("/api/outfits/:id/items", (req, res) => {
   `);
   const items = stmt.all(id);
   res.json(items);
+});
+
+// app listen at bottom of file so everything is defined before
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });

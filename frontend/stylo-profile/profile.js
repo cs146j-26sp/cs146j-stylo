@@ -10,7 +10,7 @@
   document.getElementById("avatar-caption").textContent  = "@" + ME.username;
   document.getElementById("profile-name").textContent    = ME.displayName;
   document.getElementById("profile-handle").textContent  = "@" + ME.username;
-  document.getElementById("profile-bio").textContent     = `"${ME.bio}"`;
+  document.getElementById("profile-bio").textContent     = `${ME.bio}`;
 
   // Stats
   document.getElementById("profile-stats").innerHTML = [
@@ -104,9 +104,10 @@
   function outfitCardHTML(o) {
     return `
       <article class="outfit-card">
-        <img src="${o.cover}" alt="${o.title}" />
+        <img src="${o.cover}" alt="${o.id}" />
         <div class="outfit-meta">
-          <div class="outfit-title">${o.title}</div>
+          <div class="outfit-title">
+          ${o.title}</div>
           <div class="outfit-sub">
             <span><span class="material-symbols-outlined" style="font-size:14px;">favorite</span>${o.likes}</span>
             <span><span class="material-symbols-outlined" style="font-size:14px;">360</span>${o.remixes}</span>
