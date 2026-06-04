@@ -13,9 +13,10 @@
    - syncing title inputs
    - publish toast interaction
 ============================================ */
-(function () {
-  const { ITEMS } = window.STYLO;
+window.addEventListener('stylo:ready', () => {
+  const { ITEMS } = window.STYLO;         // ← now safe, data is loaded
   const { itemCardHTML } = window.STYLO_UI;
+
 
   // stores every clothing item currently placed on the canvas
   // each object tracks:

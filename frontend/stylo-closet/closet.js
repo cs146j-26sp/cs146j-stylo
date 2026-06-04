@@ -1,11 +1,11 @@
 /******* stylo — Closet page helper funcs ******/
-(function () {
-  const { ITEMS } = window.STYLO;
+
+window.addEventListener('stylo:ready', () => {
+  const { ITEMS } = window.STYLO;         // ← now safe, data is loaded
   const { itemCardHTML } = window.STYLO_UI;
 
   const filters = { status: "all", category: "all", color: "all" };
 
-  // Wire filter chip rows.
   document.querySelectorAll(".chip-row[data-group]").forEach((row) => {
     row.addEventListener("click", (e) => {
       const btn = e.target.closest(".chip");
@@ -40,15 +40,13 @@
       grid.innerHTML = items.map((it) => itemCardHTML(it, { size: 180 })).join("");
     }
 
-    // Summary line at the top.
-    const owned = ITEMS.filter((i) => i.status === "owned").length;
+    const owned  = ITEMS.filter((i) => i.status === "owned").length;
     const wished = ITEMS.filter((i) => i.status === "wishlist").length;
     document.getElementById("closet-summary").innerHTML =
       `${owned} owned · <em>${wished} on the wish list</em>`;
   }
 
   document.getElementById("add-item-btn").addEventListener("click", () => {
-    // simple mock: show a small confirmation
     const toast = document.createElement("div");
     toast.textContent = "Upload modal would open here — backend will run rembg to cut the background.";
     toast.style.cssText = `
@@ -64,5 +62,5 @@
     setTimeout(() => toast.remove(), 3200);
   });
 
-  render();
-})();
+  render(); // ← runs after ITEMS is populated
+});

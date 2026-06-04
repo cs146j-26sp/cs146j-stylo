@@ -57,6 +57,7 @@ db.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (outfit_id) REFERENCES outfits(id)
   );
+
   CREATE TABLE IF NOT EXISTS clothing_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -64,6 +65,7 @@ db.exec(`
     category TEXT,
     status TEXT,
     color TEXT,
+    image_url TEXT,        -- ← add this
     FOREIGN KEY (user_id) REFERENCES users(id)
   ) STRICT;
 
@@ -104,20 +106,11 @@ app.get("/api/users", (req, res) => {
   res.json(users);
 });
 
-app.get("/api/clothing-items", (req, res) => {
-  const items = db.prepare("SELECT * FROM clothing_items").all();
-  res.json(items);
-});
+// app.get("/api/clothing-items", (req, res) => {
+//   const items = db.prepare("SELECT * FROM clothing_items").all();
+//   res.json(items);
+// });
 
-app.post("/api/clothing-items", (req, res) => {
-  const { user_id, name, category, status, color } = req.body;
-  const stmt = db.prepare(`
-    INSERT INTO clothing_items (user_id, name, category, status, color)
-    VALUES (?, ?, ?, ?, ?)
-  `);
-  const info = stmt.run(user_id, name, category, status, color);
-  res.json({ id: info.lastInsertRowid });
-});
 
 app.get("/api/outfits", (req, res) => {
   const outfits = db.prepare("SELECT * FROM outfits").all();
@@ -133,6 +126,9 @@ app.post("/api/outfits", (req, res) => {
   const info = stmt.run(user_id, name, notes, occasion, image_url);
   res.json({ id: info.lastInsertRowid });
 });
+
+
+
 
 app.get("/api/outfit-items", (req, res) => {
   const outfitItems = db.prepare("SELECT * FROM outfit_items").all();
@@ -252,6 +248,17 @@ app.get("/api/clothing-items", (req, res) => {
 
   const items = db.prepare(query).all(...params);
   res.json(items);
+});
+
+
+app.post("/api/clothing-items", (req, res) => {
+  const { user_id, name, category, status, color, image_url } = req.body;  // ← add image_url
+  const stmt = db.prepare(`
+    INSERT INTO clothing_items (user_id, name, category, status, color, image_url)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+  const info = stmt.run(user_id, name, category, status, color, image_url);  // ← add image_url
+  res.json({ id: info.lastInsertRowid });
 });
 
 app.get("/api/outfits/:id/items", (req, res) => { 
