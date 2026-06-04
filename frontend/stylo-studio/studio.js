@@ -36,7 +36,7 @@
   // keeps track of active sidebar filters
   // used to dynamically re-render closet items
   let statusFilter = "all";
-  let catFilter = "all";
+  let catFilter = new Set(["tops", "bottoms", "shoes", "accessories"]);
 
   const $ = (sel) => document.querySelector(sel);
   const canvas = $("#canvas");
@@ -75,29 +75,20 @@
 
   // filters closet items based on selected status + category chips
   // returns only items matching current filters
+  function getCatGroup(category) {
+    if (["top", "outer"].includes(category)) return "tops";
+    if (["bottom", "skirt"].includes(category)) return "bottoms";
+    if (category === "shoes") return "shoes";
+    if (["accessory", "hat"].includes(category)) return "accessories";
+    return null;
+  }
+
   function filteredItems() {
     return ITEMS.filter((it) => {
       if (statusFilter !== "all" && it.status !== statusFilter) return false;
-
-      if (catFilter === "all") return true;
-
-      if (catFilter === "tops") {
-        return ["top", "outer"].includes(it.category);
-      }
-
-      if (catFilter === "bottoms") {
-        return ["bottom", "skirt"].includes(it.category);
-      }
-
-      if (catFilter === "shoes") {
-        return it.category === "shoes";
-      }
-
-      if (catFilter === "accessories") {
-        return ["accessory", "hat"].includes(it.category);
-      }
-
-      return true;
+      const group = getCatGroup(it.category);
+      if (group === null) return true;
+      return catFilter.has(group);
     });
   }
 
@@ -164,13 +155,19 @@
     ".status-tab"
   );
 
-  bindChips(
-    "cat-chips",
-    (btn) => {
-      catFilter = btn.dataset.cat;
-    },
-    ".chip"
-  );
+  document.getElementById("cat-chips").addEventListener("click", (e) => {
+    const btn = e.target.closest(".chip");
+    if (!btn) return;
+    const cat = btn.dataset.cat;
+    if (catFilter.has(cat)) {
+      catFilter.delete(cat);
+      btn.classList.remove("is-active");
+    } else {
+      catFilter.add(cat);
+      btn.classList.add("is-active");
+    }
+    renderClosetList();
+  });
 
   // ---- Canvas render ----
 

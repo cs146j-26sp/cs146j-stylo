@@ -8,15 +8,20 @@
     <link rel="stylesheet" href="../styles.css" />
     <link rel="stylesheet" href="studio.css" />
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
 
     <script src="../data.js" defer></script>
     <script src="../components.js" defer></script>
     <script src="studio.js" defer></script>
-
   </head>
   <body>
     <div id="header-mount"></div>
@@ -29,10 +34,13 @@
       <div class="studio-action-bar">
         <div class="studio-name-block">
           <span class="studio-name-prefix">titled</span>
-          <input class="studio-name-input" id="studio-name" value="saturday in soft light" />
+          <input
+            class="studio-name-input"
+            id="studio-name"
+            value="last day of school!"
+          />
         </div>
         <div class="actions">
-          <button class="btn-outline" id="save-draft">Save Draft</button>
           <button class="btn-filled" id="publish-btn">Publish →</button>
         </div>
       </div>
@@ -40,25 +48,28 @@
       <div class="studio-grid">
         <aside class="studio-panel">
           <div class="panel-eyebrow">my closet</div>
-          <div class="panel-title">drag onto the page →</div>
+          <div class="panel-title">drag onto the page!</div>
 
           <div class="filter-block">
             <span class="filter-block-label">status</span>
             <div class="status-tabs" id="status-chips">
-              <button class="status-tab is-active" data-status="all">all</button>
+              <button class="status-tab is-active" data-status="all">
+                all
+              </button>
               <button class="status-tab" data-status="owned">owned</button>
-              <button class="status-tab" data-status="wishlist">wishlist</button>
+              <button class="status-tab" data-status="wishlist">
+                wishlist
+              </button>
             </div>
           </div>
 
           <div class="filter-block">
             <span class="filter-block-label">category</span>
             <div class="chip-row" id="cat-chips">
-              <button class="chip is-active" data-cat="all">all</button>
-              <button class="chip" data-cat="tops">tops</button>
-              <button class="chip" data-cat="bottoms">bottoms</button>
-              <button class="chip" data-cat="shoes">shoes</button>
-              <button class="chip" data-cat="accessories">acc.</button>
+              <button class="chip is-active" data-cat="tops">tops</button>
+              <button class="chip is-active" data-cat="bottoms">bottoms</button>
+              <button class="chip is-active" data-cat="shoes">shoes</button>
+              <button class="chip is-active" data-cat="accessories">acc.</button>
             </div>
           </div>
 
@@ -80,7 +91,11 @@
         <aside class="studio-panel">
           <div class="field">
             <span class="field-label">title</span>
-            <input class="field-input" id="fit-title" value="saturday in soft light" />
+            <input
+              class="field-input"
+              id="fit-title"
+              value="last day of school!"
+            />
           </div>
 
           <div class="field">
@@ -98,14 +113,22 @@
           <hr class="settings-divider" />
 
           <div>
-            <span class="field-label" style="display:block;margin-bottom:8px">need a starting point?</span>
-            <button class="shuffle-btn" id="shuffle-btn">↻ shuffle a fit</button>
+            <span class="field-label" style="display: block; margin-bottom: 8px"
+              >need a starting point?</span
+            >
+            <button class="shuffle-btn" id="shuffle-btn">
+              ↻ shuffle a fit
+            </button>
           </div>
 
           <hr class="settings-divider" />
 
           <div class="used-block">
-            <span class="field-label" style="display:block;margin-bottom:10px">pieces on this page</span>
+            <span
+              class="field-label"
+              style="display: block; margin-bottom: 10px"
+              >pieces on this page</span
+            >
             <div class="used-list" id="used-list">
               <div class="used-empty">nothing yet</div>
             </div>
