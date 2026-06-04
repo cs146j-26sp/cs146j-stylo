@@ -1,4 +1,13 @@
 /************* feed styling*************/
+
+.feed-desc {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text);
+  opacity: 0.62;
+  margin: 6px 0 18px;
+}
 .entire-feed {
   display: flex;
   flex-direction: row;

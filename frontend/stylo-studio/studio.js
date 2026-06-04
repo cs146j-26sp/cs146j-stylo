@@ -37,6 +37,7 @@
   // used to dynamically re-render closet items
   let statusFilter = "all";
   let catFilter = new Set(["tops", "bottoms", "shoes", "accessories"]);
+  let searchQuery = "";
 
   const $ = (sel) => document.querySelector(sel);
   const canvas = $("#canvas");
@@ -87,8 +88,9 @@
     return ITEMS.filter((it) => {
       if (statusFilter !== "all" && it.status !== statusFilter) return false;
       const group = getCatGroup(it.category);
-      if (group === null) return true;
-      return catFilter.has(group);
+      if (group !== null && !catFilter.has(group)) return false;
+      if (searchQuery && !it.name.toLowerCase().includes(searchQuery)) return false;
+      return true;
     });
   }
 
@@ -155,17 +157,56 @@
     ".status-tab"
   );
 
-  document.getElementById("cat-chips").addEventListener("click", (e) => {
-    const btn = e.target.closest(".chip");
-    if (!btn) return;
-    const cat = btn.dataset.cat;
-    if (catFilter.has(cat)) {
-      catFilter.delete(cat);
-      btn.classList.remove("is-active");
-    } else {
-      catFilter.add(cat);
-      btn.classList.add("is-active");
+  function bindMultiselect(dropdownId, allLabel, onChange) {
+    const root = document.getElementById(dropdownId);
+    const trigger = root.querySelector(".multiselect-trigger");
+    const menu = root.querySelector(".multiselect-menu");
+    const labelEl = root.querySelector(".multiselect-label");
+    const checkboxes = root.querySelectorAll("input[type=checkbox]");
+
+    function updateLabel() {
+      const checked = [...checkboxes].filter(c => c.checked).map(c => c.value);
+      if (checked.length === 0) {
+        labelEl.textContent = "none";
+      } else if (checked.length === checkboxes.length) {
+        labelEl.textContent = allLabel;
+      } else if (checked.length <= 2) {
+        labelEl.textContent = checked.join(", ");
+      } else {
+        labelEl.textContent = checked.length + " selected";
+      }
     }
+
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      root.classList.toggle("is-open");
+    });
+
+    menu.addEventListener("click", (e) => e.stopPropagation());
+
+    menu.addEventListener("change", () => {
+      const checked = new Set([...checkboxes].filter(c => c.checked).map(c => c.value));
+      updateLabel();
+      onChange(checked);
+    });
+
+    updateLabel();
+  }
+
+  document.addEventListener("click", () => {
+    document.querySelectorAll(".multiselect.is-open").forEach(d => d.classList.remove("is-open"));
+  });
+
+  bindMultiselect("cat-dropdown", "all categories", (checked) => {
+    catFilter = checked;
+    renderClosetList();
+  });
+
+  bindMultiselect("occ-dropdown", "all occasions", () => {});
+
+  const searchInput = document.getElementById("closet-search");
+  searchInput.addEventListener("input", () => {
+    searchQuery = searchInput.value.trim().toLowerCase();
     renderClosetList();
   });
 
@@ -527,19 +568,7 @@
 
   document.getElementById("shuffle-btn").addEventListener("click", shuffleFit);
 
-  document.getElementById("save-draft").addEventListener("click", () => {
-    const toast = document.createElement("div");
-    toast.className = "studio-toast";
-    toast.innerHTML = `draft saved — <span class="studio-toast-em">keep going.</span>`;
-    document.body.appendChild(toast);
-    requestAnimationFrame(() => toast.classList.add("in"));
-    setTimeout(() => {
-      toast.classList.remove("in");
-      setTimeout(() => toast.remove(), 350);
-    }, 2200);
-  });
-
-  document.getElementById("publish-btn").addEventListener("click", () => {
+document.getElementById("publish-btn").addEventListener("click", () => {
     const title = document.getElementById("fit-title").value.trim() || "untitled";
     const toast = document.createElement("div");
     toast.className = "studio-toast";
@@ -552,11 +581,9 @@
     }, 2800);
   });
 
-  // keep both title inputs in sync
   const studioName = document.getElementById("studio-name");
   const fitTitle   = document.getElementById("fit-title");
-  studioName.addEventListener("input", () => { fitTitle.value   = studioName.value; });
-  fitTitle.addEventListener("input",   () => { studioName.value = fitTitle.value; });
+  studioName.addEventListener("input", () => { fitTitle.textContent = studioName.value; });
 
   renderClosetList();
   renderCanvas();
