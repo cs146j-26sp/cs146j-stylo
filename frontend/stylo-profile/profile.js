@@ -1,10 +1,9 @@
 /* ============================================
    stylo — Profile page logic
    ============================================ */
-(function () {
-  const { ME, OUTFITS, ITEMS } = window.STYLO;
+window.addEventListener('stylo:ready', () => {
+  const { ITEMS } = window.STYLO;         // ← now safe, data is loaded
   const { itemCardHTML } = window.STYLO_UI;
-
   // Populate identity
   document.getElementById("avatar-initials").textContent = ME.initials;
   document.getElementById("avatar-caption").textContent  = "@" + ME.username;
