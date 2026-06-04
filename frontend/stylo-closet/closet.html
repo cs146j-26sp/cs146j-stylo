@@ -27,7 +27,10 @@
       <div class="subhead-note" id="closet-summary">
         <!-- filled by closet.js -->
       </div>
-      <button class="btn-filled" id="add-item-btn">+ Add a piece</button>
+      <button class="btn-filled" id="add-item-btn"
+        onclick="document.getElementById('upload-overlay').classList.add('is-open')">
+        + Add a piece
+      </button>
     </div>
 
     <div class="closet-filter-row" id="closet-filters">
@@ -50,6 +53,59 @@
     </div>
 
     <div class="closet-grid" id="closet-grid"></div>
+  </div>
+
+  <!-- add a piece modal -->
+  <div class="modal-overlay" id="upload-overlay"
+    onclick="if(event.target===this) this.classList.remove('is-open')"
+  >
+    <div class="upload-card">
+      <button class="modal-close-btn" id="upload-close-btn" aria-label="close"
+        onclick="document.getElementById('upload-overlay').classList.remove('is-open')">✕</button>
+      <h2 class="upload-title">add a piece</h2>
+
+      <div class="upload-dropzone" id="upload-dropzone">
+        <input type="file" id="upload-file" accept="image/*" />
+        <span class="material-symbols-outlined upload-dropzone-icon">upload</span>
+        <p class="upload-dropzone-label">drop image or <span class="upload-browse">browse</span></p>
+      </div>
+
+      <div class="upload-preview-wrap" id="upload-preview-wrap">
+        <img id="upload-preview-img" alt="preview" />
+        <div class="upload-processing" id="upload-processing">
+          <span class="upload-processing-dot"></span>removing background…
+        </div>
+      </div>
+
+      <div class="upload-form">
+        <div class="upload-field">
+          <span class="upload-field-label">item name</span>
+          <input class="upload-field-input" id="upload-name" type="text" placeholder="e.g. white linen shirt" />
+        </div>
+        <div class="upload-field">
+          <span class="upload-field-label">category</span>
+          <select class="upload-field-input" id="upload-category">
+            <option value="top">tops</option>
+            <option value="bottom">bottoms</option>
+            <option value="shoes">shoes</option>
+            <option value="accessory">accessories</option>
+          </select>
+        </div>
+        <div class="upload-field">
+          <span class="upload-field-label">status</span>
+          <div class="upload-status-tabs" id="upload-status-tabs">
+            <button class="upload-status-tab is-active" type="button" data-status="owned">owned</button>
+            <button class="upload-status-tab" type="button" data-status="wishlist">wishlist</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="upload-actions">
+        <button class="upload-secondary-btn" id="upload-cancel-btn"
+        onclick="document.getElementById('upload-overlay').classList.remove('is-open')">cancel</button>
+        <button class="upload-primary-btn" id="upload-add-btn">add to closet</button>
+      </div>
+    </div>
   </div>
 
   <script>

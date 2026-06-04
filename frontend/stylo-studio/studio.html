@@ -34,14 +34,13 @@
       <div class="studio-action-bar">
         <div class="studio-name-block">
           <span class="studio-name-prefix">name of outfit</span>
-          <input
-            class="studio-name-input"
-            id="studio-name"
-            value="last day of school!"
-          />
+          <span class="studio-name-display" id="studio-name">last day of school!</span>
         </div>
         <div class="actions">
-          <button class="btn-filled" id="publish-btn">Publish Outfit →</button>
+          <button class="btn-filled" id="publish-btn"
+            onclick="document.getElementById('publish-confirm-overlay').classList.add('is-open')">
+            Publish Outfit →
+          </button>
         </div>
       </div>
 
@@ -116,7 +115,7 @@
         <aside class="studio-panel">
           <div class="field">
             <span class="field-label">outfit title</span>
-            <p class="field-value" id="fit-title">last day of school!</p>
+            <input class="field-input" id="fit-title" type="text" value="last day of school!" />
           </div>
 
           <div class="field">
@@ -179,10 +178,34 @@
       </div>
     </div>
 
+    <!-- publish confirmation modal -->
+    <div class="modal-overlay" id="publish-confirm-overlay"
+      onclick="if(event.target===this) this.classList.remove('is-open')"
+    >
+      <div class="publish-confirm-card">
+        <h2 class="publish-confirm-title">ready to publish?</h2>
+        <p class="publish-confirm-body">
+          Your outfit will be visible on the <em>public feed</em> and your
+          <em>personal profile</em>.
+        </p>
+        <div class="publish-confirm-actions">
+          <button class="secondary-btn" id="publish-cancel-btn"
+            onclick="document.getElementById('publish-confirm-overlay').classList.remove('is-open')">
+            go back
+          </button>
+          <button class="btn-filled" id="publish-confirm-btn">
+            yes, publish →
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("header-mount").innerHTML =
-          window.STYLO_UI.renderHeader("studio");
+        try {
+          document.getElementById("header-mount").innerHTML =
+            window.STYLO_UI.renderHeader("studio");
+        } catch (e) { /* header is cosmetic – don't block the page */ }
       });
     </script>
   </body>

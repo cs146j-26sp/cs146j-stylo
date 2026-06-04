@@ -277,13 +277,26 @@ const state = {
 
 // -------------- feed helper funcs ------------
 
-function loadPosts(tab = "discover") {
-  // if tab = following, load following posts placeholder
-  // const posts = tab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
+async function loadPosts(tab = "discover") {
+  let publishedPosts = [];
+  try {
+    const resp = await fetch("/api/outfits");
+    const rows = await resp.json();
+    publishedPosts = rows.map(outfit => ({
+      id: outfit.id,
+      username: window.STYLO.ME.username,
+      avatarUrl: "",
+      imageUrl: outfit.cover,
+      overlayUrl: outfit.overlayUrl,
+      caption: outfit.title,
+      likeCount: outfit.likes,
+      commentCount: outfit.comments,
+      shareCount: outfit.remixes,
+      aspect: outfit.aspect,
+    }));
+  } catch (_) {}
 
-  const outfits = window.STYLO.OUTFITS;
-  const posts = outfits.map(outfit => ({
-    // map all labels from data.js onto feed posts
+  const staticPosts = window.STYLO.OUTFITS.map(outfit => ({
     id: outfit.id,
     username: window.STYLO.ME.username,
     avatarUrl: "",
@@ -296,8 +309,8 @@ function loadPosts(tab = "discover") {
     aspect: outfit.aspect,
   }));
 
-  // filter posts by filter btns
-  filteredPosts = filterPosts(posts);
+  const allPosts = [...publishedPosts, ...staticPosts];
+  filteredPosts = filterPosts(allPosts);
   renderFeed(filteredPosts);
 }
 

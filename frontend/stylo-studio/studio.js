@@ -568,22 +568,54 @@
 
   document.getElementById("shuffle-btn").addEventListener("click", shuffleFit);
 
-document.getElementById("publish-btn").addEventListener("click", () => {
+  // ---- Publish confirm action (open/close handled in inline HTML script) ----
+
+  document.getElementById("publish-confirm-btn").addEventListener("click", async () => {
+    document.getElementById("publish-confirm-overlay").classList.remove("is-open");
+
     const title = document.getElementById("fit-title").value.trim() || "untitled";
+    const occasion = [...document.querySelectorAll("#occ-dropdown input[type=checkbox]:checked")]
+      .map(c => c.value).join(",");
+
+    const firstItem = placements[0] ? findItem(placements[0].item_id) : null;
+    const overlayUrl = firstItem ? firstItem.image : "";
+
+    const covers = [
+      "/stylo-feed/media/post1tall.png", "/stylo-feed/media/post2wide.png",
+      "/stylo-feed/media/post3tall.png", "/stylo-feed/media/post4wide.png",
+      "/stylo-feed/media/post1wide.png", "/stylo-feed/media/post2tall.png",
+    ];
+    const cover = covers[Math.floor(Math.random() * covers.length)];
+    const aspect = cover.includes("tall") ? "tall" : "wide";
+
+    try {
+      const resp = await fetch("/api/outfits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: 1, name: title, occasion, image_url: cover, overlay_url: overlayUrl, aspect }),
+      });
+      const { id } = await resp.json();
+      window.STYLO.OUTFITS.unshift({
+        id: "pub-" + id, title, occasion, cover, overlayUrl, aspect,
+        likes: 0, comments: 0, remixes: 0, items: placements.map(p => p.item_id), tags: [], aesthetic: "",
+      });
+    } catch (err) {
+      console.error("publish failed:", err);
+    }
+
     const toast = document.createElement("div");
     toast.className = "studio-toast";
     toast.innerHTML = `posted — <span class="studio-toast-em">${title}</span>`;
     document.body.appendChild(toast);
     requestAnimationFrame(() => toast.classList.add("in"));
-    setTimeout(() => {
-      toast.classList.remove("in");
-      setTimeout(() => toast.remove(), 350);
-    }, 2800);
+    setTimeout(() => { toast.classList.remove("in"); setTimeout(() => toast.remove(), 350); }, 2800);
   });
 
-  const studioName = document.getElementById("studio-name");
-  const fitTitle   = document.getElementById("fit-title");
-  studioName.addEventListener("input", () => { fitTitle.textContent = studioName.value; });
+  // ---- Sync outfit title → display span ----
+
+  const fitTitle  = document.getElementById("fit-title");
+  const nameSpan  = document.getElementById("studio-name");
+  fitTitle.addEventListener("input", () => { nameSpan.textContent = fitTitle.value; });
 
   renderClosetList();
   renderCanvas();

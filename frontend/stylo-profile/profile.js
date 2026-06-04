@@ -72,7 +72,7 @@
   // ── Tabs ───────────────────────────────────────────────────
   let closetFilter = "all";
 
-  function renderTab(tab) {
+  async function renderTab(tab) {
     const root = document.getElementById("tab-content");
 
     if (tab === "closet") {
@@ -96,9 +96,20 @@
       return;
     }
 
-    const outfits = tab === "outfits" ? myOutfits : myRemixes;
-    if (!outfits.length) { root.innerHTML = `<div class="closet-empty">nothing here yet.</div>`; return; }
-    root.innerHTML = `<div class="outfit-grid">${outfits.map(outfitCardHTML).join("")}</div>`;
+    let displayOutfits = tab === "outfits" ? myOutfits : myRemixes;
+
+    if (tab === "outfits") {
+      let published = [];
+      try {
+        const resp = await fetch("/api/outfits");
+        published = await resp.json();
+      } catch (_) {}
+      displayOutfits = [...published, ...myOutfits];
+      document.getElementById("count-outfits").textContent = displayOutfits.length;
+    }
+
+    if (!displayOutfits.length) { root.innerHTML = `<div class="closet-empty">nothing here yet.</div>`; return; }
+    root.innerHTML = `<div class="outfit-grid">${displayOutfits.map(outfitCardHTML).join("")}</div>`;
   }
 
   function outfitCardHTML(o) {

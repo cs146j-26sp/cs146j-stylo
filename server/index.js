@@ -41,9 +41,11 @@ db.exec(`
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
     name TEXT,
-    item_ids TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    occasion TEXT,
+    image_url TEXT,
+    overlay_url TEXT,
+    aspect TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
   );
 
   CREATE TABLE IF NOT EXISTS posts (
@@ -55,6 +57,7 @@ db.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (outfit_id) REFERENCES outfits(id)
   );
+
   CREATE TABLE IF NOT EXISTS clothing_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER NOT NULL,
@@ -65,17 +68,6 @@ db.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id)
   ) STRICT;
 
-  CREATE TABLE IF NOT EXISTS outfits (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    name TEXT,
-    notes TEXT,
-    occasion TEXT,
-    image_url TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-  ) STRICT;
-
   CREATE TABLE IF NOT EXISTS outfit_items (
     outfit_id INTEGER NOT NULL,
     clothing_item_id INTEGER NOT NULL,
@@ -83,8 +75,12 @@ db.exec(`
     FOREIGN KEY (outfit_id) REFERENCES outfits(id),
     FOREIGN KEY (clothing_item_id) REFERENCES clothing_items(id)
   ) STRICT;
-  
 `);
+
+// add columns to existing DBs that were created before schema was finalised
+["occasion", "image_url", "overlay_url", "aspect"].forEach(col => {
+  try { db.exec(`ALTER TABLE outfits ADD COLUMN ${col} TEXT`); } catch (_) {}
+});
 
 // Redirect root to studio
 app.get("/", (req, res) => {
@@ -122,17 +118,31 @@ app.post("/api/clothing-items", (req, res) => {
 });
 
 app.get("/api/outfits", (req, res) => {
-  const outfits = db.prepare("SELECT * FROM outfits").all();
+  const rows = db.prepare("SELECT * FROM outfits ORDER BY created_at DESC").all();
+  const outfits = rows.map(r => ({
+    id: "pub-" + r.id,
+    title: r.name || "untitled",
+    occasion: r.occasion || "",
+    cover: r.image_url || "/stylo-feed/media/post1tall.png",
+    overlayUrl: r.overlay_url || "",
+    aspect: r.aspect || "tall",
+    likes: 0,
+    comments: 0,
+    remixes: 0,
+    items: [],
+    tags: [],
+    aesthetic: "",
+  }));
   res.json(outfits);
 });
 
 app.post("/api/outfits", (req, res) => {
-  const { user_id, name, notes, occasion, image_url } = req.body;
+  const { user_id, name, occasion, image_url, overlay_url, aspect } = req.body;
   const stmt = db.prepare(`
-    INSERT INTO outfits (user_id, name, notes, occasion, image_url)
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO outfits (user_id, name, occasion, image_url, overlay_url, aspect)
+    VALUES (?, ?, ?, ?, ?, ?)
   `);
-  const info = stmt.run(user_id, name, notes, occasion, image_url);
+  const info = stmt.run(user_id ?? 1, name, occasion, image_url, overlay_url, aspect);
   res.json({ id: info.lastInsertRowid });
 });
 
