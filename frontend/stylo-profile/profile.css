@@ -272,3 +272,53 @@
   gap: 10px;
   margin-top: 26px;
 }
+
+/* ============================================================
+   PROFILE — privacy toggle (edit modal) + private state
+   ============================================================ */
+.privacy-field { margin-bottom: 4px; }
+.privacy-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.privacy-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.privacy-text { display: flex; flex-direction: column; }
+.privacy-title {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.privacy-sub {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--text);
+  opacity: 0.6;
+  margin-top: 2px;
+}
+
+.private-badge {
+  font-size: 1.6rem;
+  vertical-align: middle;
+}
+
+.profile-locked {
+  text-align: center;
+  line-height: 1.7;
+  padding: 60px 20px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--text);
+  opacity: 0.7;
+}
