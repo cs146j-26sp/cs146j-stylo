@@ -745,3 +745,102 @@
   .closet-list { max-height: 320px; }
 }
 
+
+/* publish confirmation modal */
+.publish-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(46, 19, 18, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 10000;
+  align-items: center;
+  justify-content: center;
+}
+.publish-modal-overlay.is-open {
+  display: flex;
+}
+.publish-modal {
+  background: #fffaf2;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 36px 40px 32px;
+  max-width: 440px;
+  width: calc(100% - 40px);
+  box-shadow: 0 32px 64px -24px rgba(46, 19, 18, 0.35);
+  animation: modal-in 0.22s ease;
+}
+@keyframes modal-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+.publish-modal-eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+.publish-modal-heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.9rem;
+  line-height: 1.1;
+  color: var(--text);
+  margin: 0 0 16px;
+}
+.publish-modal-heading em {
+  font-style: italic;
+  color: var(--accent);
+}
+.publish-modal-body {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text);
+  opacity: 0.78;
+  margin: 0 0 28px;
+}
+.publish-modal-body strong {
+  font-weight: 600;
+  opacity: 1;
+  color: var(--text);
+}
+.publish-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.publish-modal-confirm {
+  padding: 11px 22px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: var(--text);
+  color: var(--bg);
+  border: 1.4px solid var(--text);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.publish-modal-confirm:hover {
+  background: transparent;
+  color: var(--text);
+}
+.publish-modal-cancel {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.15s;
+}
+.publish-modal-cancel:hover {
+  opacity: 1;
+}

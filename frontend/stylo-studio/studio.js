@@ -331,7 +331,7 @@ window.addEventListener('stylo:ready', () => {
       <button data-act="cw">↻</button>
       <button data-act="front">↑ front</button>
       <button data-act="back">↓ back</button>
-      <button data-act="remove" class="remove">✕</button>
+      <button data-act="remove" class="remove" title="remove item"><span class="material-symbols-outlined" style="font-size:16px;line-height:1;vertical-align:middle;font-variation-settings:'FILL' 1">delete</span></button>
     `;
 
     tb.addEventListener("pointerdown", (e) => {
@@ -569,23 +569,57 @@ window.addEventListener('stylo:ready', () => {
 
   document.getElementById("shuffle-btn").addEventListener("click", shuffleFit);
 
-document.getElementById("publish-btn").addEventListener("click", () => {
-    const title = document.getElementById("fit-title").value.trim() || "untitled";
-    const toast = document.createElement("div");
-    toast.className = "studio-toast";
-    toast.innerHTML = `posted — <span class="studio-toast-em">${title}</span>`;
-    document.body.appendChild(toast);
-    requestAnimationFrame(() => toast.classList.add("in"));
-    setTimeout(() => {
-      toast.classList.remove("in");
-      setTimeout(() => toast.remove(), 350);
-    }, 2800);
-  });
-
-  const studioName = document.getElementById("studio-name");
-  const fitTitle   = document.getElementById("fit-title");
-  studioName.addEventListener("input", () => { fitTitle.textContent = studioName.value; });
-
   renderClosetList();
   renderCanvas();
-})();
+});
+
+// ---- Publish modal + title sync (no ITEMS needed, wire up on DOMContentLoaded) ----
+
+function showToast(title) {
+  const toast = document.createElement("div");
+  toast.className = "studio-toast";
+  toast.innerHTML = `posted — <span class="studio-toast-em">${title}</span>`;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add("in"));
+  setTimeout(() => {
+    toast.classList.remove("in");
+    setTimeout(() => toast.remove(), 350);
+  }, 2800);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const studioName  = document.getElementById("studio-name");
+  const fitTitle    = document.getElementById("fit-title");
+  const publishModal = document.getElementById("publish-modal");
+  const modalTitle  = document.getElementById("publish-modal-title");
+
+  // keep both title fields in sync (bidirectional)
+  studioName.addEventListener("input", () => {
+    fitTitle.value = studioName.value;
+  });
+  fitTitle.addEventListener("input", () => {
+    studioName.value = fitTitle.value;
+  });
+
+  // publish button → open modal
+  document.getElementById("publish-btn").addEventListener("click", () => {
+    modalTitle.textContent = studioName.value.trim() || "untitled";
+    publishModal.classList.add("is-open");
+  });
+
+  // confirm → toast + close
+  document.getElementById("publish-confirm-btn").addEventListener("click", () => {
+    publishModal.classList.remove("is-open");
+    showToast(studioName.value.trim() || "untitled");
+  });
+
+  // cancel → just close
+  document.getElementById("publish-cancel-btn").addEventListener("click", () => {
+    publishModal.classList.remove("is-open");
+  });
+
+  // click backdrop → close
+  publishModal.addEventListener("click", (e) => {
+    if (e.target === publishModal) publishModal.classList.remove("is-open");
+  });
+});
