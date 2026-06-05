@@ -11,8 +11,16 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Serve the frontend statically
-app.use(express.static(path.join(__dirname, "../frontend")));
+// Serve the frontend statically. no-store so the browser always pulls the
+// latest html/js/css during development instead of running a stale cached copy
+// (otherwise edits like the wired-up buttons don't show up until a hard refresh).
+app.use(
+  express.static(path.join(__dirname, "../frontend"), {
+    etag: false,
+    lastModified: false,
+    setHeaders: (res) => res.setHeader("Cache-Control", "no-store"),
+  })
+);
 
 // Connect to SQLite
 const db = new Database(process.env.DB_PATH || "./server/stylo.db");
@@ -88,7 +96,7 @@ db.exec(`
     FOREIGN KEY (clothing_item_id) REFERENCES clothing_items(id)
   ) STRICT;
 
-  -- Profile page: who follows whom (Sprint 2, section 6)
+  -- who follows who (profile page)
   CREATE TABLE IF NOT EXISTS follows (
     follower_id INTEGER NOT NULL,
     followee_id INTEGER NOT NULL,
@@ -99,10 +107,8 @@ db.exec(`
   );
 `);
 
-// A few columns the profile page relies on may be missing on databases that
-// were created by an earlier version of this schema. ADD COLUMN is a no-op the
-// second time around, so we guard each one and ignore the "duplicate column"
-// error instead of trying to detect it up front.
+// add columns to older DBs that don't have them yet.
+// ADD COLUMN throws if it's already there, so just ignore that.
 function ensureColumn(sql) {
   try {
     db.exec(sql);
@@ -113,10 +119,11 @@ function ensureColumn(sql) {
 ensureColumn("ALTER TABLE users ADD COLUMN display_name TEXT");
 ensureColumn("ALTER TABLE users ADD COLUMN avatar TEXT");
 ensureColumn("ALTER TABLE users ADD COLUMN is_private INTEGER DEFAULT 0");
-ensureColumn("ALTER TABLE closet_items ADD COLUMN status TEXT DEFAULT 'owned'");
+// studio, closet and profile all read the wardrobe from clothing_items
+ensureColumn("ALTER TABLE clothing_items ADD COLUMN image_url TEXT");
+ensureColumn("ALTER TABLE clothing_items ADD COLUMN status TEXT DEFAULT 'owned'");
 
-// Seed a little demo data so the profile endpoints return something to look at
-// on a fresh database. Skipped entirely once any users exist.
+// seed some demo data on a fresh db so the pages aren't empty
 if (db.prepare("SELECT COUNT(*) AS n FROM users").get().n === 0) {
   const insertUser = db.prepare(
     "INSERT INTO users (username, display_name, bio, is_private) VALUES (?, ?, ?, ?)"
@@ -130,7 +137,7 @@ if (db.prepare("SELECT COUNT(*) AS n FROM users").get().n === 0) {
   const userIds = demoUsers.map((u) => Number(insertUser.run(...u).lastInsertRowid));
   const [jane, iris, leo, mara] = userIds;
 
-  // Jane (the demo "me") follows iris and leo; iris + leo follow jane back.
+  // jane follows iris + leo, they follow her back, mara follows her too
   const follow = db.prepare(
     "INSERT OR IGNORE INTO follows (follower_id, followee_id) VALUES (?, ?)"
   );
@@ -140,21 +147,34 @@ if (db.prepare("SELECT COUNT(*) AS n FROM users").get().n === 0) {
   follow.run(leo, jane);
   follow.run(mara, jane);
 
-  // A handful of wardrobe items + outfits per user so the grids aren't empty.
+  // jane gets the full starter closet so the grids look full, the others
+  // just get a couple items each for their profiles
   const insertItem = db.prepare(
-    "INSERT INTO closet_items (user_id, name, category, image_url, status) VALUES (?, ?, ?, ?, ?)"
+    "INSERT INTO clothing_items (user_id, name, category, status, image_url) VALUES (?, ?, ?, ?, ?)"
   );
   const seedItems = [
-    [jane, "mint cami", "top", "/stylo-feed/media/items/mint-cami.png", "owned"],
-    [jane, "washed shorts", "bottom", "/stylo-feed/media/items/wash-shorts.png", "owned"],
-    [jane, "wide leg jeans", "bottom", "/stylo-feed/media/items/wide-jeans.png", "wishlist"],
-    [jane, "tan ballet flats", "shoes", "/stylo-feed/media/items/tan-flats.png", "owned"],
-    [iris, "rose floral cami", "top", "/stylo-feed/media/items/rose-cami.png", "owned"],
-    [iris, "olive bag", "accessory", "/stylo-feed/media/items/olive-bag.png", "wishlist"],
-    [leo, "valentin tee", "top", "/stylo-feed/media/items/valentin-tee.png", "owned"],
+    // jane — full closet
+    [jane, "mint cami", "top", "owned", "/stylo-feed/media/items/mint-cami.png"],
+    [jane, "rose floral cami", "top", "owned", "/stylo-feed/media/items/rose-cami.png"],
+    [jane, "valentin tee", "top", "owned", "/stylo-feed/media/items/valentin-tee.png"],
+    [jane, "puff blouse", "top", "wishlist", "/stylo-feed/media/items/puff-blouse.png"],
+    [jane, "washed shorts", "bottom", "owned", "/stylo-feed/media/items/wash-shorts.png"],
+    [jane, "wide denim shorts", "bottom", "owned", "/stylo-feed/media/items/wide-denim.png"],
+    [jane, "wide leg jeans", "bottom", "wishlist", "/stylo-feed/media/items/wide-jeans.png"],
+    [jane, "tan ballet flats", "shoes", "owned", "/stylo-feed/media/items/tan-flats.png"],
+    [jane, "beige ballet flats", "shoes", "owned", "/stylo-feed/media/items/beige-flats.png"],
+    [jane, "brown shoulder bag", "accessory", "owned", "/stylo-feed/media/items/brown-bag.png"],
+    [jane, "black shoulder bag", "accessory", "owned", "/stylo-feed/media/items/black-bag.png"],
+    [jane, "olive bag", "accessory", "wishlist", "/stylo-feed/media/items/olive-bag.png"],
+    [jane, "red cap", "accessory", "owned", "/stylo-feed/media/items/red-cap.png"],
+    [jane, "plaid scrunchie", "accessory", "owned", "/stylo-feed/media/items/plaid-scrunchie.png"],
+    // the others
+    [iris, "rose floral cami", "top", "owned", "/stylo-feed/media/items/rose-cami.png"],
+    [iris, "olive bag", "accessory", "wishlist", "/stylo-feed/media/items/olive-bag.png"],
+    [leo, "valentin tee", "top", "owned", "/stylo-feed/media/items/valentin-tee.png"],
   ];
   for (const it of seedItems) {
-    try { insertItem.run(...it); } catch (_) { /* tolerate schema drift */ }
+    try { insertItem.run(...it); } catch (_) {}
   }
 
   const insertOutfit = db.prepare(
@@ -167,7 +187,7 @@ if (db.prepare("SELECT COUNT(*) AS n FROM users").get().n === 0) {
     [leo, "thrifted layers", "/stylo-feed/media/post4wide.png"],
   ];
   for (const o of seedOutfits) {
-    try { insertOutfit.run(...o); } catch (_) { /* tolerate schema drift */ }
+    try { insertOutfit.run(...o); } catch (_) {}
   }
 }
 
@@ -186,12 +206,6 @@ app.get("/api/users", (req, res) => {
   const users = db.prepare("SELECT * FROM users").all();
   res.json(users);
 });
-
-// app.get("/api/clothing-items", (req, res) => {
-//   const items = db.prepare("SELECT * FROM clothing_items").all();
-//   res.json(items);
-// });
-
 
 app.get("/api/outfits", (req, res) => {
   const outfits = db.prepare("SELECT * FROM outfits").all();
@@ -253,64 +267,6 @@ app.delete("/api/outfits/:id", (req, res) => {
   stmt.run(id);
   res.json({ message: "Outfit deleted" });
 });
-/* app.get("GET /items?filter=wishlist", (req, res) => {
-  const stmt = db.prepare(`
-    SELECT *
-    FROM clothing_items
-    WHERE status = 'wishlist'
-  `);
-  const items = stmt.all();
-  res.json(items);
-});
-app.get("GET /items?filter=owned", (req, res) => {
-  const stmt = db.prepare(`
-    SELECT *
-    FROM clothing_items
-    WHERE status = 'owned'
-  `);
-  const items = stmt.all();
-  res.json(items);
-});
-
-app.get("GET /items?filter=tops", (req, res) => {
-  const stmt = db.prepare(`
-    SELECT *
-    FROM clothing_items
-    WHERE status = 'tops'
-  `);
-  const items = stmt.all();
-  res.json(items);
-});
-
-app.get("GET /items?filter=bottoms", (req, res) => {
-  const stmt = db.prepare(`
-    SELECT *
-    FROM clothing_items
-    WHERE status = 'bottoms'
-  `);
-  const items = stmt.all();
-  res.json(items);
-});
-app.get("GET /items?filter=accessories", (req, res) => {
-  const stmt = db.prepare(`
-    SELECT *
-    FROM clothing_items
-    WHERE status = 'accessories'
-  `);
-  const items = stmt.all();
-  res.json(items);
-});
-
-app.get("GET /items?filter=shoes", (req, res) => {
-  const stmt = db.prepare(`
-    SELECT *
-    FROM clothing_items
-    WHERE status = 'wishlist'
-  `);
-  const items = stmt.all();
-  res.json(items);
-}); */
-
 // handle filters
 app.get("/api/clothing-items", (req, res) => {
   const { status, category } = req.query;
@@ -354,12 +310,10 @@ app.get("/api/outfits/:id/items", (req, res) => {
   res.json(items);
 });
 
-/* ============================================================
-   PROFILE PAGE (Sprint 2, section 6)
-   ============================================================ */
+// ---- profile page routes ----
 
-// There is no auth/session yet, so the "current" user is whoever the client
-// names via ?viewer_id= (GET) or follower_id in the body (follow actions).
+// no real login yet, so the "current" user is whoever the client says it is
+// (?viewer_id= on GETs, follower_id in the body when following)
 function getViewerId(req) {
   const raw = req.query.viewer_id ?? req.header("x-user-id");
   const id = Number(raw);
@@ -373,9 +327,7 @@ function isFollowing(followerId, followeeId) {
     .get(followerId, followeeId);
 }
 
-// Whether `viewerId` is allowed to see `owner`'s private content.
-// Public profiles are open; private ones are visible only to the owner and
-// their followers.
+// public profiles are open to everyone, private ones only to the owner + followers
 function canView(owner, viewerId) {
   if (!owner.is_private) return true;
   if (viewerId && viewerId === owner.id) return true;
@@ -488,7 +440,7 @@ app.get("/api/users/:id/items", (req, res) => {
   if (!canView(owner, getViewerId(req)))
     return res.status(403).json({ error: "This profile is private", private: true });
 
-  let query = "SELECT * FROM closet_items WHERE user_id = ?";
+  let query = "SELECT * FROM clothing_items WHERE user_id = ?";
   const params = [owner.id];
   const { status } = req.query; // "owned" | "wishlist"
   if (status === "owned" || status === "wishlist") {
