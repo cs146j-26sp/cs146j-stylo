@@ -1,31 +1,24 @@
-/* ============================================
-   stylo — Profile page logic
-   ----------------------------------------------
-   Talks to the Sprint-2 profile API:
-     GET    /api/users/:id            (info + follower/following counts)
-     GET    /api/users/:id/outfits    (their saved outfits)
-     GET    /api/users/:id/items      (their wardrobe items)
-     POST   /api/follow/:id           (follow)
-     DELETE /api/follow/:id           (unfollow)
-     PUT    /api/users/:id            (edit bio / privacy)
-   Runs after data.js fires 'stylo:ready' (matches studio.js / closet.js).
-   Falls back to the demo data on window.STYLO if the API is unreachable.
-   ============================================ */
-window.addEventListener("stylo:ready", () => {
+/******* stylo — Profile page helper funcs ******/
+// shows a user's profile + outfits + closet. own profile = edit/privacy,
+// someone else's = follow button. pulls everything from /api/users/:id.
+// if the server's down it just falls back to the demo data in data.js.
+
+window.addEventListener('stylo:ready', () => {
   const { ME, OUTFITS, ITEMS } = window.STYLO;
   const { itemCardHTML } = window.STYLO_UI;
 
-  // No auth yet, so the logged-in "me" is a fixed demo user (seeded as id 1).
+  // no auth yet so "me" is just user 1
   const CURRENT_USER_ID = 1;
 
-  // Which profile are we looking at? ?user=<id>; default = your own profile.
+  // ?user=<id> in the url, otherwise it's your own profile
   const params = new URLSearchParams(location.search);
   const requestedId = Number(params.get("user"));
   const profileId =
     Number.isInteger(requestedId) && requestedId > 0 ? requestedId : CURRENT_USER_ID;
   const isOwnProfile = profileId === CURRENT_USER_ID;
 
-  // ── tiny fetch helper ──────────────────────────────────────
+  // little fetch wrapper — throws a flagged error on 403 so we can show the
+  // "this profile is private" state instead of just blowing up
   async function getJSON(url) {
     const res = await fetch(url);
     if (res.status === 403) {
@@ -47,14 +40,14 @@ window.addEventListener("stylo:ready", () => {
       .slice(0, 2);
   }
 
-  // ── view state, populated by load() ────────────────────────
-  let profile = null;  // { id, username, display_name, bio, is_private, followers, following, is_following, is_self }
-  let outfits = [];    // card-ready outfit objects
-  let remixes = [];    // card-ready outfit objects (mock only; API has no remix concept)
-  let items = [];      // card-ready closet items
-  let locked = false;  // private profile we're not allowed to see
+  // filled in by load()
+  let profile = null;
+  let outfits = [];
+  let remixes = [];   // no remix endpoint yet, only the mock fallback uses this
+  let items = [];
+  let locked = false; // private profile we can't see
 
-  // Map API rows → the shapes the existing card renderers expect.
+  // db rows -> the shapes the existing card renderers want
   const mapItem = (row) => ({
     id: String(row.id),
     name: row.name,
@@ -71,6 +64,7 @@ window.addEventListener("stylo:ready", () => {
     remixes: row.remixes || 0,
   });
 
+  // server unreachable -> use the demo data so the page still shows something
   function useMockData() {
     profile = {
       id: ME.id,
@@ -93,7 +87,6 @@ window.addEventListener("stylo:ready", () => {
     try {
       profile = await getJSON(`/api/users/${profileId}?${viewerQS}`);
     } catch (_) {
-      // API down / user missing → fall back to the demo data and stop.
       useMockData();
       return;
     }
@@ -112,7 +105,6 @@ window.addEventListener("stylo:ready", () => {
     }
   }
 
-  // ── rendering ──────────────────────────────────────────────
   function renderIdentity() {
     const name = profile.display_name || profile.username;
     document.getElementById("avatar-initials").textContent = initialsOf(name);
@@ -143,11 +135,11 @@ window.addEventListener("stylo:ready", () => {
     const btnFollow = document.getElementById("btn-follow");
 
     if (isOwnProfile) {
-      // Own profile: editable, no follow button (task: remove follow on own profile).
+      // your own profile — hide follow, keep edit
       btnFollow.hidden = true;
       btnEdit.hidden = false;
     } else {
-      // Someone else's profile: can follow, can't edit.
+      // someone else — hide edit, show follow
       btnEdit.hidden = true;
       btnFollow.hidden = false;
       setFollowButton(profile.is_following);
@@ -160,7 +152,6 @@ window.addEventListener("stylo:ready", () => {
     btn.classList.toggle("btn-following", following);
   }
 
-  // ── follow / unfollow with live count ──────────────────────
   function wireFollow() {
     const btn = document.getElementById("btn-follow");
     btn.addEventListener("click", async () => {
@@ -176,7 +167,7 @@ window.addEventListener("stylo:ready", () => {
         profile.is_following = data.following;
         profile.followers = data.followers;
       } catch (_) {
-        // Offline: still reflect the intent locally.
+        // offline — just toggle it locally
         profile.is_following = willFollow;
         profile.followers += willFollow ? 1 : -1;
       }
@@ -187,7 +178,23 @@ window.addEventListener("stylo:ready", () => {
     });
   }
 
-  // ── edit profile modal (own profile only) ──────────────────
+  // share — copy a link to this profile to the clipboard
+  function wireShare() {
+    const btn = document.getElementById("btn-share");
+    btn.addEventListener("click", async () => {
+      const url = `${location.origin}${location.pathname}?user=${profileId}`;
+      const original = btn.textContent;
+      try {
+        await navigator.clipboard.writeText(url);
+        btn.textContent = "Copied!";
+      } catch (_) {
+        btn.textContent = "Copy failed";
+      }
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    });
+  }
+
+  // edit modal — own profile only
   function wireEditModal() {
     const modal = document.getElementById("edit-modal");
     const privateInput = document.getElementById("edit-private");
@@ -216,7 +223,7 @@ window.addEventListener("stylo:ready", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ display_name: name || null, bio, is_private: isPrivate }),
         });
-      } catch (_) { /* offline: update the view anyway */ }
+      } catch (_) { /* offline — update the view anyway */ }
 
       if (name) profile.display_name = name;
       profile.bio = bio;
@@ -226,7 +233,6 @@ window.addEventListener("stylo:ready", () => {
     });
   }
 
-  // ── tabs ───────────────────────────────────────────────────
   let closetFilter = "all";
 
   function outfitCardHTML(o) {
@@ -297,13 +303,13 @@ window.addEventListener("stylo:ready", () => {
     });
   }
 
-  // ── boot ───────────────────────────────────────────────────
   (async function init() {
     await load();
     renderIdentity();
     renderActions();
     renderTabCounts();
     wireTabs();
+    wireShare();
 
     if (isOwnProfile) {
       wireEditModal();
