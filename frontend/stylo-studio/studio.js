@@ -593,6 +593,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const publishModal = document.getElementById("publish-modal");
   const modalTitle  = document.getElementById("publish-modal-title");
 
+   // add remix functionality
+  const remixRaw = localStorage.getItem("remixPost");
+
+  if (remixRaw) {
+    const remixPost = JSON.parse(remixRaw);
+    localStorage.removeItem("remixPost"); // clear after reading
+
+    // pre-fill the outfit name
+    const nameInput = document.getElementById("studio-name");
+    if (nameInput) nameInput.value = `remix of ${remixPost.username}'s fit`;
+
+    const fitTitle = document.getElementById("fit-title");
+    if (fitTitle) fitTitle.value = `remix of ${remixPost.username}'s fit`;
+
+    // hide the empty hint
+    const hint = document.getElementById("canvas-empty-hint");
+    if (hint) hint.style.display = "none";
+
+    // place the background image on the canvas
+    const canvas = document.getElementById("canvas");
+    if (canvas && remixPost.imageUrl) {
+      const piece = document.createElement("div");
+      piece.className = "canvas-piece";
+      piece.style.cssText = "left:60px; top:40px; width:260px; height:320px;";
+      piece.innerHTML = `<img src="../${remixPost.imageUrl}" alt="remixed outfit" />`;
+      canvas.appendChild(piece);
+    }
+
+    // place the overlay clothing item if there is one
+    if (canvas && remixPost.overlayUrl) {
+      const overlayPiece = document.createElement("div");
+      overlayPiece.className = "canvas-piece";
+      overlayPiece.style.cssText = "left:100px; top:80px; width:160px; height:200px;";
+      overlayPiece.innerHTML = `<img src="../${remixPost.overlayUrl}" alt="clothing item" />`;
+      canvas.appendChild(overlayPiece);
+    }
+  }
+
+
+  
   // keep both title fields in sync (bidirectional)
   studioName.addEventListener("input", () => {
     fitTitle.value = studioName.value;
@@ -622,4 +662,6 @@ document.addEventListener("DOMContentLoaded", () => {
   publishModal.addEventListener("click", (e) => {
     if (e.target === publishModal) publishModal.classList.remove("is-open");
   });
+
+ 
 });

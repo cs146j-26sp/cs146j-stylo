@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const grid = document.getElementById("closet-grid");
       grid.innerHTML = items.length
         ? items.map((it) => itemCardHTML(it, { size: 180 })).join("")
-        : `<div class="closet-empty">nothing matches — loosen a filter.</div>`;
+        : `<div class="closet-empty">No items match these filters. Try changing a filter!</div>`;
 
       const owned  = ITEMS.filter((i) => i.status === "owned").length;
       const wished = ITEMS.filter((i) => i.status === "wishlist").length;

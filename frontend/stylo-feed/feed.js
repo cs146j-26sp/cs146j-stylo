@@ -228,19 +228,92 @@ const FOLLOWING_POSTS = [
 
 // placeholder comments on post
 const MOCK_COMMENTS = {
-  "1": [
+  "outfit1": [
     { username: "angela", text: "i love this this palette" },
     { username: "hannah", text: "where is the top from??" },
   ],
-  "2": [{ username: "vivian", text: "so cute!! 🌸" }],
-  "3": [
+  "outfit2": [{ username: "vivian", text: "so cute!! 🌸" },
+        { username: "gudetama", text: "egg!" },
+         { username: "kaycee", text: "my favorite influencer!" }
+  ],
+  "outfit3": [
     { username: "kaycee", text: "this is everything" },
     { username: "angela", text: "need those shoes immediately" },
+        { username: "gudetama", text: "egg!" }
   ],
-  "9": [{ username: "hannah", text: "love love this coat on you" }],
-  "11": [{ username: "vivian", text: "thrift goals" },
-  { username: "kaycee", text: "ur my favorite influencer!!" }
+  "outfit4": [{ username: "vivian", text: "thrift goals" },
+  { username: "kaycee", text: "my favorite influencer!" },
+  { username: "hannah", text: "love love this coat on you" },
+        { username: "gudetama", text: "egg!" }
+
   ],
+  "outfit5": [{ username: "vivian", text: "thrift goals" },
+  { username: "kaycee", text: "my favorite influencer!" },
+  { username: "gudetama", text: "egg!" },
+  { username: "gudetama", text: "egg!!" },
+  { username: "gudetama", text: "egg!!!" }
+  ],
+  "outfit6": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+  ],
+  "outfit7": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+    { username: "vivian", text: "thrift goals" },
+  { username: "kaycee", text: "my favorite influencer!!" },
+    { username: "gudetama", text: "egg!" }
+  ],
+  "outfit8": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+  ],
+  "outfit9": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+      { username: "gudetama", text: "egg!" },
+  { username: "gudetama", text: "egg!!" },
+  { username: "gudetama", text: "egg!!!" }
+  ],
+  "outfit10": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+    { username: "vivian", text: "thrift goals" },
+  { username: "kaycee", text: "my favorite influencer!!" }
+  ],
+  "outfit11": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+  ],
+  "outfit12": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+  ],
+  "outfit13": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+    { username: "vivian", text: "thrift goals" },
+  { username: "kaycee", text: "my favorite influencer!!" },
+      { username: "gudetama", text: "egg!" }
+
+  ],
+  "outfit14": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+  ],
+  "outfit15": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+      { username: "gudetama", text: "egg!" },
+  { username: "gudetama", text: "egg!!" },
+  { username: "gudetama", text: "egg!!!" }
+  ],
+  "outfit16": [
+    { username: "angela", text: "i love this this palette" },
+    { username: "hannah", text: "where is the top from??" },
+    { username: "vivian", text: "thrift goals" },
+  { username: "kaycee", text: "my favorite influencer!!" }
+  ]
 };
 
 // -------------- update actual comment counts ------------
@@ -252,7 +325,7 @@ function getCommentCount(post) {
 }
 
 // make the counts reflect actual # of comments
-[...DISCOVER_POSTS, ...FOLLOWING_POSTS].forEach(post => {
+[...window.STYLO.OUTFITS].forEach(post => {
   // combine array using ...
   post.commentCount = getCommentCount(post.id);
 });
@@ -294,7 +367,8 @@ function loadPosts(tab = "discover") {
     overlayUrl: outfit.overlayUrl ?? "",
     caption: outfit.title,
     likeCount: outfit.likes,
-    commentCount: outfit.comments,
+    commentCount: MOCK_COMMENTS[outfit.id] 
+    ? MOCK_COMMENTS[outfit.id].length : outfit.comments,
     shareCount: outfit.remixes,
     aspect: outfit.aspect,
     tags: outfit.tags ?? [],
@@ -728,13 +802,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const noRemixBtn = document.querySelector(".share-btn-close");
 
   yesRemixBtn.addEventListener("click", () => {
-    window.location.href = "../stylo-studio/studio.html";
-  });
+  const post = getPost(state.currentPostId);
+  if (post) {
+    // to remix, save post clothes to local storage
+    localStorage.setItem("remixPost", JSON.stringify({
+      id: post.id,
+      imageUrl: post.imageUrl,
+      overlayUrl: post.overlayUrl,
+      caption: post.caption,
+      username: post.username,
+ 
+    }));
+         console.log("remix worked");
+  }
+  window.location.href = "../stylo-studio/studio.html";
+});
 
-/*   noRemixBtn.addEventListener("click", () => {
+  noRemixBtn.addEventListener("click", () => {
     window.location.href = "../stylo-feed/feed.html";
     sharePopup.setAttribute("hidden");
-  }); */
+  });
 
   noRemixBtn.addEventListener("click", () => {
   const sharePopup = document.getElementById("share-popup"); // add this

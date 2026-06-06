@@ -25,15 +25,7 @@ app.use(
 // Connect to SQLite
 const db = new Database(process.env.DB_PATH || "./server/stylo.db");
 
-// removed 
-/*   CREATE TABLE IF NOT EXISTS outfits (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    name TEXT,
-    item_ids TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-  ); */
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -267,69 +259,8 @@ app.delete("/api/outfits/:id", (req, res) => {
   stmt.run(id);
   res.json({ message: "Outfit deleted" });
 });
-// <<<<<<< Updated upstream
-// // handle filters
-// =======
-// /* app.get("GET /items?filter=wishlist", (req, res) => {
-//   const stmt = db.prepare(`
-//     SELECT *
-//     FROM clothing_items
-//     WHERE status = 'wishlist'
-//   `);
-//   const items = stmt.all();
-//   res.json(items);
-// });
-// app.get("GET /items?filter=owned", (req, res) => {
-//   const stmt = db.prepare(`
-//     SELECT *
-//     FROM clothing_items
-//     WHERE status = 'owned'
-//   `);
-//   const items = stmt.all();
-//   res.json(items);
-// });
 
-// app.get("GET /items?filter=tops", (req, res) => {
-//   const stmt = db.prepare(`
-//     SELECT *
-//     FROM clothing_items
-//     WHERE status = 'tops'
-//   `);
-//   const items = stmt.all();
-//   res.json(items);
-// });
-
-// app.get("GET /items?filter=bottoms", (req, res) => {
-//   const stmt = db.prepare(`
-//     SELECT *
-//     FROM clothing_items
-//     WHERE status = 'bottoms'
-//   `);
-//   const items = stmt.all();
-//   res.json(items);
-// });
-// app.get("GET /items?filter=accessories", (req, res) => {
-//   const stmt = db.prepare(`
-//     SELECT *
-//     FROM clothing_items
-//     WHERE status = 'accessories'
-//   `);
-//   const items = stmt.all();
-//   res.json(items);
-// });
-
-// app.get("GET /items?filter=shoes", (req, res) => {
-//   const stmt = db.prepare(`
-//     SELECT *
-//     FROM clothing_items
-//     WHERE status = 'wishlist'
-//   `);
-//   const items = stmt.all();
-//   res.json(items);
-// }); */
-
-// /* // handle filters
-// >>>>>>> Stashed changes
+// handle filters
 app.get("/api/clothing-items", (req, res) => {
   const { status, category } = req.query;
 
@@ -347,7 +278,7 @@ app.get("/api/clothing-items", (req, res) => {
 
   const items = db.prepare(query).all(...params);
   res.json(items);
-}); */
+}); 
 
 
 
