@@ -287,7 +287,7 @@ function loadPosts(tab = "discover") {
   const posts = outfits.map(outfit => ({
  
     // map all labels from data.js onto feed posts
-    id: outfit.id, // must be id and NOT src to be able to find outfit
+    id: outfit.id, // must be id and NOT src to be able to find
     username: outfit.username ?? window.STYLO.ME.username,
     avatarUrl: outfit.avatarUrl ?? "",
     imageUrl: outfit.cover,
@@ -314,8 +314,12 @@ function filterPosts(posts) {
 
   // filter by aesthetic
   if (state.filters.aesthetic) {
-    filtered = filtered.filter( // .filter() keeps items with only that aesthetic
-      post => post.aesthetic === state.filters.aesthetic);
+    filtered = filtered.filter(post => {
+  if (Array.isArray(post.aesthetic)) {
+    return post.aesthetic.includes(state.filters.aesthetic);
+  }
+  return post.aesthetic === state.filters.aesthetic;
+});
   }
 
   // filter by category/tag
@@ -328,7 +332,7 @@ function filterPosts(posts) {
 
   // compare posts to apply dropdown filters
   if (state.filters.sortBy === "most-popular") { // sort by like count
-    filtered.sort((firstPost, secondPost) => secondPost.likes - firstPost.likes);
+    filtered.sort((firstPost, secondPost) => secondPost.likeCount - firstPost.likeCount);
   } else if (state.filters.sortBy === "oldest") {
     filtered.sort((firstPost, secondPost) => firstPost.id.localeCompare(secondPost.id));
   } else if (state.filters.sortBy === "most-recent") {

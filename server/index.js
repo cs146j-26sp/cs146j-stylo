@@ -267,7 +267,69 @@ app.delete("/api/outfits/:id", (req, res) => {
   stmt.run(id);
   res.json({ message: "Outfit deleted" });
 });
-// handle filters
+// <<<<<<< Updated upstream
+// // handle filters
+// =======
+// /* app.get("GET /items?filter=wishlist", (req, res) => {
+//   const stmt = db.prepare(`
+//     SELECT *
+//     FROM clothing_items
+//     WHERE status = 'wishlist'
+//   `);
+//   const items = stmt.all();
+//   res.json(items);
+// });
+// app.get("GET /items?filter=owned", (req, res) => {
+//   const stmt = db.prepare(`
+//     SELECT *
+//     FROM clothing_items
+//     WHERE status = 'owned'
+//   `);
+//   const items = stmt.all();
+//   res.json(items);
+// });
+
+// app.get("GET /items?filter=tops", (req, res) => {
+//   const stmt = db.prepare(`
+//     SELECT *
+//     FROM clothing_items
+//     WHERE status = 'tops'
+//   `);
+//   const items = stmt.all();
+//   res.json(items);
+// });
+
+// app.get("GET /items?filter=bottoms", (req, res) => {
+//   const stmt = db.prepare(`
+//     SELECT *
+//     FROM clothing_items
+//     WHERE status = 'bottoms'
+//   `);
+//   const items = stmt.all();
+//   res.json(items);
+// });
+// app.get("GET /items?filter=accessories", (req, res) => {
+//   const stmt = db.prepare(`
+//     SELECT *
+//     FROM clothing_items
+//     WHERE status = 'accessories'
+//   `);
+//   const items = stmt.all();
+//   res.json(items);
+// });
+
+// app.get("GET /items?filter=shoes", (req, res) => {
+//   const stmt = db.prepare(`
+//     SELECT *
+//     FROM clothing_items
+//     WHERE status = 'wishlist'
+//   `);
+//   const items = stmt.all();
+//   res.json(items);
+// }); */
+
+// /* // handle filters
+// >>>>>>> Stashed changes
 app.get("/api/clothing-items", (req, res) => {
   const { status, category } = req.query;
 
@@ -285,6 +347,34 @@ app.get("/api/clothing-items", (req, res) => {
 
   const items = db.prepare(query).all(...params);
   res.json(items);
+}); */
+
+
+
+app.get("/api/clothing-items", (req, res) => {
+  try {
+    const { status, category } = req.query;
+
+    let query = "SELECT * FROM clothing_items WHERE 1=1";
+    const params = [];
+
+    if (status) {
+      query += " AND status = ?";
+      params.push(status);
+    }
+
+    if (category) {
+      query += " AND category = ?";
+      params.push(category);
+    }
+
+    const items = db.prepare(query).all(...params);
+    res.json(items);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 
