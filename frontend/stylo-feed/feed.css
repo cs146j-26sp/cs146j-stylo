@@ -96,6 +96,59 @@
   display: block;
 }
 
+.background {
+  width: 75%;
+  height: 60%;
+  justify-content: center;
+  display: flex;
+  color: white;
+}
+.card-outfit-img {
+  position: relative;
+}
+
+.card-flatlay,
+.post-flatlay {
+  position: absolute;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 2;
+}
+
+/* Tall posts: transparent cutout is at x: 81-479 (15.88% - 93.92%, width 78.04%), y: 151-549 (18.88% - 68.63%, height 49.75%) */
+.post-card--tall .card-flatlay,
+.post-overlay-card--tall .post-flatlay {
+  left: 15.88%;
+  top: 18.875%;
+  width: 78.04%;
+  height: 49.75%;
+}
+
+/* Wide posts: transparent cutout is at x: 81-799 (9.20% - 90.80%, width 81.59%), y: 151-649 (18.88% - 81.13%, height 62.25%) */
+.post-card--wide .card-flatlay,
+.post-overlay-card--wide .post-flatlay {
+  left: 9.20%;
+  top: 18.875%;
+  width: 81.59%;
+  height: 62.25%;
+}
+
+.card-flatlay-piece,
+.post-flatlay-piece {
+  position: absolute;
+  filter: drop-shadow(0 4px 8px rgba(46, 19, 18, 0.18));
+}
+
+.card-flatlay-piece img,
+.post-flatlay-piece img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
 .card-username {
   display: flex;
   flex-direction: row;
@@ -103,7 +156,6 @@
   gap: 5px;
   padding: 10px 12px;
 }
-
 
 /************* profile photo styling *************/
 .avatar {
@@ -176,22 +228,21 @@
   color: var(--accent);
 }
 
-
 .like-btn.active .material-symbols-outlined,
 .post-like-btn.active .material-symbols-outlined {
   color: #e05c6e;
-  font-variation-settings: 'FILL' 1;
+  font-variation-settings: "FILL" 1;
 }
 
 .share-btn.active .material-symbols-outlined,
 .post-share-btn.active .material-symbols-outlined {
   color: #7b9ccc;
-  font-variation-settings: 'FILL' 1;
+  font-variation-settings: "FILL" 1;
 }
 
 .post-comment-btn.active .material-symbols-outlined {
   color: #7b9ccc;
-  font-variation-settings: 'FILL' 1;
+  font-variation-settings: "FILL" 1;
 }
 
 /************* post overlay styling *************/
@@ -209,7 +260,6 @@
 .post-overlay.open {
   display: flex;
 }
-
 
 /* adjust post overlay for tall vs. wide posts */
 .post-overlay-card {
@@ -232,6 +282,10 @@
   flex: 0 0 48%;
 }
 
+.post-overlay-card--tall .post-img-wrapper {
+  aspect-ratio: 2.5/4;
+}
+
 .post-overlay-card--wide {
   width: min(90vw, 820px);
 }
@@ -240,10 +294,13 @@
   flex: 0 0 62%;
 }
 
+.post-overlay-card--wide .post-img-wrapper {
+  aspect-ratio: 4/3;
+}
+
 /* constrain image so tall images don't overflow */
 .post-overlay-card--tall .post-outfit-img {
-  object-fit: contain;
-  /* contain = show full image */
+  object-fit: cover;
   background: transparent;
 }
 
@@ -300,11 +357,12 @@
 .post-img-wrapper {
   flex: 1;
   overflow: hidden;
+  position: relative;
 }
 
 .post-outfit-img {
   position: relative;
-  z-index: 999;
+  z-index: 1;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -313,16 +371,14 @@
 
 .post-overlay-img {
   position: absolute;
-  bottom: 33%;
-  left: 31%;
-  margin: 0px auto;
+  bottom: 28%;
+  left: 50%;
   transform: translateX(-50%);
-  width: 52%;
+  width: 84%;
   height: auto;
   object-fit: contain;
+  z-index: 2;
 }
-
-
 
 .post-actions {
   display: flex;
@@ -410,7 +466,6 @@
   inset: 0px;
   z-index: 999;
   background: rgba(0, 0, 0, 0.091);
-
 }
 
 .share-popup-card {

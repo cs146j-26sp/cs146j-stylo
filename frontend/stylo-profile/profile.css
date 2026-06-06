@@ -144,10 +144,30 @@
 .outfit-card:hover {
   transform: translateY(-3px);
 }
+.outfit-card .outfit-cover {
+  position: relative;
+}
 .outfit-card img {
   width: 100%;
   height: auto;
   display: block;
+}
+/* remix indicator on a remixed outfit card */
+.outfit-card .remix-tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
 }
 .outfit-card .outfit-meta {
   margin-top: 8px;
@@ -219,6 +239,71 @@
   margin-bottom: 8px;
 }
 
+/* closet grid + item cards — profile.html doesn't load closet.css, so the
+   shared itemCardHTML markup needs its sizing rules here too. */
+.closet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 24px 18px;
+  padding: 6px 0 40px;
+}
+
+.item-card {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 8px 8px 32px;
+}
+.item-card:hover { transform: translateY(-4px); }
+
+.item-photo {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+.item-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  -webkit-user-drag: none;
+  user-select: none;
+  filter: drop-shadow(0 6px 10px rgba(46, 19, 18, 0.12));
+}
+.item-caption {
+  position: absolute;
+  left: 8px; right: 8px; bottom: 6px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0.78;
+}
+.wishlist-badge {
+  position: absolute;
+  top: 6px; right: 6px;
+  font-family: var(--font-body);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
 /* ============================================================
    PROFILE — edit modal
    ============================================================ */
@@ -265,7 +350,35 @@
   line-height: 1;
 }
 .modal-close:hover { opacity: 1; background: none; color: var(--text); }
-.modal-form .field { margin-bottom: 18px; }
+.modal-form .field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+/* match the field styling used in studio / closet so the prefilled
+   name + bio render in the page font + color, not the browser default */
+.field-label {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+  opacity: 0.55;
+}
+.field-input {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 2px;
+  outline: none;
+  width: 100%;
+}
+.field-input:focus { border-bottom-color: var(--accent); }
 .modal-actions {
   display: flex;
   justify-content: flex-end;

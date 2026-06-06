@@ -51,7 +51,7 @@ const DISCOVER_POSTS = [
     avatarUrl: "",
     imageUrl: "media/post3wide.png",
     overlayUrl: "media/items/tan-flats.png",
-    caption: "today's business casual outfit ✨ #dark academia #ootd",
+    caption: "today's business casual outfit ✨ #darkacademia #ootd",
     likeCount: 500,
     commentCount: 4,
     shareCount: 2,
@@ -350,13 +350,159 @@ const state = {
 
 // -------------- feed helper funcs ------------
 
-function loadPosts(tab = "discover") {
-  // if tab = following, change to following posts 
-    const outfits = tab === "following"
-  ? window.STYLO.OUTFITS.slice(8, 16)
-  : window.STYLO.OUTFITS;
+const DEFAULT_FRAME_TALL = "media/post1tall.png";
+const DEFAULT_FRAME_WIDE = "media/post1wide.png";
 
- // const outfits = window.STYLO.OUTFITS;
+function normalizeFeedUrl(url) {
+  if (!url) return "";
+  if (/^https?:/.test(url) || url.startsWith("/")) return url;
+  return url.replace(/^\/?/, "");
+}
+
+function isClothingItemUrl(url) {
+  return /\/items\//.test(url || "");
+}
+
+function getItemCategory(p) {
+  const slug = p.item_id || (p.image || "").split("/").pop().replace(/\.[^.]+$/, "");
+  const catalogItem = window.STYLO?.CATALOG?.find(
+    (it) => it.id === p.item_id || it.id === slug || (it.image && it.image.includes(slug))
+  );
+  if (catalogItem) return catalogItem.category;
+
+  const closetItem = window.STYLO?.ITEMS?.find(
+    (it) => it.id === p.item_id || (it.image && it.image.includes(slug))
+  );
+  if (closetItem) return closetItem.category;
+
+  const imgName = (p.image || "").toLowerCase();
+  if (imgName.includes("dress")) return "dress";
+  if (imgName.includes("cami") || imgName.includes("blouse") || imgName.includes("tee") || imgName.includes("top") || imgName.includes("cardigan")) return "top";
+  if (imgName.includes("short") || imgName.includes("jean") || imgName.includes("skirt") || imgName.includes("bottom")) return "bottom";
+  if (imgName.includes("flat") || imgName.includes("shoe") || imgName.includes("boot") || imgName.includes("heel") || imgName.includes("converse")) return "shoes";
+  if (imgName.includes("bag") || imgName.includes("cap") || imgName.includes("scrunchie") || imgName.includes("hat") || imgName.includes("necklace") || imgName.includes("charm")) return "accessory";
+
+  return "top";
+}
+
+function pieceWidthPct(p) {
+  const cat = getItemCategory(p);
+  const baseSize = {
+    top: 240,
+    outer: 250,
+    bottom: 230,
+    skirt: 230,
+    dress: 260,
+    shoes: 180,
+    accessory: 170,
+    hat: 160,
+  }[cat] || 220;
+  
+  const pct = (baseSize * (p.scale || 1)) / 540 * 100;
+  return Math.min(Math.max(pct, 10), 60);
+}
+
+function buildFlatlayPieces(layout, classPrefix) {
+  return layout
+    .slice()
+    .sort((a, b) => (a.z || 0) - (b.z || 0))
+    .map((p, i) => {
+      const w = pieceWidthPct(p);
+      return `
+        <div class="${classPrefix}-piece" style="
+          left:${p.x}%;
+          top:${p.y}%;
+          width:${w}%;
+          transform:translate(-50%,-50%) rotate(${p.rot || 0}deg);
+          z-index:${p.z ?? i + 1};
+        ">
+          <img src="${normalizeFeedUrl(p.image)}" alt="${p.name || ""}" />
+        </div>`;
+    })
+    .join("");
+}
+
+// user-published outfits store a canvas layout — render every piece on the frame
+function buildOutfitPreviewHtml(post) {
+  const layout = Array.isArray(post.layout)
+    ? post.layout.filter((p) => p && p.image)
+    : [];
+
+  if (layout.length) {
+    const isWide = post.aspect === "wide";
+    const frame = isClothingItemUrl(post.imageUrl)
+      ? (isWide ? DEFAULT_FRAME_WIDE : DEFAULT_FRAME_TALL)
+      : normalizeFeedUrl(post.imageUrl) || DEFAULT_FRAME_TALL;
+
+    return `
+      <img class="card-outfit-img" src="${frame}" alt="post frame" />
+      <div class="card-flatlay">${buildFlatlayPieces(layout, "card-flatlay")}</div>
+    `;
+  }
+
+  const bg = normalizeFeedUrl(post.imageUrl);
+  const overlay = post.overlayUrl ? normalizeFeedUrl(post.overlayUrl) : "";
+  return `
+    <img class="card-outfit-img" src="${bg}" alt="post frame bg" />
+    ${
+      overlay
+        ? `<img class="card-overlay-img" src="${overlay}" alt="full outfit" />`
+        : ""
+    }
+  `;
+}
+
+function mountPostFlatlay(post, wrapperEl, frameImgEl, overlayImgEl) {
+  const layout = Array.isArray(post.layout)
+    ? post.layout.filter((p) => p && p.image)
+    : [];
+
+  wrapperEl.querySelector(".post-flatlay")?.remove();
+
+  if (!layout.length) {
+    frameImgEl.src = normalizeFeedUrl(post.imageUrl);
+    overlayImgEl.src = post.overlayUrl ? normalizeFeedUrl(post.overlayUrl) : "";
+    overlayImgEl.style.display = post.overlayUrl ? "" : "none";
+    return;
+  }
+
+  const isWide = post.aspect === "wide";
+  const frame = isClothingItemUrl(post.imageUrl)
+    ? (isWide ? DEFAULT_FRAME_WIDE : DEFAULT_FRAME_TALL)
+    : normalizeFeedUrl(post.imageUrl) || DEFAULT_FRAME_TALL;
+
+  frameImgEl.src = frame;
+  overlayImgEl.src = "";
+  overlayImgEl.style.display = "none";
+
+  const flatlay = document.createElement("div");
+  flatlay.className = "post-flatlay";
+  flatlay.innerHTML = buildFlatlayPieces(layout, "post-flatlay");
+  wrapperEl.appendChild(flatlay);
+}
+
+// outfits for the feed — fetched from the api once and cached here. falls back
+// to the hardcoded OUTFITS in data.js if the server is unreachable.
+let FEED_OUTFITS = null;
+
+async function fetchFeedOutfits() {
+  try {
+    const res = await fetch("/api/outfits");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    FEED_OUTFITS = await res.json();
+  } catch (err) {
+    console.warn("feed api down, using hardcoded outfits", err);
+    FEED_OUTFITS = window.STYLO.OUTFITS;
+  }
+}
+
+function loadPosts(tab = "discover") {
+  const all = FEED_OUTFITS || window.STYLO.OUTFITS;
+  // following = posts by other people (everything not authored by me)
+  const outfits = tab === "following"
+    ? all.filter((o) => (o.username || "") !== window.STYLO.ME.username)
+    : all;
+
   const posts = outfits.map(outfit => ({
  
     // map all labels from data.js onto feed posts
@@ -373,7 +519,10 @@ function loadPosts(tab = "discover") {
     aspect: outfit.aspect,
     tags: outfit.tags ?? [],
     aesthetic: outfit.aesthetic ?? "",
-    
+    // keep the item slugs so studio can rebuild this look when you remix it
+    items: outfit.items ?? [],
+    layout: outfit.layout ?? null,
+
   }));
 
   // filter posts by filter btns
@@ -484,7 +633,7 @@ function appendPosts(posts, page) {
 
 function createPostCard(post) {
   const card = document.createElement("div");
-  card.className = "post-card";
+  card.className = `post-card post-card--${post.aspect === "wide" ? "wide" : "tall"}`;
   card.dataset.id = post.id;
 
   const avatar =
@@ -496,13 +645,7 @@ function createPostCard(post) {
       ${avatar} <strong>@${post.username}</strong>
     </div>
 <div class="card-img-wrapper">
-  <img class="card-outfit-img" src="${post.imageUrl}" alt="post frame bg" />
-  ${
-    post.overlayUrl
-      ? `<img class="card-overlay-img" src="${post.overlayUrl}" alt="full outfit" />`
-     
-      : ""
-  }
+  ${buildOutfitPreviewHtml(post)}
 </div>
     ${post.caption ? `<p class="card-caption">${post.caption}</p>` : ""}
     <div class="card-footer">
@@ -627,10 +770,9 @@ function openModal(post) {
   state.currentPostId = post.id;
   const overlayCard = document.getElementById("post-overlay-card");
 
-  // determine if image is tall
-  const isTall = post.cover
-    ? post.cover.includes("tall")
-    : post.imageUrl?.includes("tall");
+  const isTall = post.aspect
+    ? post.aspect !== "wide"
+    : post.imageUrl?.includes("tall") ?? true;
   // remove existing style classes, add the tall property back
   overlayCard.classList.remove("post-overlay-card--tall", "post-overlay-card--wide");
   overlayCard.classList.add(isTall ? "post-overlay-card--tall" : "post-overlay-card--wide");
@@ -643,9 +785,13 @@ function openModal(post) {
   document.getElementById("post-username").innerHTML =
     `${avatar}<strong>@${post.username}</strong>`;
 
-  // load all images for post overlay
-  document.getElementById("post-outfit-img").src = post.imageUrl;
-  document.getElementById("post-overlay-img").src = post.overlayUrl ?? "";
+  // load frame + flatlay (or legacy overlay) for the expanded post view
+  mountPostFlatlay(
+    post,
+    document.querySelector(".post-img-wrapper"),
+    document.getElementById("post-outfit-img"),
+    document.getElementById("post-overlay-img")
+  );
   document.getElementById("post-caption").textContent = post.caption ?? "";
 
   syncModalCounts(post);
@@ -749,12 +895,26 @@ function switchTab(tab) {
 // -------------- initialization functionality ------------
 
 document.addEventListener("DOMContentLoaded", () => {
-  // loadPosts("discover");
+  // fetch outfits from the api (falls back to hardcoded), then render the feed
+  const startFeed = async () => {
+    const navigationEntries = performance.getEntriesByType('navigation');
+    const isReload = (navigationEntries.length > 0 && navigationEntries[0].type === 'reload') ||
+                     (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
+    if (isReload) {
+      try {
+        await fetch("/api/outfits", { method: "DELETE" });
+      } catch (err) {
+        console.error("Failed to delete user outfits on reload", err);
+      }
+    }
+    await fetchFeedOutfits();
+    loadPosts("discover");
+  };
   if (window.STYLO && window.STYLO.OUTFITS) {
-  loadPosts("discover");
-} else {
-  window.addEventListener("stylo:ready", () => loadPosts("discover"), { once: true });
-}
+    startFeed();
+  } else {
+    window.addEventListener("stylo:ready", startFeed, { once: true });
+  }
 
   // clicking "create post" takes user to Studio page
   document.getElementById("post-btn")
@@ -801,33 +961,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const yesRemixBtn = document.querySelector(".share-btn-yes");
   const noRemixBtn = document.querySelector(".share-btn-close");
 
+  // yes -> save what we need about the post, then send them to studio to remix it
   yesRemixBtn.addEventListener("click", () => {
-  const post = getPost(state.currentPostId);
-  if (post) {
-    // to remix, save post clothes to local storage
-    localStorage.setItem("remixPost", JSON.stringify({
-      id: post.id,
-      imageUrl: post.imageUrl,
-      overlayUrl: post.overlayUrl,
-      caption: post.caption,
-      username: post.username,
- 
-    }));
-         console.log("remix worked");
-  }
-  window.location.href = "../stylo-studio/studio.html";
-});
-
-  noRemixBtn.addEventListener("click", () => {
-    window.location.href = "../stylo-feed/feed.html";
-    sharePopup.setAttribute("hidden");
+    const post = getPost(state.currentPostId);
+    if (post) {
+      localStorage.setItem(
+        "remixPost",
+        JSON.stringify({
+          sourceId: post.id,
+          username: post.username,
+          title: post.caption,
+          cover: post.imageUrl,
+          overlayUrl: post.overlayUrl,
+          items: post.items ?? [], // slugs we drop onto the canvas
+          aesthetic: post.aesthetic ?? "",
+          tags: post.tags ?? [],
+        })
+      );
+    }
+    window.location.href = "../stylo-studio/studio.html";
   });
 
+  // no -> just close the popup
   noRemixBtn.addEventListener("click", () => {
-  const sharePopup = document.getElementById("share-popup"); // add this
-  sharePopup.setAttribute("hidden", "");
-  // remove the window.location.href — this navigates away instead of just closing
-});
+    document.getElementById("share-popup").setAttribute("hidden", "");
+  });
 
   // add filter functionality
   document.getElementById("filter-sort").addEventListener("change", event => {
