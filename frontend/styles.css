@@ -60,7 +60,7 @@ menu {
 .menu-img {
   position: absolute;
   z-index: -1;
-  margin-top: -315px;
+  margin-top: -325px;
   left: -30px;
   width: calc(100% + 30px);
   min-width: 1440px;
