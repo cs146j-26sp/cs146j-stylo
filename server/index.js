@@ -471,7 +471,20 @@ app.get("/api/users/:id/items", (req, res) => {
   query += " ORDER BY id DESC";
   res.json(db.prepare(query).all(...params));
 });
+// POST /api/users/:id/items — add a new clothing item to their wardrobe
+app.post("/api/users/:id/items", (req, res) => {
+  const userId = Number(req.params.id);
+  const { name, category, status, color, image_url } = req.body;
+  if (!name) return res.status(400).json({ error: "name is required" });
 
+  const info = db.prepare(`
+    INSERT INTO clothing_items (user_id, name, category, status, color, image_url)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `).run(userId, name, category || "top", status || "owned", color || null, image_url || null);
+
+  const newItem = db.prepare("SELECT * FROM clothing_items WHERE id = ?").get(info.lastInsertRowid);
+  res.status(201).json(newItem);
+});
 // app listen at bottom of file so everything is defined before
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
