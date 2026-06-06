@@ -26,9 +26,8 @@
   padding: 3px;
 }
 .status-tab {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 0.92rem;
+  font-family: var(--font-body);
+  font-size: 0.80rem;
   padding: 4px 12px;
   background: transparent;
   color: var(--text);
@@ -838,7 +837,7 @@
   color: var(--text);
   opacity: 0.5;
   cursor: pointer;
-  padding: 0;
+  padding: 11px 14px;
   transition: opacity 0.15s;
 }
 .publish-modal-cancel:hover {
