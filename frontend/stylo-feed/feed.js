@@ -278,11 +278,14 @@ const state = {
 // -------------- feed helper funcs ------------
 
 function loadPosts(tab = "discover") {
-  // if tab = following, load following posts placeholder
-  // const posts = tab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
+  // if tab = following, change to following posts 
+    const outfits = tab === "following"
+  ? window.STYLO.OUTFITS.slice(8, 16)
+  : window.STYLO.OUTFITS;
 
-  const outfits = window.STYLO.OUTFITS;
+ // const outfits = window.STYLO.OUTFITS;
   const posts = outfits.map(outfit => ({
+ 
     // map all labels from data.js onto feed posts
     id: outfit.id, // must be id and NOT src to be able to find outfit
     username: outfit.username ?? window.STYLO.ME.username,
@@ -377,26 +380,26 @@ function appendPosts(posts, page) {
   });
 }
 
-// when user scrolls near bottom of screen div, this observer activates
-const infiniteScroll = document.querySelector("#infinite-scroll");
+// // when user scrolls near bottom of screen div, this observer activates
+// const infiniteScroll = document.querySelector("#infinite-scroll");
 
-const scrollObserver = new IntersectionObserver((entries) => {
-  // if sentinel is visible
-  if (entries[0].isIntersecting) {
-    // track current page status
-    const currentPosts
-      = state.currentTab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
-    const visible = state.currentPage * POSTS_PER_PAGE;
-    // if no more posts
-    if (visible >= currentPosts.length) return;
+// const scrollObserver = new IntersectionObserver((entries) => {
+//   // if sentinel is visible
+//   if (entries[0].isIntersecting) {
+//     // track current page status
+//     const currentPosts
+//       = state.currentTab === "following" ? FOLLOWING_POSTS : DISCOVER_POSTS;
+//     const visible = state.currentPage * POSTS_PER_PAGE;
+//     // if no more posts
+//     if (visible >= currentPosts.length) return;
 
-    // only if we have 2+ pages?
-    state.currentPage += 1;
-    appendPosts(currentPosts, state.currentPage);
-  }
-}, { threshold: 0.1 }); // call observer when 10% of infiniteScroll is visible
+//     // only if we have 2+ pages?
+//     state.currentPage += 1;
+//     appendPosts(currentPosts, state.currentPage);
+//   }
+// }, { threshold: 0.1 }); // call observer when 10% of infiniteScroll is visible
 
-scrollObserver.observe(infiniteScroll);
+// scrollObserver.observe(infiniteScroll);
 
 
 // -------------- indiv post functionality ------------
@@ -703,14 +706,6 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("keydown", event => {
       if (event.key === "Enter") postComment();
     });
-
-/*   // feed- toggle like button on and off
-  document.getElementById("post-like-btn")
-    .addEventListener("click", () => {
-      const post = getPost(state.currentPostId);
-      const card = document.querySelector(`.post-card[data-id="${state.currentPostId}"]`);
-      if (post && card) toggleLike(post, card);
-    }); */
 
   // overlay- toggle like btn
   document.getElementById("post-like-btn").addEventListener("click", toggleLikeOverlay);
