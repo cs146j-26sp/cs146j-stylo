@@ -414,14 +414,15 @@ function createPostCard(post) {
         <div class="card-username">
       ${avatar} <strong>@${post.username}</strong>
     </div>
-
-    <div class="card-img-wrapper"> 
-      <img class="card-outfit-img" src="${post.imageUrl}" alt="post frame bg" />
-   ${post.overlayUrl
-      ? `<img class="card-overlay-img" src="${post.overlayUrl}" alt="clothing item" />`
-      : ""}
-      </div>
-    
+<div class="card-img-wrapper">
+  <img class="card-outfit-img" src="${post.imageUrl}" alt="post frame bg" />
+  ${
+    post.overlayUrl
+      ? `<img class="card-overlay-img" src="${post.overlayUrl}" alt="full outfit" />`
+     
+      : ""
+  }
+</div>
     ${post.caption ? `<p class="card-caption">${post.caption}</p>` : ""}
     <div class="card-footer">
       <button class="action-btn post-like-btn 
@@ -667,7 +668,12 @@ function switchTab(tab) {
 // -------------- initialization functionality ------------
 
 document.addEventListener("DOMContentLoaded", () => {
+  // loadPosts("discover");
+  if (window.STYLO && window.STYLO.OUTFITS) {
   loadPosts("discover");
+} else {
+  window.addEventListener("stylo:ready", () => loadPosts("discover"), { once: true });
+}
 
   // clicking "create post" takes user to Studio page
   document.getElementById("post-btn")

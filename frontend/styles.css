@@ -11,7 +11,7 @@
   --accent-soft: rgba(255, 227, 197, 0.229);
   --border: rgba(42, 51, 68, 0.12);
   --popup-border: rgb(57, 35, 27);
-  --font-display: "Instrument Serif", serif;
+ --font-display: "Instrument serif", serif;
   --font-body: "Albert Sans", sans-serif;
 }
 
@@ -140,7 +140,7 @@ a.account {
 }
 
 .title {
-  font-family: var(--font-display);
+  font-family: "DM Serif Display", serif;
   font-weight: 700;
   font-size: 2.5rem;
   margin-bottom: 20px;

@@ -289,7 +289,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 2px 7px;
-  border-radius: 999px;
+  border-radius: 30px;
   background: var(--accent-soft);
   color: var(--accent);
   border: 1px solid var(--accent);
