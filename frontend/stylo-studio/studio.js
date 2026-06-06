@@ -15,7 +15,9 @@
 ============================================ */
 window.addEventListener('stylo:ready', () => {
   const { ITEMS } = window.STYLO;         // ← now safe, data is loaded
+  const CATALOG = window.STYLO.CATALOG || []; // every item, not just owned ones
   const { itemCardHTML } = window.STYLO_UI;
+  const CURRENT_USER_ID = 1; // no auth yet so "me" is just user 1
 
 
   // stores every clothing item currently placed on the canvas
@@ -46,8 +48,10 @@ window.addEventListener('stylo:ready', () => {
   const usedList = $("#used-list");
   const emptyHint = $("#canvas-empty-hint");
 
+  // look up an item by id, checking the closet first then the full catalog
+  // (so remixed pieces you don't own still show up on the canvas)
   function findItem(id) {
-    return ITEMS.find((i) => i.id === id);
+    return ITEMS.find((i) => i.id === id) || CATALOG.find((i) => i.id === id);
   }
 
   function clamp(v, a, b) {
@@ -569,6 +573,257 @@ window.addEventListener('stylo:ready', () => {
 
   document.getElementById("shuffle-btn").addEventListener("click", shuffleFit);
 
+  // ---- remix ----
+  // coming in from "remix" on a feed post leaves a remixPost in localStorage.
+  // rebuild that look on the canvas, mark it as a remix, and let the user add
+  // any pieces they don't own to their closet
+
+  let remixMeta = null; // set while we're remixing someone's post
+
+  const basename = (u) => (u || "").split("/").pop();
+
+  // feed covers are stored relative to /stylo-feed, so make them absolute and
+  // the profile page can load them from its own folder too
+  function normalizeCover(url) {
+    if (!url) return null;
+    if (/^https?:/.test(url) || url.startsWith("/")) return url;
+    return "/stylo-feed/" + url.replace(/^\.?\//, "");
+  }
+
+  // strip the #hashtags out of a caption so it reads as a plain outfit name
+  function stripHashtags(text) {
+    return (text || "")
+      .replace(/#[^\s#]+/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  // lay out a list of slugs on the canvas — tops up top, bottoms in the
+  // middle, shoes down low, accessories off to the side
+  function flatlayPlacements(slugs) {
+    const SPOTS = {
+      tops: { x: 42, y: 30 },
+      bottoms: { x: 46, y: 60 },
+      shoes: { x: 55, y: 85 },
+      accessories: { x: 76, y: 42 },
+      other: { x: 50, y: 50 },
+    };
+    const used = {};
+    return slugs
+      .map((slug) => findItem(slug))
+      .filter(Boolean)
+      .map((item, i) => {
+        const group = getCatGroup(item.category) || "other";
+        const n = used[group] || 0;
+        used[group] = n + 1;
+        const spot = SPOTS[group] || SPOTS.other;
+        return {
+          item_id: item.id,
+          x: clamp(spot.x + n * 12 - 4, 8, 92),
+          y: clamp(spot.y + (group === "accessories" ? n * 16 : 0), 8, 92),
+          scale: 0.95,
+          rot: rand(-5, 5),
+          z: i + 1,
+        };
+      });
+  }
+
+  // remix pieces the user doesn't own yet. match on the image filename since
+  // owned items use numeric ids but the catalog is keyed by slug
+  function missingItems(slugs) {
+    const owned = new Set(ITEMS.map((i) => basename(i.image)));
+    const seen = new Set();
+    const out = [];
+    for (const slug of slugs) {
+      const item = findItem(slug);
+      if (!item) continue;
+      const base = basename(item.image);
+      if (owned.has(base) || seen.has(base)) continue;
+      seen.add(base);
+      out.push(item);
+    }
+    return out;
+  }
+
+  function renderRemixBadge() {
+    if (!remixMeta) return;
+    let badge = document.getElementById("remix-badge");
+    if (!badge) {
+      badge = document.createElement("div");
+      badge.id = "remix-badge";
+      badge.className = "remix-badge";
+      const bar = document.querySelector(".studio-action-bar");
+      if (bar) bar.appendChild(badge);
+    }
+    badge.innerHTML =
+      `<span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">refresh</span> ` +
+      `remixing <strong>@${remixMeta.username}</strong>'s look`;
+  }
+
+  async function addRemixItem(slug, status, row) {
+    const item = findItem(slug);
+    if (!item) return;
+    const payload = {
+      user_id: CURRENT_USER_ID,
+      name: item.name,
+      category: item.category,
+      status,
+      image_url: item.image,
+    };
+    let newId = slug;
+    try {
+      const res = await fetch("/api/clothing-items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (data && data.id != null) newId = String(data.id);
+    } catch (_) {
+      // offline — just add it locally
+    }
+    ITEMS.push({
+      id: newId,
+      name: item.name,
+      category: item.category,
+      status,
+      image: item.image,
+    });
+    // now that it's owned it has a real id, so point any canvas piece still on
+    // the slug at the new id (otherwise it won't get linked when we publish)
+    if (newId !== slug) {
+      let relinked = false;
+      for (const p of placements) {
+        if (p.item_id === slug) { p.item_id = newId; relinked = true; }
+      }
+      if (relinked) renderCanvas();
+    }
+    row.remove();
+    renderClosetList();
+    const panel = document.getElementById("remix-missing");
+    if (panel && !panel.querySelector(".remix-missing-row")) panel.remove();
+  }
+
+  function renderMissingPanel(slugs) {
+    const existing = document.getElementById("remix-missing");
+    if (existing) existing.remove();
+
+    const missing = missingItems(slugs);
+    if (!missing.length) return;
+
+    const panel = document.createElement("div");
+    panel.id = "remix-missing";
+    panel.className = "remix-missing";
+    panel.innerHTML = `
+      <div class="remix-missing-title">remixed pieces you don't own yet</div>
+      ${missing
+        .map(
+          (it) => `
+        <div class="remix-missing-row" data-id="${it.id}">
+          <img src="${it.image}" alt="${it.name}" />
+          <span class="remix-missing-name">${it.name}</span>
+          <span class="remix-missing-actions">
+            <button class="remix-add-btn" data-status="owned">+ closet</button>
+            <button class="remix-add-btn ghost" data-status="wishlist">+ wishlist</button>
+          </span>
+        </div>`
+        )
+        .join("")}
+    `;
+
+    const anchor = document.getElementById("closet-list");
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(panel, anchor);
+
+    panel.querySelectorAll(".remix-add-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const row = btn.closest(".remix-missing-row");
+        addRemixItem(row.dataset.id, btn.dataset.status, row);
+      });
+    });
+  }
+
+  function loadRemix() {
+    const raw = localStorage.getItem("remixPost");
+    if (!raw) return;
+    localStorage.removeItem("remixPost"); // consume so a refresh doesn't re-load
+
+    let data;
+    try {
+      data = JSON.parse(raw);
+    } catch (_) {
+      return;
+    }
+
+    const slugs = Array.isArray(data.items) ? data.items : [];
+    const built = flatlayPlacements(slugs);
+    if (built.length) {
+      placements = built;
+      selectedIdx = null;
+    }
+
+    remixMeta = {
+      sourceId: data.sourceId,
+      username: data.username,
+      title: data.title || "",
+      cover: normalizeCover(data.cover),
+    };
+
+    // prefill the name with the original outfit's title so there's something to
+    // start from, minus the hashtags. user can rename it before publishing
+    const seedTitle = stripHashtags(data.title);
+    const nameInput = document.getElementById("studio-name");
+    const fitTitle = document.getElementById("fit-title");
+    if (nameInput && seedTitle) nameInput.value = seedTitle;
+    if (fitTitle && seedTitle) fitTitle.value = seedTitle;
+
+    renderRemixBadge();
+    renderMissingPanel(slugs);
+  }
+
+  // the publish button lives in the DOMContentLoaded block below, so hand it a
+  // way to read the current canvas. only owned items have a real (numeric) db
+  // id, so catalog-only pieces get dropped and we only link the real ones.
+  // remix flags + the source cover go along when we're remixing.
+  window.STYLO_STUDIO = {
+    buildPublishPayload(title, occasion) {
+      // remix placements use catalog slugs, not db ids, so build an image -> id
+      // map of owned items and match by filename when a placement isn't numeric
+      const ownedIdByImage = new Map();
+      for (const it of ITEMS) {
+        const nid = Number(it.id);
+        if (Number.isInteger(nid) && nid > 0) ownedIdByImage.set(basename(it.image), nid);
+      }
+      const resolveOwnedId = (p) => {
+        const direct = Number(p.item_id);
+        if (Number.isInteger(direct) && direct > 0) return direct;
+        const item = findItem(p.item_id);
+        return item ? ownedIdByImage.get(basename(item.image)) ?? null : null;
+      };
+      const itemIds = [...new Set(placements.map(resolveOwnedId).filter((n) => n))];
+      const layout = placements.map((p) => {
+        const item = findItem(p.item_id);
+        return { ...p, image: item?.image || null, name: item?.name || null };
+      });
+      const payload = {
+        user_id: CURRENT_USER_ID,
+        title: title || "untitled",
+        occasion,
+        item_ids: itemIds,
+        layout,
+        // feed uses a frame bg + the saved layout to show every piece
+        image_url: remixMeta ? remixMeta.cover : "media/post1tall.png",
+        aspect: "tall",
+      };
+      if (remixMeta) {
+        payload.is_remix = 1;
+        payload.remix_of = remixMeta.sourceId;
+        payload.remix_of_username = remixMeta.username;
+      }
+      return payload;
+    },
+  };
+
+  loadRemix();
   renderClosetList();
   renderCanvas();
 });
@@ -593,46 +848,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const publishModal = document.getElementById("publish-modal");
   const modalTitle  = document.getElementById("publish-modal-title");
 
-   // add remix functionality
-  const remixRaw = localStorage.getItem("remixPost");
-
-  if (remixRaw) {
-    const remixPost = JSON.parse(remixRaw);
-    localStorage.removeItem("remixPost"); // clear after reading
-
-    // pre-fill the outfit name
-    const nameInput = document.getElementById("studio-name");
-    if (nameInput) nameInput.value = `remix of ${remixPost.username}'s fit`;
-
-    const fitTitle = document.getElementById("fit-title");
-    if (fitTitle) fitTitle.value = `remix of ${remixPost.username}'s fit`;
-
-    // hide the empty hint
-    const hint = document.getElementById("canvas-empty-hint");
-    if (hint) hint.style.display = "none";
-
-    // place the background image on the canvas
-    const canvas = document.getElementById("canvas");
-    if (canvas && remixPost.imageUrl) {
-      const piece = document.createElement("div");
-      piece.className = "canvas-piece";
-      piece.style.cssText = "left:60px; top:40px; width:260px; height:320px;";
-      piece.innerHTML = `<img src="../${remixPost.imageUrl}" alt="remixed outfit" />`;
-      canvas.appendChild(piece);
-    }
-
-    // place the overlay clothing item if there is one
-    if (canvas && remixPost.overlayUrl) {
-      const overlayPiece = document.createElement("div");
-      overlayPiece.className = "canvas-piece";
-      overlayPiece.style.cssText = "left:100px; top:80px; width:160px; height:200px;";
-      overlayPiece.innerHTML = `<img src="../${remixPost.overlayUrl}" alt="clothing item" />`;
-      canvas.appendChild(overlayPiece);
-    }
-  }
-
-
-  
   // keep both title fields in sync (bidirectional)
   studioName.addEventListener("input", () => {
     fitTitle.value = studioName.value;
@@ -641,16 +856,39 @@ document.addEventListener("DOMContentLoaded", () => {
     studioName.value = fitTitle.value;
   });
 
-  // publish button → open modal
+  // publish button → open modal (the POST happens on confirm below, which can
+  // see the canvas + remix state through window.STYLO_STUDIO)
   document.getElementById("publish-btn").addEventListener("click", () => {
     modalTitle.textContent = studioName.value.trim() || "untitled";
     publishModal.classList.add("is-open");
   });
 
-  // confirm → toast + close
-  document.getElementById("publish-confirm-btn").addEventListener("click", () => {
+  // confirm → POST the outfit (carrying remix flags when remixing), then toast
+  document.getElementById("publish-confirm-btn").addEventListener("click", async () => {
     publishModal.classList.remove("is-open");
-    showToast(studioName.value.trim() || "untitled");
+    const title = studioName.value.trim() || "untitled";
+    // the occasion(s) the user has checked in the "this fit" panel
+    const occasion = [
+      ...document.querySelectorAll("#occ-dropdown input[type=checkbox]:checked"),
+    ].map((c) => c.value);
+    try {
+      const payload = window.STYLO_STUDIO?.buildPublishPayload(
+        title,
+        occasion.length ? occasion : null
+      );
+      if (payload) {
+        // the feed reads from /api/outfits, so saving here is enough to make the
+        // outfit show up at the top of discover (and on your profile)
+        await fetch("/api/outfits", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
+    } catch (_) {
+      // offline — still show the toast
+    }
+    showToast(title);
   });
 
   // cancel → just close
@@ -662,6 +900,4 @@ document.addEventListener("DOMContentLoaded", () => {
   publishModal.addEventListener("click", (e) => {
     if (e.target === publishModal) publishModal.classList.remove("is-open");
   });
-
- 
 });

@@ -22,7 +22,7 @@ const ME = {
 // outfits: use the pre-rendered post images for cover art (hardcoded for now)
 const OUTFITS = [
   { id: "outfit1", title: "saturday market outfit #cottagecore #staples #ootd", username: "angela", occasion: "weekend", cover: "media/talloutfit1.png", aspect: "tall", likes: 124, comments: 12, remixes: 8, items: ["mint-cami", "wash-shorts", "tan-flats", "brown-bag"], tags: ["staples", "ootd"], aesthetic: "cottagecore" },
-  { id: "outfit2", title: "florals for spring #grunge #inspo #accessories", username: "hannah",occasion: "work", cover: "media/post2wide.png", aspect: "wide", likes: 89, comments: 6, remixes: 14, overlayUrl: "media/wideoutfit1.png", items: ["puff-blouse", "wide-jeans", "beige-flats"], tags: ["inspo", "accessories"], aesthetic: "grunge" },
+  { id: "outfit2", title: "florals for spring #grunge #inspo #accessories", username: "hannah",occasion: "work", cover: "media/post2wide.png", aspect: "wide", likes: 89, comments: 6, remixes: 14, overlayUrl: "media/wideoutfit1.png", items: ["rose-cami", "wide-jeans"], tags: ["inspo", "accessories"], aesthetic: "grunge" },
   { id: "outfit3", title: "I wore this to the art museum! #y2k #staples #accessories", username: "kaycee",occasion: "everyday", cover: "media/talloutfit2.png", overlayUrl: "", aspect: "tall", likes: 312, comments: 5, remixes: 22, items: ["rose-cami", "wide-denim", "black-bag"], tags: ["staples", "accessories"], aesthetic: "y2k" },
   { id: "outfit4", title: "my mom picked this outfit #darkacademia #ootd #accessories", username: "vivian", occasion: "everyday", cover: "media/post4wide.png", aspect: "wide", likes: 540, comments: 41, remixes: 36, overlayUrl: "media/wideoutfit2.png", items: ["valentin-tee", "wide-jeans", "tan-flats"], tags: ["accessories", "ootd"], aesthetic: "dark-academia" },
   { id: "outfit5", title: "my favorite band #grunge #inspo", username: "gudetama", occasion: "weekend", cover: "media/post3wide.png", aspect: "wide", likes: 201, comments: 9, remixes: 5, overlayUrl: "media/wideoutfit3.png", items: ["mint-cami", "wide-denim", "beige-flats", "red-cap"], tags: ["inspo"], aesthetic: "grunge" },
@@ -58,7 +58,9 @@ const FALLBACK_ITEMS = [
 ];
 
 // start empty — ITEMS gets filled below, ME/OUTFITS are ready now
-window.STYLO = { ITEMS: [], OUTFITS, ME };
+// CATALOG keeps the whole item list around so studio can look up an outfit's
+// pieces by slug ("mint-cami" etc) even for stuff the user doesn't own
+window.STYLO = { ITEMS: [], OUTFITS, ME, CATALOG: FALLBACK_ITEMS };
 
 function initialsFrom(name) {
   return (name || "?")

@@ -92,12 +92,16 @@ window.addEventListener('stylo:ready', () => {
     }
 
     try {
-      const [outfitRows, itemRows] = await Promise.all([
+      const [outfitRows, remixRows, itemRows] = await Promise.all([
         getJSON(`/api/users/${profileId}/outfits?${viewerQS}`),
+        getJSON(`/api/users/${profileId}/remixes?${viewerQS}`),
         getJSON(`/api/users/${profileId}/items?${viewerQS}`),
       ]);
       outfits = outfitRows.map(mapOutfit);
-      remixes = [];
+      remixes = remixRows.map((row) => ({
+        ...mapOutfit(row),
+        remixedFrom: row.remix_of_username || null,
+      }));
       items = itemRows.map(mapItem);
     } catch (err) {
       if (err.private) locked = true;
@@ -178,18 +182,37 @@ window.addEventListener('stylo:ready', () => {
     });
   }
 
-  // share — copy a link to this profile to the clipboard
+  // copy text to the clipboard. navigator.clipboard needs https/localhost so if
+  // that's not around (file://, plain ip) we fall back to the old textarea trick
+  async function copyText(text) {
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (_) {} // fall back below
+    }
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      const ok = document.execCommand("copy");
+      ta.remove();
+      return ok;
+    } catch (_) {
+      return false;
+    }
+  }
+
   function wireShare() {
     const btn = document.getElementById("btn-share");
     btn.addEventListener("click", async () => {
       const url = `${location.origin}${location.pathname}?user=${profileId}`;
       const original = btn.textContent;
-      try {
-        await navigator.clipboard.writeText(url);
-        btn.textContent = "Copied!";
-      } catch (_) {
-        btn.textContent = "Copy failed";
-      }
+      btn.textContent = (await copyText(url)) ? "Copied!" : "Copy failed";
       setTimeout(() => { btn.textContent = original; }, 1500);
     });
   }
@@ -236,9 +259,16 @@ window.addEventListener('stylo:ready', () => {
   let closetFilter = "all";
 
   function outfitCardHTML(o) {
+    // show a badge on remixes so you can tell whose look it came from
+    const remixBadge = o.remixedFrom
+      ? `<span class="remix-tag"><span class="material-symbols-outlined" style="font-size:13px;vertical-align:middle;">refresh</span> remix · @${o.remixedFrom}</span>`
+      : "";
     return `
       <article class="outfit-card">
-        <img src="${o.cover}" alt="${o.title}" />
+        <div class="outfit-cover">
+          <img src="${o.cover}" alt="${o.title}" />
+          ${remixBadge}
+        </div>
         <div class="outfit-meta">
           <div class="outfit-title">${o.title}</div>
           <div class="outfit-sub">
