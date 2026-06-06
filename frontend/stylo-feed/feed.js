@@ -801,10 +801,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const yesRemixBtn = document.querySelector(".share-btn-yes");
   const noRemixBtn = document.querySelector(".share-btn-close");
 
+  // save outfit data to remix
   yesRemixBtn.addEventListener("click", () => {
   const post = getPost(state.currentPostId);
   if (post) {
     // to remix, save post clothes to local storage
+    localStorage.setItem("styloRemixOutfit", currentOutfit.id);
     localStorage.setItem("remixPost", JSON.stringify({
       id: post.id,
       imageUrl: post.imageUrl,
