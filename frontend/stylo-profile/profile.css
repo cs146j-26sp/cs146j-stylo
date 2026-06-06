@@ -247,8 +247,45 @@
   justify-content: space-between;
   margin-bottom: 24px;
 }
-.modal-title {
+
+.field-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  background: #fffaf2;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field-input:focus {
+  border-color: var(--accent);
+}
+.field-input::placeholder {
+  opacity: 0.42;
+}
+
+#modal-cancel {
   font-family: var(--font-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 11px 14px;
+  transition: opacity 0.15s;
+}
+#modal-cancel:hover {
+  opacity: 1;
+}
+
+.modal-title {
+  font-family: var(--font-header);
   font-size: 2rem;
   font-weight: 400;
   color: var(--text);
