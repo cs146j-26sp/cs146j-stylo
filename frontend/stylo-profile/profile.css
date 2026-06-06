@@ -1,6 +1,4 @@
-/* ============================================================
-   PROFILE PAGE
-   ============================================================ */
+/* profile page styling */
 .profile-header {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -43,8 +41,9 @@
 }
 
 .profile-name {
-  font-family: var(--font-display);
-  font-size: 4.2rem;
+  font-family: "DM Serif Display", serif;
+  font-weight: 100;
+  font-size: 4rem;
   letter-spacing: -0.02em;
   color: var(--text);
   line-height: 1;
