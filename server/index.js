@@ -65,7 +65,7 @@ db.exec(`
     category TEXT,
     status TEXT,
     color TEXT,
-    image_url TEXT,        -- ← add this
+    image_url TEXT,       
     FOREIGN KEY (user_id) REFERENCES users(id)
   ) STRICT;
 
@@ -485,6 +485,10 @@ app.post("/api/users/:id/items", (req, res) => {
   const newItem = db.prepare("SELECT * FROM clothing_items WHERE id = ?").get(info.lastInsertRowid);
   res.status(201).json(newItem);
 });
+// app.get("/api/admin/cleanup", (req, res) => {
+//   const info = db.prepare("DELETE FROM clothing_items WHERE image_url IS NULL OR image_url = ''").run();
+//   res.json({ deleted: info.changes });
+// });
 // app listen at bottom of file so everything is defined before
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
