@@ -480,3 +480,54 @@
   margin: 15% auto;
   gap: 10px;
 }
+/************* multiselect dropdown styling *************/
+.multiselect-wrapper {
+  position: relative;
+}
+
+.multiselect-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: var(--bg);
+  border: 1.4px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 4px;
+  z-index: 200;
+  min-width: 160px;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.multiselect-dropdown:not([hidden]) {
+  display: flex;
+}
+
+.multiselect-dropdown label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.83rem;
+  font-family: var(--font-body);
+  color: var(--text);
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.multiselect-dropdown label:hover {
+  background: var(--accent-soft);
+}
+
+.multiselect-dropdown input[type="checkbox"] {
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

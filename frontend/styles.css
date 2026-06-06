@@ -13,6 +13,7 @@
   --popup-border: rgb(57, 35, 27);
  --font-display: "Instrument serif", serif;
   --font-body: "Albert Sans", sans-serif;
+  --font-header: "DM Serif Display", serif;
 }
 
 * {
@@ -185,6 +186,16 @@ button:hover {
   border-radius: 4px;
   cursor: pointer;
   transition: background 0.2s;
+}
+
+select.filter-button {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 28px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23d0a18a'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-color: var(--accent-soft);
 }
 
 .filter-button:hover {

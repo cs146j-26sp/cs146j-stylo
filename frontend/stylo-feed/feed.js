@@ -342,8 +342,8 @@ const state = {
   // enable dropdown filters
   filters: {
     sortBy: "",
-    aesthetic: "",
-    category: "",
+    aesthetics: ["dark-academia", "y2k", "cottagecore", "grunge"],
+    categories: ["inspo", "ootd", "accessories", "staples"],
   }
 };
 
@@ -535,21 +535,23 @@ function filterPosts(posts) {
   // copy array to make edits to it
   let filtered = [...posts];
 
-  // filter by aesthetic
-  if (state.filters.aesthetic) {
+  // filter by aesthetic (skip if all selected)
+  const ALL_AESTHETICS = ["dark-academia", "y2k", "cottagecore", "grunge"];
+  if (state.filters.aesthetics.length < ALL_AESTHETICS.length) {
     filtered = filtered.filter(post => {
-  if (Array.isArray(post.aesthetic)) {
-    return post.aesthetic.includes(state.filters.aesthetic);
-  }
-  return post.aesthetic === state.filters.aesthetic;
-});
+      if (!post.aesthetic) return false;
+      if (Array.isArray(post.aesthetic)) {
+        return post.aesthetic.some(a => state.filters.aesthetics.includes(a));
+      }
+      return state.filters.aesthetics.includes(post.aesthetic);
+    });
   }
 
-  // filter by category/tag
-  if (state.filters.category) {
+  // filter by category/tag (skip if all selected)
+  const ALL_CATEGORIES = ["inspo", "ootd", "accessories", "staples"];
+  if (state.filters.categories.length < ALL_CATEGORIES.length) {
     filtered = filtered.filter(post =>
-      // check that post has tags at all
-      post.tags && post.tags.includes(state.filters.category)
+      post.tags && post.tags.some(tag => state.filters.categories.includes(tag))
     );
   }
 
@@ -961,25 +963,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const yesRemixBtn = document.querySelector(".share-btn-yes");
   const noRemixBtn = document.querySelector(".share-btn-close");
 
-  // yes -> save what we need about the post, then send them to studio to remix it
+  // save outfit data to remix
   yesRemixBtn.addEventListener("click", () => {
-    const post = getPost(state.currentPostId);
-    if (post) {
-      localStorage.setItem(
-        "remixPost",
-        JSON.stringify({
-          sourceId: post.id,
-          username: post.username,
-          title: post.caption,
-          cover: post.imageUrl,
-          overlayUrl: post.overlayUrl,
-          items: post.items ?? [], // slugs we drop onto the canvas
-          aesthetic: post.aesthetic ?? "",
-          tags: post.tags ?? [],
-        })
-      );
-    }
-    window.location.href = "../stylo-studio/studio.html";
+  const post = getPost(state.currentPostId);
+  if (post) {
+    // to remix, save post clothes to local storage
+    localStorage.setItem("styloRemixOutfit", currentOutfit.id);
+    localStorage.setItem("remixPost", JSON.stringify({
+      id: post.id,
+      imageUrl: post.imageUrl,
+      overlayUrl: post.overlayUrl,
+      caption: post.caption,
+      username: post.username,
+ 
+    }));
+         console.log("remix worked");
+  }
+  window.location.href = "../stylo-studio/studio.html";
+});
+
+  noRemixBtn.addEventListener("click", () => {
+    window.location.href = "../stylo-feed/feed.html";
+    sharePopup.setAttribute("hidden");
   });
 
   // no -> just close the popup
@@ -993,14 +998,42 @@ document.addEventListener("DOMContentLoaded", () => {
     loadPosts(state.currentTab);
   });
 
-  document.getElementById("filter-aesthetic").addEventListener("change", event => {
-    state.filters.aesthetic = event.target.value;
-    loadPosts(state.currentTab);
+  // aesthetic multiselect toggle
+  document.getElementById("aesthetic-btn").addEventListener("click", e => {
+    e.stopPropagation();
+    const dropdown = document.getElementById("aesthetic-dropdown");
+    dropdown.hidden = !dropdown.hidden;
+    document.getElementById("category-dropdown").hidden = true;
   });
 
-  document.getElementById("filter-category").addEventListener("change", event => {
-    state.filters.category = event.target.value;
-    loadPosts(state.currentTab);
+  document.getElementById("aesthetic-dropdown").addEventListener("click", e => e.stopPropagation());
+  document.querySelectorAll("#aesthetic-dropdown input[type='checkbox']").forEach(cb => {
+    cb.addEventListener("change", () => {
+      state.filters.aesthetics = [...document.querySelectorAll("#aesthetic-dropdown input:checked")].map(c => c.value);
+      loadPosts(state.currentTab);
+    });
+  });
+
+  // category multiselect toggle
+  document.getElementById("category-btn").addEventListener("click", e => {
+    e.stopPropagation();
+    const dropdown = document.getElementById("category-dropdown");
+    dropdown.hidden = !dropdown.hidden;
+    document.getElementById("aesthetic-dropdown").hidden = true;
+  });
+
+  document.getElementById("category-dropdown").addEventListener("click", e => e.stopPropagation());
+  document.querySelectorAll("#category-dropdown input[type='checkbox']").forEach(cb => {
+    cb.addEventListener("change", () => {
+      state.filters.categories = [...document.querySelectorAll("#category-dropdown input:checked")].map(c => c.value);
+      loadPosts(state.currentTab);
+    });
+  });
+
+  // close dropdowns when clicking outside
+  document.addEventListener("click", () => {
+    document.getElementById("aesthetic-dropdown").hidden = true;
+    document.getElementById("category-dropdown").hidden = true;
   });
 
 });
