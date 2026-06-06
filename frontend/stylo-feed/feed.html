@@ -53,21 +53,25 @@
           <option value="most-popular">Most Popular</option>
         </select>
 
-        <select id="filter-aesthetic" class="filter-button">
-          <option value="" hidden>Select Aesthetic</option>
-          <option value="dark-academia">Dark Academia</option>
-          <option value="y2k">Y2K</option>
-          <option value="cottagecore">Cottagecore</option>
-          <option value="grunge">Grunge</option>
-        </select>
+        <div class="multiselect-wrapper">
+          <button class="filter-button multiselect-btn" id="aesthetic-btn">Select Aesthetic ▾</button>
+          <div class="multiselect-dropdown" id="aesthetic-dropdown" hidden>
+            <label><input type="checkbox" value="dark-academia" checked> Dark Academia</label>
+            <label><input type="checkbox" value="y2k" checked> Y2K</label>
+            <label><input type="checkbox" value="cottagecore" checked> Cottagecore</label>
+            <label><input type="checkbox" value="grunge" checked> Grunge</label>
+          </div>
+        </div>
 
-        <select id="filter-category" class="filter-button">
-          <option value="" hidden>Select Category</option>
-          <option value="inspo">Outfit Inspiration</option>
-          <option value="ootd">OOTD</option>
-          <option value="accessories">Accessories</option>
-          <option value="staples">Closet Staples</option>
-        </select>
+        <div class="multiselect-wrapper">
+          <button class="filter-button multiselect-btn" id="category-btn">Select Category ▾</button>
+          <div class="multiselect-dropdown" id="category-dropdown" hidden>
+            <label><input type="checkbox" value="inspo" checked> Outfit Inspiration</label>
+            <label><input type="checkbox" value="ootd" checked> OOTD</label>
+            <label><input type="checkbox" value="accessories" checked> Accessories</label>
+            <label><input type="checkbox" value="staples" checked> Closet Staples</label>
+          </div>
+        </div>
       </div>
 
 
