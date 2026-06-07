@@ -91,7 +91,11 @@ async function loadMe() {
 // load my closet from the db. db calls it image_url, the ui wants image.
 async function loadItems() {
   try {
-    const res = await fetch(`/api/users/${CURRENT_USER_ID}/items`);
+    // identify ourselves as the viewer so the privacy gate lets us load our own
+    // closet even when our profile is set to private (owner can always view).
+    const res = await fetch(
+      `/api/users/${CURRENT_USER_ID}/items?viewer_id=${CURRENT_USER_ID}`
+    );
     if (!res.ok) throw new Error("HTTP " + res.status);
     const rows = await res.json();
     window.STYLO.ITEMS = rows.length

@@ -55,13 +55,19 @@ window.addEventListener('stylo:ready', () => {
     status: row.status || "owned",
     category: row.category,
   });
+  // covers are saved relative to /stylo-feed, so make them absolute or they 404 here
+  const absCover = (url) => {
+    if (!url) return "";
+    if (/^(https?:|data:)/.test(url) || url.startsWith("/")) return url;
+    return "/stylo-feed/" + url.replace(/^\.?\//, "");
+  };
   const mapOutfit = (row) => ({
     id: String(row.id),
     title: row.name || "untitled outfit",
-    cover: row.image_url,
+    cover: absCover(row.image_url),
     likes: row.likes || 0,
     comments: row.comments || 0,
-    remixes: row.remixes || 0,
+    remixes: row.remix_count ?? row.remixes ?? 0,
   });
 
   // server unreachable -> use the demo data so the page still shows something
@@ -333,7 +339,36 @@ window.addEventListener('stylo:ready', () => {
     });
   }
 
+  // re-pull from the server and re-render the active tab so new posts show up
+  async function refresh() {
+    await load();
+    renderIdentity();
+    renderTabCounts();
+    const activeTab =
+      document.querySelector(".profile-tab.is-active")?.dataset.tab || "outfits";
+    renderTab(activeTab);
+  }
+
+  function isReload() {
+    const nav = performance.getEntriesByType?.("navigation")?.[0];
+    if (nav) return nav.type === "reload";
+    // older browsers: performance.navigation.type === 1 means reload
+    return performance.navigation?.type === 1;
+  }
+
+  // hard-refreshing your own profile clears your published outfits + remixes so
+  // it goes back to a clean slate. coming in from another page keeps them.
+  async function resetPublishedIfReload() {
+    if (!isOwnProfile || !isReload()) return;
+    try {
+      await fetch(`/api/users/${profileId}/outfits`, { method: "DELETE" });
+    } catch (_) {
+      // offline — nothing to reset
+    }
+  }
+
   (async function init() {
+    await resetPublishedIfReload();
     await load();
     renderIdentity();
     renderActions();
@@ -349,4 +384,11 @@ window.addEventListener('stylo:ready', () => {
 
     renderTab("outfits");
   })();
+
+  // hitting back into this page pulls it from the bfcache, which restores the
+  // old dom without re-running the script — so re-fetch when that happens to
+  // catch anything published in the meantime. a real refresh re-runs init().
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) refresh();
+  });
 });

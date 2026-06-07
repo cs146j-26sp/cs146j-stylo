@@ -628,6 +628,36 @@ window.addEventListener('stylo:ready', () => {
       });
   }
 
+  // find an item by its image, preferring one the user owns. the saved layout
+  // ids belong to the original author, so we match on the image instead
+  function itemByImage(image) {
+    const base = basename(image);
+    return (
+      ITEMS.find((i) => basename(i.image) === base) ||
+      CATALOG.find((i) => basename(i.image) === base) ||
+      null
+    );
+  }
+
+  // rebuild placements from a saved layout — same positions, but the item ids
+  // remapped to this user's matching pieces
+  function placementsFromLayout(layout) {
+    return layout
+      .map((p, i) => {
+        const item = itemByImage(p.image) || findItem(p.item_id);
+        if (!item) return null;
+        return {
+          item_id: item.id,
+          x: p.x,
+          y: p.y,
+          scale: p.scale ?? 0.95,
+          rot: p.rot ?? 0,
+          z: p.z ?? i + 1,
+        };
+      })
+      .filter(Boolean);
+  }
+
   // remix pieces the user doesn't own yet. match on the image filename since
   // owned items use numeric ids but the catalog is keyed by slug
   function missingItems(slugs) {
@@ -754,12 +784,18 @@ window.addEventListener('stylo:ready', () => {
       return;
     }
 
+    // use the saved layout if we have one, otherwise build a flatlay from slugs
+    const layout = Array.isArray(data.layout)
+      ? data.layout.filter((p) => p && (p.image || p.item_id))
+      : [];
     const slugs = Array.isArray(data.items) ? data.items : [];
-    const built = flatlayPlacements(slugs);
+    const built = layout.length ? placementsFromLayout(layout) : flatlayPlacements(slugs);
     if (built.length) {
       placements = built;
       selectedIdx = null;
     }
+    // what actually landed on the canvas, so the "don't own yet" panel matches
+    const placedIds = built.length ? built.map((p) => p.item_id) : slugs;
 
     remixMeta = {
       sourceId: data.sourceId,
@@ -777,14 +813,84 @@ window.addEventListener('stylo:ready', () => {
     if (fitTitle && seedTitle) fitTitle.value = seedTitle;
 
     renderRemixBadge();
-    renderMissingPanel(slugs);
+    renderMissingPanel(placedIds);
   }
 
-  // the publish button lives in the DOMContentLoaded block below, so hand it a
-  // way to read the current canvas. only owned items have a real (numeric) db
-  // id, so catalog-only pieces get dropped and we only link the real ones.
-  // remix flags + the source cover go along when we're remixing.
+  // load an <img> (resolves null on error so a missing piece can't break capture)
+  function loadImage(src) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+  }
+
+  // the frame png + where its transparent window sits, as fractions of the image
+  // (these match the feed's .card-flatlay geometry in feed.css)
+  const FRAME_TALL_SRC = "/stylo-feed/media/post1tall.png";
+  const FRAME_WINDOW = { left: 0.1588, top: 0.18875, width: 0.7804, height: 0.4975 };
+
+  // draw the look the same way the feed does — white background, polaroid frame
+  // (its window is see-through so the white shows), then the pieces inside the
+  // window — and hand back a cover image as a data url
+  async function captureCanvas() {
+    if (!placements.length) return null;
+
+    const frame = await loadImage(FRAME_TALL_SRC);
+    const W = frame?.naturalWidth || 510;
+    const H = frame?.naturalHeight || 800;
+    const cvs = document.createElement("canvas");
+    cvs.width = W;
+    cvs.height = H;
+    const ctx = cvs.getContext("2d");
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+    if (frame) ctx.drawImage(frame, 0, 0, W, H);
+
+    const winL = FRAME_WINDOW.left * W;
+    const winT = FRAME_WINDOW.top * H;
+    const winW = FRAME_WINDOW.width * W;
+    const winH = FRAME_WINDOW.height * H;
+
+    const ordered = [...placements].sort((a, b) => (a.z || 0) - (b.z || 0));
+    for (const p of ordered) {
+      const item = findItem(p.item_id);
+      if (!item || !item.image) continue;
+      const img = await loadImage(item.image);
+      if (!img || !img.naturalWidth) continue;
+      // piece width as a % of the window — same formula the feed uses
+      const pct = Math.min(
+        Math.max((baseSizeFor(item.category) * (p.scale || 1)) / 540 * 100, 10),
+        60
+      );
+      const dw = (pct / 100) * winW;
+      const dh = dw * (img.naturalHeight / img.naturalWidth);
+      const cx = winL + (p.x / 100) * winW;
+      const cy = winT + (p.y / 100) * winH;
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(((p.rot || 0) * Math.PI) / 180);
+      ctx.shadowColor = "rgba(46,19,18,0.18)";
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetY = 4;
+      ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh);
+      ctx.restore();
+    }
+    try {
+      return cvs.toDataURL("image/jpeg", 0.85);
+    } catch (_) {
+      return null; // tainted canvas — shouldn't happen for same-origin images
+    }
+  }
+
+  // hand the publish button (down in the DOMContentLoaded block) what it needs
+  // from the canvas. only owned pieces have a numeric db id, so catalog-only
+  // ones get dropped and we link just the real ones. remix flags + the source
+  // cover tag along when we're remixing.
   window.STYLO_STUDIO = {
+    captureCanvas,
     buildPublishPayload(title, occasion) {
       // remix placements use catalog slugs, not db ids, so build an image -> id
       // map of owned items and match by filename when a placement isn't numeric
@@ -810,8 +916,9 @@ window.addEventListener('stylo:ready', () => {
         occasion,
         item_ids: itemIds,
         layout,
-        // feed uses a frame bg + the saved layout to show every piece
-        image_url: remixMeta ? remixMeta.cover : "media/post1tall.png",
+        // fallback cover if the canvas snapshot fails — the publish handler
+        // overrides this with an actual snapshot of the arrangement
+        image_url: remixMeta ? remixMeta.cover : layout[0]?.image || null,
         aspect: "tall",
       };
       if (remixMeta) {
@@ -877,6 +984,11 @@ document.addEventListener("DOMContentLoaded", () => {
         occasion.length ? occasion : null
       );
       if (payload) {
+        // use a snapshot of the canvas as the cover (what shows on the feed +
+        // profile). if capture fails the payload's default cover stays.
+        const snapshot = await window.STYLO_STUDIO?.captureCanvas?.();
+        if (snapshot) payload.image_url = snapshot;
+
         // the feed reads from /api/outfits, so saving here is enough to make the
         // outfit show up at the top of discover (and on your profile)
         await fetch("/api/outfits", {
