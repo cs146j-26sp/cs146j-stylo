@@ -359,10 +359,6 @@ function normalizeFeedUrl(url) {
   return url.replace(/^\/?/, "");
 }
 
-function isClothingItemUrl(url) {
-  return /\/items\//.test(url || "");
-}
-
 function getItemCategory(p) {
   const slug = p.item_id || (p.image || "").split("/").pop().replace(/\.[^.]+$/, "");
   const catalogItem = window.STYLO?.CATALOG?.find(
@@ -430,9 +426,9 @@ function buildOutfitPreviewHtml(post) {
 
   if (layout.length) {
     const isWide = post.aspect === "wide";
-    const frame = isClothingItemUrl(post.imageUrl)
-      ? (isWide ? DEFAULT_FRAME_WIDE : DEFAULT_FRAME_TALL)
-      : normalizeFeedUrl(post.imageUrl) || DEFAULT_FRAME_TALL;
+    // use the empty frame, not the post cover — on a remix the cover is the
+    // original photo and you'd see a whole second outfit behind the pieces
+    const frame = isWide ? DEFAULT_FRAME_WIDE : DEFAULT_FRAME_TALL;
 
     return `
       <img class="card-outfit-img" src="${frame}" alt="post frame" />
@@ -467,9 +463,8 @@ function mountPostFlatlay(post, wrapperEl, frameImgEl, overlayImgEl) {
   }
 
   const isWide = post.aspect === "wide";
-  const frame = isClothingItemUrl(post.imageUrl)
-    ? (isWide ? DEFAULT_FRAME_WIDE : DEFAULT_FRAME_TALL)
-    : normalizeFeedUrl(post.imageUrl) || DEFAULT_FRAME_TALL;
+  // empty frame again, same reason as buildOutfitPreviewHtml
+  const frame = isWide ? DEFAULT_FRAME_WIDE : DEFAULT_FRAME_TALL;
 
   frameImgEl.src = frame;
   overlayImgEl.src = "";
@@ -967,17 +962,17 @@ document.addEventListener("DOMContentLoaded", () => {
   yesRemixBtn.addEventListener("click", () => {
   const post = getPost(state.currentPostId);
   if (post) {
-    // to remix, save post clothes to local storage
-    localStorage.setItem("styloRemixOutfit", currentOutfit.id);
+    // save what studio needs to rebuild the look. layout is the saved canvas
+    // arrangement (lets us recreate it exactly), and we keep items as a backup
+    // for demo posts that only know which pieces they used, not the positions.
     localStorage.setItem("remixPost", JSON.stringify({
-      id: post.id,
-      imageUrl: post.imageUrl,
-      overlayUrl: post.overlayUrl,
-      caption: post.caption,
+      sourceId: post.id,
       username: post.username,
- 
+      title: post.caption,
+      cover: post.imageUrl,
+      items: post.items ?? [],
+      layout: post.layout ?? null,
     }));
-         console.log("remix worked");
   }
   window.location.href = "../stylo-studio/studio.html";
 });
